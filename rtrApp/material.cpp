@@ -12,7 +12,7 @@ void PhongMaterial::setUniforms(QOpenGLShaderProgram &prog)
     prog.setUniformValue("light.intensity", lightIntensity);
 }
 
-void ToonMaterial::setUniforms(QOpenGlShaderProgram &prog)
+void ToonMaterial::setUniforms(QOpenGLShaderProgram &prog)
 {
     prog.bind();
     prog.setUniformValue("material.k_ambient", k_ambient);
