@@ -8,7 +8,7 @@
  * and model-view, projection and normal matrices.
  *
  * It transforms the position and normal to eye coordinates and
- * passes them to the fragment shader; it also transforms the vertex 
+ * passes them to the fragment shader; it also transforms the vertex
  * position to clip coordinates for the needs of the pipeline.
  *
  */
@@ -28,7 +28,7 @@ out vec4 position_EC;
 out vec3 normal_EC;
 
 void main(void) {
-    
+
     // position to eye coordinates
     position_EC = modelViewMatrix * vec4(position_MC,1);
 

@@ -1,4 +1,3 @@
-
 #include "scene.h"
 
 #include <iostream> // std::cout etc.
@@ -60,6 +59,7 @@ void Scene::changeModel(const QString &txt)
     float r = currentMesh_->bbox().maxExtent();
     worldTransform_ = QMatrix4x4();
     worldTransform_.scale(QVector3D(1.0/r,1.0/r,1.0/r));
+
     update();
 
 }
