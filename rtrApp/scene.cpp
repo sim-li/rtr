@@ -1,4 +1,3 @@
-
 #include "scene.h"
 
 #include <iostream> // std::cout etc.
@@ -13,17 +12,16 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     // create shader program to be used for rendering
     program_ = new QOpenGLShaderProgram();
     if(!program_->addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                    ":/assets/shaders/toon.vert"))
+                                    ":/assets/shaders/myphong.vert"))
         qFatal("could not add vertex shader");
     if(!program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                    ":/assets/shaders/toon.frag"))
+                                    ":/assets/shaders/myphong.frag"))
         qFatal("coudl not add fragment shader");
 
     if(!program_->link())
         qFatal("could not link shader program");
 
     // Material: use default Phong material
-    //material_ = std::make_shared<ToonMaterial>();
     material_ = std::make_shared<PhongMaterial>();
     material_->setUniforms(*program_);
 
@@ -61,6 +59,7 @@ void Scene::changeModel(const QString &txt)
     float r = currentMesh_->bbox().maxExtent();
     worldTransform_ = QMatrix4x4();
     worldTransform_.scale(QVector3D(1.0/r,1.0/r,1.0/r));
+
     update();
 
 }
