@@ -15,6 +15,12 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // create shader program to be used for rendering
     program_ = new QOpenGLShaderProgram();
+//    if(!program_->addShaderFromSourceFile(QOpenGLShader::Vertex,
+//                                    ":/assets/shaders/myphong.vert"))
+//        qFatal("could not add vertex shader");
+//    if(!program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
+//                                    ":/assets/shaders/myphong.frag"))
+//        qFatal("coudl not add fragment shader");
     if(!program_->addShaderFromSourceFile(QOpenGLShader::Vertex,
                                     ":/assets/shaders/myphong.vert"))
         qFatal("could not add vertex shader");
@@ -68,14 +74,15 @@ void Scene::changeModel(const QString &txt)
 
 void Scene::changeMaterial(const QString &txt) {
     currentMaterialSelection_ = txt;
-    std::cout << "Changed the material";
+    std::cout << "Changed the material:";
+    qDebug() << txt;
     if (currentMaterialSelection_ == "Phong") {
         material_ = std::make_shared<PhongMaterial>();
         material_->setUniforms(*program_);
         std::cout << "Changed to Phong Material";
     } else if (currentMaterialSelection_ == "Toon") {
-        //material_ = std::make_shared<ToonMaterial>();
-        //material_->setUniforms(*program_);
+//        material_ = std::make_shared<ToonMaterial>();
+//        material_->setUniforms(*program_);
         std::cout << "Changed to Toon Material";
     }
     update();

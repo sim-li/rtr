@@ -1,19 +1,5 @@
 #version 150
 
-/*
- * Simple Phong Shader
- * (C)opyright Hartmut Schirmacher, http://schirmacher.beuth-hochschule.de
- *
- * This vertex shader expects a position and normal vector per vertex,
- * and model-view, projection and normal matrices.
- *
- * It transforms the position and normal to eye coordinates and
- * passes them to the fragment shader; it also transforms the vertex
- * position to clip coordinates for the needs of the pipeline.
- *
- */
-
-
 // transformation matrices as provided by Cinder
 uniform mat4 projectionMatrix;
 uniform mat4 modelViewMatrix;

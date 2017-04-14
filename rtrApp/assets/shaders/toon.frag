@@ -1,17 +1,8 @@
 #version 150
 
-/*
- * Simple Phong Shader
- * (C)opyright Hartmut Schirmacher, http://schirmacher.beuth-hochschule.de
- *
- * This fragment shader calculates some direction vectors in eye space
- * and then uses a Phong illum model to calculate output color.
- *
- */
-
 
 // Phong coefficients and exponent
-struct PhongMaterial {
+struct ToonMaterial {
     vec3 k_ambient;
     vec3 k_diffuse;
     vec3 k_specular;
@@ -24,7 +15,7 @@ struct PointLight {
     vec4 position_EC;
 };
 
-uniform PhongMaterial material;
+uniform ToonMaterial material;
 uniform PointLight light;
 
 // ambient light
@@ -45,7 +36,7 @@ out vec4 outColor;
 
 
 // calculate Phong-style local illumination
-vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
+vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
 {
     // ambient part
     vec3 ambient = material.k_ambient * ambientLightIntensity;
@@ -78,9 +69,7 @@ vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
 
 }
 
-void
-main(void)
-{
+void main(void) {
     // normalize normal after projection
     vec3 normal = normalize(normal_EC);
 
@@ -96,7 +85,7 @@ main(void)
     vec3 viewDir = usePerspective? normalize(-position_EC.xyz) : vec3(0,0,1);
 
     // calculate color using phong illumination
-    vec3 color = phongIllum(normal, viewDir, lightDir);
+    vec3 color = toonIllum(normal, viewDir, lightDir);
 
     // out to frame buffer
     outColor = vec4(color, 1);
