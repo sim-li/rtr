@@ -46,7 +46,10 @@ in vec4 position_EC; //vertexposition
 // normal vector from vertex shader, in eye coordinates
 in vec3 normal_EC; // normalDirEC
 // output: color
+in vec2 texcoord_out;
 out vec4 outColor;
+
+
 
 
 // calculate Phong-style local illumination
@@ -80,6 +83,10 @@ vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
                     pow(rdotv, material.shininess);
 
     // return sum of all contributions
+    if (texcoord_out.x < 0.5F) {
+        return vec3(0,1,0);
+    }
+
     return ambient + floor(diffuse * bands) / bands + step(specularBias, specular);
 
 }

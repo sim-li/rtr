@@ -21,11 +21,16 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 //    if(!program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
 //                                    ":/assets/shaders/myphong.frag"))
 //        qFatal("coudl not add fragment shader");
-    if(!program_->addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                    ":/assets/shaders/toon.vert"))
-        qFatal("could not add vertex shader");
-    if(!program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                    ":/assets/shaders/toon.frag"))
+//    if(!program_->addShaderFromSourceFile(QOpenGLShader::Vertex,
+//                                    ":/assets/shaders/toon.vert"))
+//        qFatal("could not add vertex shader");
+//    if(!program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
+//                                    ":/assets/shaders/toon.frag"))
+        if(!program_->addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                        ":/assets/shaders/dots.vert"))
+            qFatal("could not add vertex shader");
+        if(!program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                        ":/assets/shaders/dots.frag"))
         qFatal("coudl not add fragment shader");
 
     if(!program_->link())
