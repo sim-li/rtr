@@ -1,6 +1,7 @@
 #include "scene.h"
 
 #include <iostream> // std::cout etc.
+#include <QDebug>
 using namespace std;
 
 Scene::Scene(QWidget* parent, QOpenGLContext *context) :
@@ -8,6 +9,9 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     parent_(parent),
     currentMesh_(nullptr)
 {
+
+
+
 
     // create shader program to be used for rendering
     program_ = new QOpenGLShaderProgram();
@@ -53,20 +57,32 @@ Scene::~Scene()
 
 void Scene::changeModel(const QString &txt)
 {
+    std::cout << "Changed model";
     currentMesh_ = meshes_[txt];
-
     // reset transform, create scaling so scene is within (-0.5 : 0.5)
     float r = currentMesh_->bbox().maxExtent();
     worldTransform_ = QMatrix4x4();
     worldTransform_.scale(QVector3D(1.0/r,1.0/r,1.0/r));
-
     update();
+}
 
+void Scene::changeMaterial(const QString &txt) {
+    currentMaterialSelection_ = txt;
+    std::cout << "Changed the material";
+    if (currentMaterialSelection_ == "Phong") {
+        material_ = std::make_shared<PhongMaterial>();
+        material_->setUniforms(*program_);
+        std::cout << "Changed to Phong Material";
+    } else if (currentMaterialSelection_ == "Toon") {
+        //material_ = std::make_shared<ToonMaterial>();
+        //material_->setUniforms(*program_);
+        std::cout << "Changed to Toon Material";
+    }
+    update();
 }
 
 void Scene::draw()
 {
-
     // clear background
     glClearColor(0.5, 0.5, 0.5, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -80,7 +96,6 @@ void Scene::draw()
     // draw our only object
     if(currentMesh_)
         currentMesh_->draw();
-
 }
 
 void Scene::updateViewport(size_t width, size_t height)

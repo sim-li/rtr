@@ -45,6 +45,41 @@
        </widget>
       </item>
       <item>
+       <widget class="QComboBox" name="shaderComboBox">
+        <property name="currentText">
+         <string>Toon</string>
+        </property>
+        <property name="currentIndex">
+         <number>2</number>
+        </property>
+        <item>
+         <property name="text">
+          <string>Minimal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Phong</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Toon</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Dots</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Procedural</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="quitButton">
         <property name="text">
          <string>Quit</string>

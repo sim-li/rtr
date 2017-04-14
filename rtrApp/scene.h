@@ -1,15 +1,11 @@
 #pragma once
-
 #include <QWidget>
-
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions>
 #include <QOpenGLVertexArrayObject>
-
 #include "mesh.h"
 #include "camera.h"
 #include "material.h"
-
 #include <memory> // std::unique_ptr
 #include <map>    // std::map
 
@@ -41,6 +37,8 @@ public slots:
     // change model according to combo box in UI
     void changeModel(const QString& txt);
 
+    void changeMaterial(const QString &txt);
+
     // perform OpenGL rendering of the entire scene. Don't call this yourself.
     void draw();
 
@@ -61,6 +59,9 @@ protected:
     // mesh(es) to be used / shared
     std::map<QString, std::shared_ptr<Mesh>> meshes_;
     std::shared_ptr<Mesh> currentMesh_;
+
+    // materials: comboBoxValue
+    QString currentMaterialSelection_;
 
     // camera(s) to be used / shared
     std::shared_ptr<Camera> camera_;

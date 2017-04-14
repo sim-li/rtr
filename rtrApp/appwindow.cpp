@@ -27,6 +27,9 @@ AppWindow::AppWindow(QWidget *parent) :
     // combo box to change the model
     connect(ui->modelComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeModel(txt); } );
+
+    connect(ui->shaderComboBox, &QComboBox::currentTextChanged,
+            [this](const QString& txt) { scene().changeMaterial(txt); });
 }
 
 AppWindow::~AppWindow()
@@ -44,7 +47,6 @@ void AppWindow::showUI()
     ui->ui_container->show();
     // default pixel margins (on Mac)
     ui->appWindowLayout->setContentsMargins(12,12,12,12);
-
 }
 
 void AppWindow::hideUI()
@@ -101,11 +103,12 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
 
     // change anything else
     case Qt::Key_Y:
-
         ui->openGLWidget->update();
         break;
-
-
-
     } // switch
+}
+
+void AppWindow::on_shaderComboBox_currentIndexChanged(const QString &arg1)
+{
+
 }
