@@ -32,7 +32,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
         qFatal("could not link shader program");
 
     // Material: use default Phong material
-    material_ = std::make_shared<PhongMaterial>();
+    material_ = std::make_shared<ToonMaterial>();
     material_->setUniforms(*program_);
 
     // load meshes from .obj files and assign shader programs to them
@@ -77,9 +77,9 @@ void Scene::changeMaterial(const QString &txt) {
     std::cout << "Changed the material:";
     qDebug() << txt;
     if (currentMaterialSelection_ == "Phong") {
-        material_ = std::make_shared<PhongMaterial>();
-        material_->setUniforms(*program_);
-        std::cout << "Changed to Phong Material";
+//        material_ = std::make_shared<PhongMaterial>();
+//        material_->setUniforms(*program_);
+//        std::cout << "Changed to Phong Material";
     } else if (currentMaterialSelection_ == "Toon") {
 //        material_ = std::make_shared<ToonMaterial>();
 //        material_->setUniforms(*program_);

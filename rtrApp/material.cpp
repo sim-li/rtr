@@ -22,4 +22,6 @@ void ToonMaterial::setUniforms(QOpenGLShaderProgram &prog)
     prog.setUniformValue("ambientLightIntensity", ambientLightIntensity);
     prog.setUniformValue("light.position_EC", lightPos_EC);
     prog.setUniformValue("light.intensity", lightIntensity);
+    prog.setUniformValue("bands", bands);
+    prog.setUniformValue("specularBias", specularBias);
 }

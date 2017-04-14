@@ -1,18 +1,6 @@
 #version 150
 
-/*
- * Simple Phong Shader
- * (C)opyright Hartmut Schirmacher, http://schirmacher.beuth-hochschule.de
- *
- * This vertex shader expects a position and normal vector per vertex,
- * and model-view, projection and normal matrices.
- *
- * It transforms the position and normal to eye coordinates and
- * passes them to the fragment shader; it also transforms the vertex 
- * position to clip coordinates for the needs of the pipeline.
- *
- */
-
+//zhis isdone
 
 // transformation matrices as provided by Cinder
 uniform mat4 projectionMatrix;
@@ -28,7 +16,6 @@ out vec4 position_EC;
 out vec3 normal_EC;
 
 void main(void) {
-    
     // position to eye coordinates
     position_EC = modelViewMatrix * vec4(position_MC,1);
 
@@ -37,6 +24,4 @@ void main(void) {
 
     // position to clip coordinates
     gl_Position = projectionMatrix * position_EC;
-
-
 }

@@ -1,43 +1,58 @@
 #version 150
 
+/*
+ * Simple Phong Shader
+ * (C)opyright Hartmut Schirmacher, http://schirmacher.beuth-hochschule.de
+ *
+ * This fragment shader calculates some direction vectors in eye space
+ * and then uses a Phong illum model to calculate output color.
+ *
+ */
+
 
 // Phong coefficients and exponent
-struct ToonMaterial {
+struct PhongMaterial {
     vec3 k_ambient;
     vec3 k_diffuse;
     vec3 k_specular;
     float shininess;
+  //  uniform int bands;
+  //SpecularBias
 };
 
-// point light
+uniform int bands;
+uniform float specularBias;
+
+// point light // ambient light
 struct PointLight {
     vec3 intensity;
     vec4 position_EC;
 };
-
-uniform ToonMaterial material;
-uniform PointLight light;
-
-// ambient light
 uniform vec3 ambientLightIntensity;
 
+
+
+uniform PhongMaterial material;
+uniform PointLight light;
+
+
+//_____________________________
 // matrices provided by the camera
-uniform mat4 modelViewMatrix;
-uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix; // ciModelView
+uniform mat4 projectionMatrix; // ciProjectionMatrix
 
 // vertex position from vertex shader, in eye coordinates
-in vec4 position_EC;
-
+in vec4 position_EC; //vertexposition
 // normal vector from vertex shader, in eye coordinates
-in vec3 normal_EC;
-
+in vec3 normal_EC; // normalDirEC
 // output: color
 out vec4 outColor;
 
 
 // calculate Phong-style local illumination
-vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
+vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
 {
+    bands -= 1;
     // ambient part
     vec3 ambient = material.k_ambient * ambientLightIntensity;
 
@@ -65,11 +80,13 @@ vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
                     pow(rdotv, material.shininess);
 
     // return sum of all contributions
-    return ambient + diffuse + specular;
+    return ambient + floor(diffuse * bands) / bands + step(specularBias, specular);
 
 }
 
-void main(void) {
+void
+main(void)
+{
     // normalize normal after projection
     vec3 normal = normalize(normal_EC);
 
@@ -85,7 +102,7 @@ void main(void) {
     vec3 viewDir = usePerspective? normalize(-position_EC.xyz) : vec3(0,0,1);
 
     // calculate color using phong illumination
-    vec3 color = toonIllum(normal, viewDir, lightDir);
+    vec3 color = phongIllum(normal, viewDir, lightDir, bands);
 
     // out to frame buffer
     outColor = vec4(color, 1);

@@ -70,7 +70,7 @@ protected:
     QMatrix4x4 worldTransform_;
 
     // material
-    std::shared_ptr<PhongMaterial> material_;
+    std::shared_ptr<ToonMaterial> material_;
 
 
 };
