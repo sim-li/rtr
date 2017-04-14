@@ -22,10 +22,10 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 //                                    ":/assets/shaders/myphong.frag"))
 //        qFatal("coudl not add fragment shader");
     if(!program_->addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                    ":/assets/shaders/myphong.vert"))
+                                    ":/assets/shaders/toon.vert"))
         qFatal("could not add vertex shader");
     if(!program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                    ":/assets/shaders/myphong.frag"))
+                                    ":/assets/shaders/toon.frag"))
         qFatal("coudl not add fragment shader");
 
     if(!program_->link())
@@ -38,9 +38,9 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     // load meshes from .obj files and assign shader programs to them
     meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", program_);
     meshes_["Trefoil"] = std::make_shared<Mesh>(":/assets/models/trefoil.obj", program_);
+    meshes_["Cube"] = std::make_shared<Mesh>(":/assets/models/cube/cube.obj", program_);
 
-    // make the duck the current model
-    changeModel("Duck");
+    changeModel("Cube");
 
     // create default camera (0,0,4) -> (0,0,0), 45°
     float aspect = float(parent->width())/float(parent->height());

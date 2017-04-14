@@ -18,35 +18,41 @@ struct PhongMaterial {
     float shininess;
 };
 
-// point light
+uniform int bands;
+uniform float specularBias;
+
+// point light // ambient light
 struct PointLight {
     vec3 intensity;
     vec4 position_EC;
 };
+uniform vec3 ambientLightIntensity;
+
+
+
+
 
 uniform PhongMaterial material;
 uniform PointLight light;
 
-// ambient light
-uniform vec3 ambientLightIntensity;
 
+//_____________________________
 // matrices provided by the camera
-uniform mat4 modelViewMatrix;
-uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix; // ciModelView
+uniform mat4 projectionMatrix; // ciProjectionMatrix
 
 // vertex position from vertex shader, in eye coordinates
-in vec4 position_EC;
-
+in vec4 position_EC; //vertexposition
 // normal vector from vertex shader, in eye coordinates
-in vec3 normal_EC;
-
+in vec3 normal_EC; // normalDirEC
 // output: color
 out vec4 outColor;
 
 
 // calculate Phong-style local illumination
-vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
+vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
 {
+    bands -= 1;
     // ambient part
     vec3 ambient = material.k_ambient * ambientLightIntensity;
 
@@ -56,25 +62,25 @@ vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
     // visual debugging, you can safely comment this out
     // if(ndotv<0)
     //     return vec3(0,1,0);
-    
+
     // cos of angle between light and surface.
     float ndotl = max(dot(normalDir,-lightDir),0);
-    
+
     // diffuse contribution
     vec3 diffuse = material.k_diffuse * light.intensity * ndotl;
-    
+
     // reflected light direction = perfect reflection direction
     vec3 r = reflect(lightDir,normalDir);
-    
+
     // angle between reflection dir and viewing dir
     float rdotv = max( dot(r,viewDir), 0.0);
-    
+
     // specular contribution
     vec3 specular = material.k_specular * light.intensity *
                     pow(rdotv, material.shininess);
-    
+
     // return sum of all contributions
-    return ambient + diffuse + specular;
+    return ambient + floor(diffuse * bands) / bands + step(specularBias, specular);
 
 }
 
@@ -83,20 +89,20 @@ main(void)
 {
     // normalize normal after projection
     vec3 normal = normalize(normal_EC);
-    
+
     // calculate light direction (for point light)
     vec3 lightDir = normalize(position_EC - light.position_EC).xyz;
-    
+
     // do we use a perspective or an orthogonal projection matrix?
     bool usePerspective = projectionMatrix[2][3] != 0.0;
-    
+
     // for perspective mode, the viewing direction (in eye coords) points
     // from the vertex to the origin (0,0,0) --> use -ecPosition as direction.
     // for orthogonal mode, the viewing direction is simply (0,0,1)
     vec3 viewDir = usePerspective? normalize(-position_EC.xyz) : vec3(0,0,1);
-    
+
     // calculate color using phong illumination
-    vec3 color = phongIllum(normal, viewDir, lightDir);
+    vec3 color = phongIllum(normal, viewDir, lightDir, bands);
 
     // out to frame buffer
     outColor = vec4(color, 1);
