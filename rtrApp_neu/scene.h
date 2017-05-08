@@ -50,6 +50,8 @@ public slots:
     // adjust camera / viewport / ... if drawing surface changes
     void updateViewport(size_t width, size_t height);
 
+    void setNewRandomColor();
+
 protected:
 
     // parent widget
@@ -79,5 +81,7 @@ protected:
 
     // helper for creating a node scaled to size 1
     std::shared_ptr<Node> createNode(std::shared_ptr<Mesh> mesh, bool scale_to_1 = true);
+
+    std::shared_ptr<UniformMaterial> uniformMaterial;
 };
 

@@ -19,6 +19,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 modelViewMatrix;
 uniform mat3 normalMatrix;
 
+
 // in: position and normal vector in model coordinates (_MC)
 in vec3 position_MC;
 in vec3 normal_MC;
@@ -26,6 +27,7 @@ in vec3 normal_MC;
 // position + normal vector in eye coordinates (_EC)
 out vec4 position_EC;
 out vec3 normal_EC;
+
 
 void main(void) {
     

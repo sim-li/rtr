@@ -36,11 +36,7 @@ AppWindow::~AppWindow()
 
 
 
-void AppWindow::on_cb_animation_clicked()
-{
-// animation Code here
 
-}
 
 Scene &AppWindow::scene()
 {
@@ -53,6 +49,14 @@ void AppWindow::showUI()
     // default pixel margins (on Mac)
     ui->appWindowLayout->setContentsMargins(12,12,12,12);
 
+}
+
+
+void AppWindow::on_cb_animation_clicked()
+{
+// animation Code here
+   scene().setNewRandomColor();
+   ui->openGLWidget->update();
 }
 
 void AppWindow::hideUI()

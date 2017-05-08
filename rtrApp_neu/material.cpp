@@ -25,3 +25,10 @@ void ToonMaterial::apply()
     prog_->setUniformValue("bands", bands);
     prog_->setUniformValue("specularBias", specularBias);
 }
+
+void UniformMaterial::apply()
+{
+    prog_->bind();
+    prog_->setUniformValue("myUniformColor", myUniformColor);
+
+}

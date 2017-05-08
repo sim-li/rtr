@@ -101,6 +101,6 @@ main(void)
 
     // out to frame buffer
 
-    outColor = vec4(myUniformColor,1);
+    outColor = vec4(myUniformColor, 1);
 
 }

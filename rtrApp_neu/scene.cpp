@@ -21,11 +21,16 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     // create required materials
     //shared_ptr<Material> red = std::make_shared<PhongMaterial>(phong_prog);
 
-    auto toon_prog = createProgram(":/assets/shaders/toon.vert", ":/assets/shaders/toon.frag");
+    //auto toon_prog = createProgram(":/assets/shaders/toon.vert", ":/assets/shaders/toon.frag");
 
     // create required materials
-    shared_ptr<Material> red = std::make_shared<ToonMaterial>(toon_prog);
+    //shared_ptr<Material> red = std::make_shared<ToonMaterial>(toon_prog);
 
+
+    auto phong_prog = createProgram(":/assets/shaders/myphong.vert", ":/assets/shaders/myphong.frag");
+    shared_ptr<UniformMaterial> red = std::make_shared<UniformMaterial>(phong_prog);
+    //Hack!
+    uniformMaterial = red;
 
     // store materials in map container
     materials_["phong_red"] = red;
@@ -99,11 +104,15 @@ void Scene::changeModel(const QString &txt)
 
 }
 
-/*void Scene::setNewRandomColor()
+void Scene::setNewRandomColor()
 {
-    QVector3D color(random(mt), random(mt), random(mt));
-    materials_->myUniformColor = color;
-}*/
+    QVector3D color(random(), random(), random());
+    qDebug() << "color : " << color;
+    //shared_ptr<UniformMaterial> myMat = materials_["phong_red"];
+
+    uniformMaterial->myUniformColor = color;
+    update();
+}
 
 
 void Scene::draw()
