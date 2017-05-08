@@ -40,6 +40,7 @@ public slots:
 
     // change model according to combo box in UI
     void changeModel(const QString& txt);
+    void changeMaterial(const QString& txt);
 
     // perform OpenGL rendering of the entire scene. Don't call this yourself.
     void draw();

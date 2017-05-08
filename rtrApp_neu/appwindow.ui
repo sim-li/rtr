@@ -56,6 +56,20 @@
        </widget>
       </item>
       <item>
+       <widget class="QComboBox" name="materialComboBox">
+        <item>
+         <property name="text">
+          <string>Toon</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Phong</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="quitButton">
         <property name="text">
          <string>Quit</string>

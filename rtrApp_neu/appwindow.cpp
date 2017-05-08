@@ -27,6 +27,8 @@ AppWindow::AppWindow(QWidget *parent) :
     // combo box to change the model
     connect(ui->modelComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeModel(txt); } );
+    connect(ui->materialComboBox, &QComboBox::currentTextChanged,
+            [this](const QString& txt) { scene().changeMaterial(txt);} );
 }
 
 AppWindow::~AppWindow()
@@ -65,6 +67,7 @@ void AppWindow::hideUI()
     // zero pixel margins, for borderless OpenGL window
     ui->appWindowLayout->setContentsMargins(0,0,0,0);
 }
+
 
 void AppWindow::keyPressEvent(QKeyEvent *event)
 {
@@ -113,4 +116,5 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
 
     } // switch
 }
+
 

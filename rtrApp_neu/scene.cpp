@@ -28,25 +28,36 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
 
     auto phong_prog = createProgram(":/assets/shaders/myphong.vert", ":/assets/shaders/myphong.frag");
-    shared_ptr<UniformMaterial> red = std::make_shared<UniformMaterial>(phong_prog);
+    shared_ptr<UniformMaterial> currentMaterial = std::make_shared<UniformMaterial>(phong_prog);
     //Hack!
-    uniformMaterial = red;
-
+    uniformMaterial = currentMaterial;
     // store materials in map container
-    materials_["phong_red"] = red;
+    materials_["Phong"] = currentMaterial;
+
+
+
+
+
+    //materials_["Phong"] = std::make_shared<Material>(":/assets/shaders/myphong.vert", ":/assets/shaders/myphong.frag");
+
+
+
+
+
 
     // load meshes from .obj files and assign shader programs to them
-    meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", red);
-    meshes_["Trefoil"] = std::make_shared<Mesh>(":/assets/models/trefoil.obj", red);
+    meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", currentMaterial);
+    meshes_["Trefoil"] = std::make_shared<Mesh>(":/assets/models/trefoil.obj", currentMaterial);
 
     // add meshes of some procedural geometry objects (not loaded from OBJ files)
-    meshes_["Cube"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), red);
+    meshes_["Cube"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), currentMaterial);
 
     // pack each mesh into a scene node, along with a transform that scales
     // it to standard size [1,1,1]
     nodes_["Duck"]    = createNode(meshes_["Duck"], true);
     nodes_["Trefoil"] = createNode(meshes_["Trefoil"], true);
     nodes_["Cube"]    = createNode(meshes_["Cube"], true);
+
 
     // make the duck the current model
     changeModel("Duck");
@@ -94,6 +105,7 @@ Scene::createNode(shared_ptr<Mesh> mesh,
     return make_shared<Node>(mesh,transform);
 }
 
+
 void Scene::changeModel(const QString &txt)
 {
     currentNode_ = nodes_[txt];
@@ -103,6 +115,19 @@ void Scene::changeModel(const QString &txt)
     update();
 
 }
+
+
+void Scene::changeMaterial(const QString &txt)
+{
+    //currentNode_ = nodes_[txt];
+    //  if(!currentNode_)
+    //   qFatal("scene: desired Material/node not found");
+
+    qDebug() << "Change material function called." << txt;
+    update();
+
+}
+
 
 void Scene::setNewRandomColor()
 {
