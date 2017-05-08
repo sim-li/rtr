@@ -1,3 +1,6 @@
+build-rtr*
+*.pro.user
+
 rtrApp.pro*
 rtrApp.pro.user*
 

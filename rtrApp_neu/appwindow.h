@@ -45,6 +45,8 @@ public slots:
 
 private slots:
 
+    void on_cb_animation_clicked();
+
 private:
     // this is the connection to the class that will come out of the UI designer
     Ui::AppWindow *ui;

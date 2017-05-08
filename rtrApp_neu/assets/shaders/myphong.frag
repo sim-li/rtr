@@ -27,6 +27,7 @@ struct PointLight {
 uniform PhongMaterial material;
 uniform PointLight light;
 
+
 // ambient light
 uniform vec3 ambientLightIntensity;
 
@@ -42,7 +43,7 @@ in vec3 normal_EC;
 
 // output: color
 out vec4 outColor;
-
+uniform vec3 myUniformColor;
 
 // calculate Phong-style local illumination
 vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
@@ -99,6 +100,7 @@ main(void)
     vec3 color = phongIllum(normal, viewDir, lightDir);
 
     // out to frame buffer
-    outColor = vec4(color, 1);
+
+    outColor = vec4(myUniformColor,1);
 
 }

@@ -91,6 +91,13 @@ void Scene::changeModel(const QString &txt)
 
 }
 
+void Scene::setNewRandomColor()
+{
+    QVector3D color(random(mt), random(mt), random(mt));
+    materials_->myUniformColor = color;
+}
+
+
 void Scene::draw()
 {
     assert(currentNode_);
