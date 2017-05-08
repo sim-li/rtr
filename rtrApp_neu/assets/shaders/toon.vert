@@ -11,12 +11,9 @@ uniform mat3 normalMatrix;
 in vec3 position_MC;
 in vec3 normal_MC;
 
-in vec2 texcoord;
-
 // position + normal vector in eye coordinates (_EC)
 out vec4 position_EC;
 out vec3 normal_EC;
-out vec2 texCoord_FRA;
 
 void main(void) {
     // position to eye coordinates
@@ -27,6 +24,4 @@ void main(void) {
 
     // position to clip coordinates
     gl_Position = projectionMatrix * position_EC;
-
-    texCoord_FRA = texcoord;
 }

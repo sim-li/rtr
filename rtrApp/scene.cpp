@@ -2,6 +2,8 @@
 
 #include <iostream> // std::cout etc.
 #include <QDebug>
+#define PROGRAM_TEXCOORD_ATTRIBUTE 1
+
 using namespace std;
 
 Scene::Scene(QWidget* parent, QOpenGLContext *context) :
@@ -15,6 +17,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // create shader program to be used for rendering
     program_ = new QOpenGLShaderProgram();
+
 //    if(!program_->addShaderFromSourceFile(QOpenGLShader::Vertex,
 //                                    ":/assets/shaders/myphong.vert"))
 //        qFatal("could not add vertex shader");
@@ -31,7 +34,9 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
             qFatal("could not add vertex shader");
         if(!program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
                                         ":/assets/shaders/dots.frag"))
-        qFatal("coudl not add fragment shader");
+            qFatal("coudl not add fragment shader");
+        //program_->bindAttributeLocation("texcoord", 1);
+
 
     if(!program_->link())
         qFatal("could not link shader program");

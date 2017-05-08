@@ -1,8 +1,9 @@
+<<<<<<< HEAD
 build-rtr*
 *.pro.user
 
+build-rtr*
 rtrApp.pro*
-rtrApp.pro.user*
 
 rtrApp/rtrApp.pro.user
 rtrApp.pro.user*

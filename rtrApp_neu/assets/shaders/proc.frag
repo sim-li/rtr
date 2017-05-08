@@ -46,17 +46,21 @@ in vec4 position_EC; //vertexposition
 // normal vector from vertex shader, in eye coordinates
 in vec3 normal_EC; // normalDirEC
 // output: color
-
-
-in vec2 texCoord_FRA;
-
+in vec2 texcoord_out;
 out vec4 outColor;
+
+in fragNormal;
+
+out oColor;
 
 
 
 
 // calculate Phong-style local illumination
-vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands) {
+vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
+{
+    oColor.rgb = (( normalize(fragNormal) + vec3(1))/2);
+    oColor.a = 1.0;
     bands -= 1;
     // ambient part
     vec3 ambient = material.k_ambient * ambientLightIntensity;
@@ -84,15 +88,18 @@ vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands) {
     vec3 specular = material.k_specular * light.intensity *
                     pow(rdotv, material.shininess);
 
-    return vec3(texCoord_FRA.x, texCoord_FRA.y, 0.0);
-
-
+    // return sum of all contributions
+    //if (texcoord_out.x < 0.5F) {
+      //  return vec3(0,1,0);
+   // }
 
     return ambient + floor(diffuse * bands) / bands + step(specularBias, specular);
 
 }
 
-void main(void) {
+void
+main(void)
+{
     // normalize normal after projection
     vec3 normal = normalize(normal_EC);
 
@@ -111,6 +118,6 @@ void main(void) {
     vec3 color = phongIllum(normal, viewDir, lightDir, bands);
 
     // out to frame buffer
-    outColor = vec4(color, 1.0);
+    outColor = vec4(color, 1);
 
 }
