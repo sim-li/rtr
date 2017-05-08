@@ -3,7 +3,6 @@
 
 #include <QApplication>
 #include <QSurfaceFormat>
-
 #include "appwindow.h"
 
 int main(int argc, char *argv[])

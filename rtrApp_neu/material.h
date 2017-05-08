@@ -59,6 +59,30 @@ public:
 };
 
 
+class ToonMaterial : public Material {
+public:
 
+   ToonMaterial(std::shared_ptr<QOpenGLShaderProgram> prog) : Material(prog) {}
+
+   // actual properties of the object's materia
+   QVector3D k_ambient  = QVector3D(0.30, 0.30, 0.01); // red-ish
+   QVector3D k_diffuse  = QVector3D(0.30, 0.30, 0.01); // red-ish
+   QVector3D k_specular = QVector3D(1.0, 1.0, 1.0); // white-ish
+   float     shininess  = 100; // middle-ish
+
+
+   // light position: up right from the camera, in eye coordinates
+   QVector4D lightPos_EC    = QVector4D(0,100,100,0);
+   QVector3D lightIntensity = QVector3D(4,4,4);
+
+   // ambient light
+   QVector3D ambientLightIntensity = QVector3D(0.5/3, 0.8/3, 1.0/3);
+
+   int bands = 3;
+   float specularBias = 9.0f;
+
+   // bind underlying shader program and set required uniforms
+   void apply() override;
+};
 
 #endif // MATERIAL_H

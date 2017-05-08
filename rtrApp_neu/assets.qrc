@@ -9,5 +9,11 @@
         <file>assets/models/trefoil.obj</file>
         <file>assets/shaders/minimal.frag</file>
         <file>assets/shaders/minimal.vert</file>
+        <file>assets/shaders/dots.frag</file>
+        <file>assets/shaders/dots.vert</file>
+        <file>assets/shaders/proc.frag</file>
+        <file>assets/shaders/proc.vert</file>
+        <file>assets/shaders/toon.frag</file>
+        <file>assets/shaders/toon.vert</file>
     </qresource>
 </RCC>

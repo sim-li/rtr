@@ -13,11 +13,19 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     currentNode_(nullptr)
 {
 
+    // @TODO: Still has to be selected manually, need dropdown menu.
+
     // load shader source files and compile them into OpenGL program objects
-    auto phong_prog = createProgram(":/assets/shaders/myphong.vert", ":/assets/shaders/myphong.frag");
+    //auto phong_prog = createProgram(":/assets/shaders/myphong.vert", ":/assets/shaders/myphong.frag");
 
     // create required materials
-    shared_ptr<PhongMaterial> red = std::make_shared<PhongMaterial>(phong_prog);
+    //shared_ptr<Material> red = std::make_shared<PhongMaterial>(phong_prog);
+
+    auto toon_prog = createProgram(":/assets/shaders/toon.vert", ":/assets/shaders/toon.frag");
+
+    // create required materials
+    shared_ptr<Material> red = std::make_shared<ToonMaterial>(toon_prog);
+
 
     // store materials in map container
     materials_["phong_red"] = red;

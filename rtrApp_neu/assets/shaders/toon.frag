@@ -1,17 +1,7 @@
 #version 150
 
-/*
- * Simple Phong Shader
- * (C)opyright Hartmut Schirmacher, http://schirmacher.beuth-hochschule.de
- *
- * This fragment shader calculates some direction vectors in eye space
- * and then uses a Phong illum model to calculate output color.
- *
- */
-
-
 // Phong coefficients and exponent
-struct PhongMaterial {
+struct ToonMaterial {
     vec3 k_ambient;
     vec3 k_diffuse;
     vec3 k_specular;
@@ -29,10 +19,7 @@ struct PointLight {
 uniform vec3 ambientLightIntensity;
 
 
-
-
-
-uniform PhongMaterial material;
+uniform ToonMaterial material;
 uniform PointLight light;
 
 
@@ -46,17 +33,12 @@ in vec4 position_EC; //vertexposition
 // normal vector from vertex shader, in eye coordinates
 in vec3 normal_EC; // normalDirEC
 // output: color
-
-
-in vec2 texCoord_FRA;
-
 out vec4 outColor;
 
 
-
-
 // calculate Phong-style local illumination
-vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands) {
+vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
+{
     bands -= 1;
     // ambient part
     vec3 ambient = material.k_ambient * ambientLightIntensity;
@@ -84,15 +66,14 @@ vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands) {
     vec3 specular = material.k_specular * light.intensity *
                     pow(rdotv, material.shininess);
 
-    return vec3(texCoord_FRA.x, texCoord_FRA.y, 0.0);
-
-
-
+    // return sum of all contributions
     return ambient + floor(diffuse * bands) / bands + step(specularBias, specular);
 
 }
 
-void main(void) {
+void
+main(void)
+{
     // normalize normal after projection
     vec3 normal = normalize(normal_EC);
 
@@ -108,9 +89,9 @@ void main(void) {
     vec3 viewDir = usePerspective? normalize(-position_EC.xyz) : vec3(0,0,1);
 
     // calculate color using phong illumination
-    vec3 color = phongIllum(normal, viewDir, lightDir, bands);
+    vec3 color = toonIllum(normal, viewDir, lightDir, bands);
 
     // out to frame buffer
-    outColor = vec4(color, 1.0);
+    outColor = vec4(color, 1);
 
 }
