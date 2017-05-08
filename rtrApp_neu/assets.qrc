@@ -15,5 +15,7 @@
         <file>assets/shaders/proc.vert</file>
         <file>assets/shaders/toon.frag</file>
         <file>assets/shaders/toon.vert</file>
+        <file>assets/shaders/uniform.frag</file>
+        <file>assets/shaders/uniform.vert</file>
     </qresource>
 </RCC>

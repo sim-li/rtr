@@ -12,45 +12,30 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     parent_(parent),
     currentNode_(nullptr)
 {
-
-    // @TODO: Still has to be selected manually, need dropdown menu.
-
-    // load shader source files and compile them into OpenGL program objects
-    //auto phong_prog = createProgram(":/assets/shaders/myphong.vert", ":/assets/shaders/myphong.frag");
-
-    // create required materials
-    //shared_ptr<Material> red = std::make_shared<PhongMaterial>(phong_prog);
-
-    //auto toon_prog = createProgram(":/assets/shaders/toon.vert", ":/assets/shaders/toon.frag");
-
-    // create required materials
-    //shared_ptr<Material> red = std::make_shared<ToonMaterial>(toon_prog);
-
-
     auto phong_prog = createProgram(":/assets/shaders/myphong.vert", ":/assets/shaders/myphong.frag");
-    shared_ptr<UniformMaterial> currentMaterial = std::make_shared<UniformMaterial>(phong_prog);
+    shared_ptr<UniformMaterial> phongMaterial = std::make_shared<UniformMaterial>(phong_prog);
+
+    auto toon_prog = createProgram(":/assets/shaders/toon.vert", ":/assets/shaders/toon.frag");
+    shared_ptr<UniformMaterial> toonMaterial = std::make_shared<UniformMaterial>(toon_prog);
+
+    auto uniform_prog = createProgram(":/assets/shaders/uniform.vert", ":/assets/shaders/uniform.frag");
+    shared_ptr<UniformMaterial> uniformMaterial = std::make_shared<UniformMaterial>(uniform_prog);
+
     //Hack!
-    uniformMaterial = currentMaterial;
+    uniformMaterialL = uniformMaterial;
+
     // store materials in map container
-    materials_["Phong"] = currentMaterial;
-
-
-
-
-
-    //materials_["Phong"] = std::make_shared<Material>(":/assets/shaders/myphong.vert", ":/assets/shaders/myphong.frag");
-
-
-
-
+    materials_["Phong"] = phongMaterial;
+    materials_["Toon"] = toonMaterial;
+    materials_["Uniform"] = uniformMaterial;
 
 
     // load meshes from .obj files and assign shader programs to them
-    meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", currentMaterial);
-    meshes_["Trefoil"] = std::make_shared<Mesh>(":/assets/models/trefoil.obj", currentMaterial);
+    meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", uniformMaterialL);
+    meshes_["Trefoil"] = std::make_shared<Mesh>(":/assets/models/trefoil.obj", uniformMaterialL);
 
     // add meshes of some procedural geometry objects (not loaded from OBJ files)
-    meshes_["Cube"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), currentMaterial);
+    meshes_["Cube"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), uniformMaterialL);
 
     // pack each mesh into a scene node, along with a transform that scales
     // it to standard size [1,1,1]
@@ -119,9 +104,7 @@ void Scene::changeModel(const QString &txt)
 
 void Scene::changeMaterial(const QString &txt)
 {
-    //currentNode_ = nodes_[txt];
-    //  if(!currentNode_)
-    //   qFatal("scene: desired Material/node not found");
+
 
     qDebug() << "Change material function called." << txt;
     update();
@@ -135,7 +118,7 @@ void Scene::setNewRandomColor()
     qDebug() << "color : " << color;
     //shared_ptr<UniformMaterial> myMat = materials_["phong_red"];
 
-    uniformMaterial->myUniformColor = color;
+    uniformMaterialL->myUniformColor = color;
     update();
 }
 
