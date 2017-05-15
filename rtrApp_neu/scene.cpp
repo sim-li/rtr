@@ -31,13 +31,12 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     uniformMaterialL = uniformMaterial;
 
     // Workaround while ComboBox not implemented: --> Change Material here.
-    shared_ptr<Material> currentMaterial = toonMaterial;
+    shared_ptr<Material> currentMaterial = dotsMaterial;
 
     // store materials in map container
     materials_["Phong"] = phongMaterial;
     materials_["Toon"] = toonMaterial;
     materials_["Uniform"] = uniformMaterial;
-
 
     // load meshes from .obj files and assign shader programs to them
     meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", currentMaterial);
