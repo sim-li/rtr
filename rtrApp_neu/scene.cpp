@@ -114,7 +114,13 @@ void Scene::changeMaterial(const QString &txt)
 
 void Scene::setNewRandomColor()
 {
-    QVector3D color(random(), random(), random());
+    double r = ((double) rand() / (RAND_MAX));
+    double g = ((double) rand() / (RAND_MAX));
+    double b = ((double) rand() / (RAND_MAX));
+
+    QVector3D color(r, g, b);
+    //QVector3D color(random(), random(), random());
+
     qDebug() << "color : " << color;
     //shared_ptr<UniformMaterial> myMat = materials_["phong_red"];
 

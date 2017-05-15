@@ -57,6 +57,7 @@ void AppWindow::showUI()
 void AppWindow::on_cb_animation_clicked()
 {
 // animation Code here
+
    scene().setNewRandomColor();
    ui->openGLWidget->update();
 }
