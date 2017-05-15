@@ -28,33 +28,9 @@ in vec3 normal_MC;
 out vec4 position_EC;
 out vec3 normal_EC;
 
-//out vec3 fragNormal;
-//out vec3 projected;
-//out vec3 disp;
-
-//ins?
-//float time = 12;
-//float disp = 12;
-
-
-const float pi2 = asin(1.0);
-float wave(float x, float t, float A, float f, float c, float p0)
-{
-    return A * sin ( pi2 * f * (t-x/c) + p0);
-}
 
 void main(void) {
     
-/*
-    vec3 direction = vec3(0, 1.0, 0.0);
-    float projected = dot(direction, position_MC);
-    vec3 dispdir = position_MC - direction * projected;
-    float disp = wave(projected, time, 0.2, 4.0, 0.05, 0.0);
-    vec3 rippled = position_MC + dispdir * disp;
-
-     gl_Position = modelViewMatrix * vec4(rippled, 1.0);
-     fragNormal = normal_MC;
-*/
     // position to eye coordinates
     position_EC = modelViewMatrix * vec4(position_MC,1);
 
