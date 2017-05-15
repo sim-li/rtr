@@ -1,16 +1,12 @@
 #pragma once
 
 #include <QWidget>
-
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions>
 #include <QOpenGLVertexArrayObject>
-
 #include "mesh/mesh.h"
 #include "camera.h"
 #include "node.h"
-
-
 #include <memory> // std::unique_ptr
 #include <map>    // std::map
 

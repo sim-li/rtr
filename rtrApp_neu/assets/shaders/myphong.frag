@@ -55,8 +55,8 @@ vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
     float ndotv = dot(normalDir,viewDir);
 
     // visual debugging, you can safely comment this out
-     if(ndotv<0)
-         return vec3(0,1,0);
+    //if(ndotv<0)
+         //return vec3(0,1,0);
     
     // cos of angle between light and surface.
     float ndotl = max(dot(normalDir,-lightDir),0);
@@ -101,6 +101,6 @@ main(void)
 
     // out to frame buffer
 
-    outColor = vec4(myUniformColor, 1);
+    outColor = vec4(color, 1);
 
 }

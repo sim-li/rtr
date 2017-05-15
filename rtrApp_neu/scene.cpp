@@ -21,9 +21,17 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     auto uniform_prog = createProgram(":/assets/shaders/uniform.vert", ":/assets/shaders/uniform.frag");
     shared_ptr<UniformMaterial> uniformMaterial = std::make_shared<UniformMaterial>(uniform_prog);
 
-    //Hack!
+    auto dots_prog = createProgram(":/assets/shaders/dots.vert", ":/assets/shaders/dots.frag");
+    shared_ptr<DotsMaterial> dotsMaterial = std::make_shared<DotsMaterial>(dots_prog);
 
-    uniformMaterialL= uniformMaterial;
+    auto proc_prog = createProgram(":/assets/shaders/proc.vert", ":/assets/shaders/proc.frag");
+    shared_ptr<ProcMaterial> procMaterial = std::make_shared<ProcMaterial>(proc_prog);
+
+    //Store uniform material to enable modification through setNewRandomColor
+    uniformMaterialL = uniformMaterial;
+
+    // Workaround while ComboBox not implemented: --> Change Material here.
+    shared_ptr<Material> currentMaterial = toonMaterial;
 
     // store materials in map container
     materials_["Phong"] = phongMaterial;
@@ -32,11 +40,11 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
 
     // load meshes from .obj files and assign shader programs to them
-    meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", phongMaterial);
-    meshes_["Trefoil"] = std::make_shared<Mesh>(":/assets/models/trefoil.obj", uniformMaterialL);
+    meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", currentMaterial);
+    meshes_["Trefoil"] = std::make_shared<Mesh>(":/assets/models/trefoil.obj", currentMaterial);
 
     // add meshes of some procedural geometry objects (not loaded from OBJ files)
-    meshes_["Cube"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), uniformMaterialL);
+    meshes_["Cube"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), currentMaterial);
 
     // pack each mesh into a scene node, along with a transform that scales
     // it to standard size [1,1,1]

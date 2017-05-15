@@ -18,50 +18,36 @@ struct PhongMaterial {
     float shininess;
 };
 
-uniform int bands;
-uniform float specularBias;
-
-// point light // ambient light
+// point light
 struct PointLight {
     vec3 intensity;
     vec4 position_EC;
 };
-uniform vec3 ambientLightIntensity;
-
-
-
-
 
 uniform PhongMaterial material;
 uniform PointLight light;
 
 
-//_____________________________
+// ambient light
+uniform vec3 ambientLightIntensity;
+
 // matrices provided by the camera
-uniform mat4 modelViewMatrix; // ciModelView
-uniform mat4 projectionMatrix; // ciProjectionMatrix
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
 
 // vertex position from vertex shader, in eye coordinates
-in vec4 position_EC; //vertexposition
+in vec4 position_EC;
+
 // normal vector from vertex shader, in eye coordinates
-in vec3 normal_EC; // normalDirEC
+in vec3 normal_EC;
+
 // output: color
-in vec2 texcoord_out;
 out vec4 outColor;
-
-in fragNormal;
-
-out oColor;
-
-
-
+uniform vec3 myUniformColor;
 
 // calculate Phong-style local illumination
-vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
+vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
 {
-    oColor.rgb = (( normalize(fragNormal) + vec3(1))/2);
-    oColor.a = 1.0;
-    bands -= 1;
     // ambient part
     vec3 ambient = material.k_ambient * ambientLightIntensity;
 
@@ -69,8 +55,8 @@ vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
     float ndotv = dot(normalDir,viewDir);
 
     // visual debugging, you can safely comment this out
-    // if(ndotv<0)
-    //     return vec3(0,1,0);
+    //if(ndotv<0)
+         //return vec3(0,1,0);
 
     // cos of angle between light and surface.
     float ndotl = max(dot(normalDir,-lightDir),0);
@@ -89,11 +75,7 @@ vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
                     pow(rdotv, material.shininess);
 
     // return sum of all contributions
-    //if (texcoord_out.x < 0.5F) {
-      //  return vec3(0,1,0);
-   // }
-
-    return ambient + floor(diffuse * bands) / bands + step(specularBias, specular);
+    return ambient + diffuse + specular;
 
 }
 
@@ -115,9 +97,10 @@ main(void)
     vec3 viewDir = usePerspective? normalize(-position_EC.xyz) : vec3(0,0,1);
 
     // calculate color using phong illumination
-    vec3 color = phongIllum(normal, viewDir, lightDir, bands);
+    vec3 color = phongIllum(normal, viewDir, lightDir);
 
     // out to frame buffer
+
     outColor = vec4(color, 1);
 
 }
