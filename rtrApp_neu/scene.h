@@ -46,7 +46,11 @@ public slots:
     void draw();
 
     // trigger a redraw of the widget through this method
-    void update() { parent_->update(); }
+    void update() {
+
+        parent_->update();
+
+    }
 
     // adjust camera / viewport / ... if drawing surface changes
     void updateViewport(size_t width, size_t height);

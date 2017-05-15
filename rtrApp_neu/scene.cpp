@@ -1,5 +1,6 @@
 #include "scene.h"
-
+#include <QTime>
+#include <QDateTime>
 #include <iostream> // std::cout etc.
 #include <assert.h> // assert()
 
@@ -22,6 +23,8 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     shared_ptr<UniformMaterial> uniformMaterial = std::make_shared<UniformMaterial>(uniform_prog);
 
     //Hack!
+
+
     uniformMaterialL = uniformMaterial;
 
     // store materials in map container
@@ -114,17 +117,19 @@ void Scene::changeMaterial(const QString &txt)
 
 void Scene::setNewRandomColor()
 {
+    QTime time;
+    time = time.currentTime();
+    float seconds = QTime(0, 0, 0).msecsTo(time);
+    qDebug() << "time = " << seconds;
+
+
     double r = ((double) rand() / (RAND_MAX));
     double g = ((double) rand() / (RAND_MAX));
     double b = ((double) rand() / (RAND_MAX));
 
     QVector3D color(r, g, b);
-    //QVector3D color(random(), random(), random());
-
-    qDebug() << "color : " << color;
-    //shared_ptr<UniformMaterial> myMat = materials_["phong_red"];
-
     uniformMaterialL->myUniformColor = color;
+
     update();
 }
 
@@ -148,7 +153,12 @@ void Scene::draw()
 
 void Scene::updateViewport(size_t width, size_t height)
 {
+
+    //angle += (M_PI / 10) * elapsed;
+
+
     camera_->setAspectRatio(float(width)/float(height));
+    //camera_->setAspectRatio(());
     glViewport(0,0,GLint(width),GLint(height));
 }
 
