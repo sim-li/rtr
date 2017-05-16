@@ -19,6 +19,8 @@ rtrGLWidget::~rtrGLWidget()
 {
 }
 
+
+
 QSize rtrGLWidget::minimumSizeHint() const
 {
     return QSize(50, 50);

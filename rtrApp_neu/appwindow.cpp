@@ -5,10 +5,10 @@
  */
 
 #include <assert.h>
-
+#include <QThread>
 #include <QApplication>
 #include <QKeyEvent>
-
+#include <QTime>
 #include "appwindow.h"
 #include "ui_appwindow.h"
 #include "scene.h"
@@ -57,8 +57,13 @@ void AppWindow::showUI()
 void AppWindow::on_cb_animation_clicked()
 {
 // animation Code here
-
-   scene().setNewRandomColor();
+   if(ui->cb_animation->isChecked() == true )
+   {
+           update();
+           //QThread will be needed.... otherwise the window will freeze.
+           scene().setNewRandomColor();
+           ui->openGLWidget->update();
+   }
    ui->openGLWidget->update();
 }
 

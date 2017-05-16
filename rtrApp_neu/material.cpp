@@ -24,6 +24,10 @@ void ToonMaterial::apply()
     prog_->setUniformValue("light.intensity", lightIntensity);
     prog_->setUniformValue("bands", bands);
     prog_->setUniformValue("specularBias", specularBias);
+
+
+
+
 }
 
 

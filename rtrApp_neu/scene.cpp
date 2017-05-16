@@ -31,7 +31,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     uniformMaterialL = uniformMaterial;
 
     // Workaround while ComboBox not implemented: --> Change Material here.
-    shared_ptr<Material> currentMaterial = dotsMaterial;
+    shared_ptr<Material> currentMaterial = uniformMaterial;
 
     // store materials in map container
     materials_["Phong"] = phongMaterial;
@@ -127,6 +127,7 @@ void Scene::setNewRandomColor()
 
     QVector3D color(r, g, b);
     uniformMaterialL->myUniformColor = color;
+
 
     update();
 }
