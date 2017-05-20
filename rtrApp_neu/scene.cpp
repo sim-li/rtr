@@ -28,6 +28,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     shared_ptr<ProcMaterial> procMaterial = std::make_shared<ProcMaterial>(proc_prog);
 
     //Store uniform material to enable modification through setNewRandomColor
+
     uniformMaterialL = uniformMaterial;
 
     // Workaround while ComboBox not implemented: --> Change Material here.
@@ -115,10 +116,6 @@ void Scene::changeMaterial(const QString &txt)
 
 void Scene::setNewRandomColor()
 {
-    QTime time;
-    time = time.currentTime();
-    float seconds = QTime(0, 0, 0).msecsTo(time);
-    qDebug() << "time = " << seconds;
 
 
     double r = ((double) rand() / (RAND_MAX));

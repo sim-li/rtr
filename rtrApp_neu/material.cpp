@@ -42,6 +42,7 @@ void UniformMaterial::apply()
     prog_->setUniformValue("light.position_EC", lightPos_EC);
     prog_->setUniformValue("light.intensity", lightIntensity);
     prog_->setUniformValue("myUniformColor", myUniformColor);
+    prog_->setUniformValue("time", time);
 }
 
 void DotsMaterial::apply()

@@ -4,7 +4,9 @@
 #include <memory> // std::shared_ptr
 
 #include <QOpenGLShaderProgram>
-
+#include <QTime>
+#include <QDateTime>
+#include <QDebug>
 /*
  *   Interface for surface materials.
  *
@@ -105,7 +107,10 @@ public:
     QVector3D ambientLightIntensity = QVector3D(0.3f,0.3f,0.3f);
 
     QVector3D myUniformColor = QVector3D(0.0f, 0.0f, 0.0f);
-    // bind underlying shader program and set required uniforms
+
+    QTime now;
+    float time = QTime(0, 0, 0).msecsTo(now);
+
     void apply() override;
 };
 
