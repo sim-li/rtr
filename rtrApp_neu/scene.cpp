@@ -116,6 +116,12 @@ void Scene::changeMaterial(const QString &txt)
 
 void Scene::setNewRandomColor()
 {
+    update();
+    QTime now;
+    //float wtime = QTime(0, 0, 0).msecsTo(now);
+    float wtime = ((float) rand() / (RAND_MAX));
+    qDebug() << "wtime :____", wtime;
+    uniformMaterialL->time = wtime;
 
 
     double r = ((double) rand() / (RAND_MAX));
@@ -125,8 +131,8 @@ void Scene::setNewRandomColor()
     QVector3D color(r, g, b);
     uniformMaterialL->myUniformColor = color;
 
-
     update();
+
 }
 
 

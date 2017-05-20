@@ -108,9 +108,7 @@ public:
 
     QVector3D myUniformColor = QVector3D(0.0f, 0.0f, 0.0f);
 
-    QTime now;
-    float time = QTime(0, 0, 0).msecsTo(now);
-
+   float time = 1;
     void apply() override;
 };
 

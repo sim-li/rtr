@@ -57,15 +57,18 @@ void AppWindow::showUI()
 void AppWindow::on_cb_animation_clicked()
 {
 // animation Code here
-   if(ui->cb_animation->isChecked() == true )
-   {
-           update();
-           //QThread will be needed.... otherwise the window will freeze.
-           scene().setNewRandomColor();
-           ui->openGLWidget->update();
-   }
-   ui->openGLWidget->update();
-}
+    qDebug() << "clicked. im inside of function";
+
+       qDebug() << "clicked. im inside of if";
+
+
+       qDebug() << "clicked. im inside of the loop";
+       scene().worldTransform().rotate(-5, QVector3D(0,1,0));
+       scene().setNewRandomColor();
+       ui->openGLWidget->update();
+       update();
+
+ }
 
 void AppWindow::hideUI()
 {
