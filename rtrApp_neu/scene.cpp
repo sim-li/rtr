@@ -4,6 +4,9 @@
 #include <iostream> // std::cout etc.
 #include <assert.h> // assert()
 #include "geometries/cube.h" // geom::Cube
+#include "appwindow.h"
+#include "ui_appwindow.h"
+#include "scene.h"
 
 using namespace std;
 
@@ -116,9 +119,8 @@ void Scene::changeMaterial(const QString &txt)
 
 void Scene::setNewRandomColor()
 {
-    update();
+
     QTime now;
-    //float wtime = QTime(0, 0, 0).msecsTo(now);
     float wtime = ((float) rand() / (RAND_MAX));
     qDebug() << "wtime :____", wtime;
     uniformMaterialL->time = wtime;
@@ -130,7 +132,6 @@ void Scene::setNewRandomColor()
 
     QVector3D color(r, g, b);
     uniformMaterialL->myUniformColor = color;
-
     update();
 
 }
@@ -156,7 +157,6 @@ void Scene::draw()
 void Scene::updateViewport(size_t width, size_t height)
 {
 
-    //angle += (M_PI / 10) * elapsed;
 
 
     camera_->setAspectRatio(float(width)/float(height));

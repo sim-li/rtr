@@ -29,6 +29,8 @@ AppWindow::AppWindow(QWidget *parent) :
             [this](const QString& txt) { scene().changeModel(txt); } );
     connect(ui->materialComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeMaterial(txt);} );
+
+
 }
 
 AppWindow::~AppWindow()
@@ -53,22 +55,16 @@ void AppWindow::showUI()
 
 }
 
-
-void AppWindow::on_cb_animation_clicked()
+void AppWindow::on_cb_animation_stateChanged(int arg1)
 {
-// animation Code here
-    qDebug() << "clicked. im inside of function";
+    // if checked arg1 is 2 else it is 0
+    scene().worldTransform().rotate(-5, QVector3D(0,1,0));
+    scene().setNewRandomColor();
+    ui->openGLWidget->update();
+    update();
 
-       qDebug() << "clicked. im inside of if";
+}
 
-
-       qDebug() << "clicked. im inside of the loop";
-       scene().worldTransform().rotate(-5, QVector3D(0,1,0));
-       scene().setNewRandomColor();
-       ui->openGLWidget->update();
-       update();
-
- }
 
 void AppWindow::hideUI()
 {
@@ -99,6 +95,7 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Left:
         scene().worldTransform().rotate(-5, QVector3D(0,1,0));
         ui->openGLWidget->update();
+
         break;
     case Qt::Key_Right:
         scene().worldTransform().rotate(5, QVector3D(0,1,0));
@@ -121,9 +118,14 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_O:
         scene().camera().translateViewPoint(QVector3D(0,0,+0.1f));
         ui->openGLWidget->update();
+
+       // int k  = ui->cb_animation->stateChanged(k);
+
+        //qDebug() << "Checkbox Status is" << k ;
         break;
 
     } // switch
 }
+
 
 
