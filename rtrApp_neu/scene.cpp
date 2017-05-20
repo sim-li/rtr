@@ -120,10 +120,12 @@ void Scene::changeMaterial(const QString &txt)
 void Scene::setNewRandomColor()
 {
 
+
     QTime now;
     float wtime = ((float) rand() / (RAND_MAX));
     qDebug() << "wtime :____", wtime;
     uniformMaterialL->time = wtime;
+    update();
 
 
     double r = ((double) rand() / (RAND_MAX));
