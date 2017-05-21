@@ -9,6 +9,7 @@
 #include "node.h"
 #include <memory> // std::unique_ptr
 #include <map>    // std::map
+#include <QTimer>
 
 /*
  * OpenGL-based scene. Required objects are created in the constructor,
@@ -85,7 +86,8 @@ protected:
 
     std::shared_ptr<UniformMaterial> uniformMaterialL;
 
-    QTimer *timer;
+
+    QTimer *timer = new QTimer(this);
 
 };
 
