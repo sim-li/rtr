@@ -129,11 +129,7 @@ void Scene::setNewRandomColor()
 {
 
 
-    QTime now;
-    float wtime = ((float) rand() / (RAND_MAX));
-    qDebug() << "wtime :____", wtime;
-    uniformMaterialL->time = wtime;
-    update();
+
 
 
     double r = ((double) rand() / (RAND_MAX));
@@ -153,6 +149,14 @@ void Scene::draw()
     assert(currentNode_);
     assert(camera_);
 
+
+    //wobble
+    float wtime = ((float) rand() / (RAND_MAX));
+    uniformMaterialL->time = wtime;
+    update();
+
+
+
     // clear background
     glClearColor(0.5, 0.5, 0.5, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -164,7 +168,7 @@ void Scene::draw()
     worldTransform().rotate(5, QVector3D(0,1,0));
     currentNode_->draw(*camera_, worldTransform_);
 
-    updateViewport();
+    //updateViewport();
 
 }
 
