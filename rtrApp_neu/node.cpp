@@ -10,8 +10,7 @@ Node::Node(shared_ptr<Mesh> mesh,
 }
 
 
-void
-Node::draw(const Camera &cam, QMatrix4x4 parent_transform) {
+void Node::draw(const Camera &cam, QMatrix4x4 parent_transform) {
 
     // chain this transformation with the parent's transformation
     QMatrix4x4 transform = parent_transform * transformation;

@@ -39,12 +39,29 @@ in vec3 normal_EC; // normalDirEC
 out vec4 outColor;
 
 
+//in vec2 _st,
+float circle(in float _radius) {
+    vec2 st = texCoord_FRA.xy; // / u_resolution
+
+    st *= 3.0;      // Scale up the space by 3
+    st = fract(st); // Wrap arround 1.0
+    // Now we have 3 spaces that goes from 0-1
+    //color = vec3(st,0.0);
+
+    vec2 l = st-vec2(0.5);
+    return 1.-smoothstep(_radius - (_radius * 0.01),
+                         _radius + (_radius * 0.01),
+                         dot(l,l) * 4.0);
+}
+
+
 // calculate Phong-style local illumination
-vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
-{
+vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands) {
     bands -= 1;
+
     // ambient part
-    vec3 ambient = material.k_ambient * ambientLightIntensity;
+    // vec3 ambient = material.k_ambient * ambientLightIntensity
+    vec3 ambient =  material.k_ambient * ambientLightIntensity;
 
     // back face towards viewer?
     float ndotv = dot(normalDir,viewDir);
@@ -54,36 +71,33 @@ vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
     //     return vec3(0,1,0);
 
     // cos of angle between light and surface.
-    float ndotl = max(dot(normalDir,-lightDir),0);
+    float ndotl = max(dot(normalDir,-lightDir), 0);
 
     // diffuse contribution
-    vec3 diffuse = material.k_diffuse * light.intensity * ndotl;
+// circle(0.5), material.k_diffuse.y, material.k_diffuse.z
+    vec3 diffuse =  material.k_diffuse * light.intensity * ndotl;
+    if (circle(0.5) > 0.5) {
+        diffuse = vec3(0, 255, 0)  * light.intensity * ndotl;
+    }
 
     // reflected light direction = perfect reflection direction
-    vec3 r = reflect(lightDir,normalDir);
+    vec3 r = reflect(lightDir, normalDir);
 
     // angle between reflection dir and viewing dir
-    float rdotv = max( dot(r,viewDir), 0.0);
+    float rdotv = max(dot(r, viewDir), 0.0);
 
     // specular contribution
-    vec3 specular = material.k_specular * light.intensity *
-                    pow(rdotv, material.shininess);
+    vec3 specular = material.k_specular * light.intensity * pow(rdotv, material.shininess);
+
+    vec3 dif = floor(diffuse * bands) / bands;
+
 
     // return sum of all contributions
-    return ambient + floor(diffuse * bands) / bands + step(specularBias, specular);
-
+    return ambient + dif + step(specularBias, specular);
 }
 
-float circle(in vec2 _st, in float _radius){
-    vec2 l = _st-vec2(0.5);
-    return 1.-smoothstep(_radius-(_radius*0.01),
-                         _radius+(_radius*0.01),
-                         dot(l,l)*4.0);
-}
 
-void
-main(void)
-{
+void main(void) {
     // normalize normal after projection
     vec3 normal = normalize(normal_EC);
 
@@ -98,21 +112,9 @@ main(void)
     // for orthogonal mode, the viewing direction is simply (0,0,1)
     vec3 viewDir = usePerspective? normalize(-position_EC.xyz) : vec3(0,0,1);
 
-
-    vec2 st = texCoord_FRA.xy / u_resolution;
-    vec3 color = vec3(0.0);
-    st *= 3.0;      // Scale up the space by 3
-    st = fract(st); // Wrap arround 1.0
-    // Now we have 3 spaces that goes from 0-1
-    color = vec3(st,0.0);
-    //color = vec3(circle(st,0.5));
-    outColor = vec4(color,1.0);
-
-
     // calculate color using phong illumination
-    //vec3 color = toonIllum(normal, viewDir, lightDir, bands);
+    vec3 toonColor = toonIllum(normal, viewDir, lightDir, bands);
 
     // out to frame buffer
-    //outColor = vec4(color, 1);
-
+    outColor = vec4(toonColor, 1.0);
 }

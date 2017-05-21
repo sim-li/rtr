@@ -35,7 +35,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     uniformMaterialL = uniformMaterial;
 
     // Workaround while ComboBox not implemented: --> Change Material here.
-    shared_ptr<Material> currentMaterial = uniformMaterial;
+    shared_ptr<Material> currentMaterial = toonMaterial;
 
     // store materials in map container
     materials_["Phong"] = phongMaterial;
@@ -119,11 +119,9 @@ void Scene::changeMaterial(const QString &txt)
 
 void Scene::setNewRandomColor()
 {
-
-
     QTime now;
     float wtime = ((float) rand() / (RAND_MAX));
-    qDebug() << "wtime :____", wtime;
+    //qDebug() << "wtime :____", wtime;
     uniformMaterialL->time = wtime;
     update();
 
@@ -141,6 +139,7 @@ void Scene::setNewRandomColor()
 
 void Scene::draw()
 {
+
     assert(currentNode_);
     assert(camera_);
 
@@ -154,12 +153,12 @@ void Scene::draw()
     // draw selected node, apply current world transformation
     currentNode_->draw(*camera_, worldTransform_);
 
+    qDebug() << "Draw Call!";
+
 }
 
 void Scene::updateViewport(size_t width, size_t height)
 {
-
-
 
     camera_->setAspectRatio(float(width)/float(height));
     //camera_->setAspectRatio(());

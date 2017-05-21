@@ -84,5 +84,8 @@ protected:
     std::shared_ptr<Node> createNode(std::shared_ptr<Mesh> mesh, bool scale_to_1 = true);
 
     std::shared_ptr<UniformMaterial> uniformMaterialL;
+
+    QTimer *timer;
+
 };
 

@@ -57,21 +57,21 @@ void AppWindow::showUI()
 
 void AppWindow::on_cb_animation_stateChanged(int arg1)
 {
-    // if checked arg1 is 2 else it is 0
+//    // if checked arg1 is 2 else it is 0
 
-    for(int jesushrist = 0 ; jesushrist < 10 ; jesushrist++)
-{
+//    for(int jesushrist = 0 ; jesushrist !=-1 ; jesushrist++)
+//{
 
-    if(AppWindow::ui->cb_animation->checkState() == 2)
-    {
-        qDebug() << "not running your fucking loop- why?";
-        scene().worldTransform().rotate(-5, QVector3D(0,1,0));
-        scene().setNewRandomColor();
-    ui->openGLWidget->update();
-    update();
-    }
-}
-    ui->cb_animation->setCheckState(Qt::Unchecked);
+//    if(AppWindow::ui->cb_animation->checkState() == 2)
+//    {
+//        qDebug() << "not running your fucking loop- why?";
+//        scene().worldTransform().rotate(-5, QVector3D(0,1,0));
+//        scene().setNewRandomColor();
+//    ui->openGLWidget->update();
+//    update();
+//    }
+//}
+//    ui->cb_animation->setCheckState(Qt::Unchecked);
 
 }
 
