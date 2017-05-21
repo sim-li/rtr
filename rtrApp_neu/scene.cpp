@@ -7,7 +7,6 @@
 #include "appwindow.h"
 #include "ui_appwindow.h"
 #include "scene.h"
-#include <QThread>
 #include <QTimer>
 
 
@@ -61,7 +60,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
 
     connect(timer, SIGNAL(timeout()), this, SLOT(draw()));
-    timer->start();
+    timer->start(500);
 
 
     // make the duck the current model
