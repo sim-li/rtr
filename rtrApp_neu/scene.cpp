@@ -33,7 +33,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     uniformMaterialL = uniformMaterial;
 
     // Workaround while ComboBox not implemented: --> Change Material here.
-    shared_ptr<Material> currentMaterial = uniformMaterial;
+    shared_ptr<Material> currentMaterial = dotsMaterial;
 
     // store materials in map container
     materials_["Phong"] = phongMaterial;
