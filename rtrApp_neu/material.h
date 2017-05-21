@@ -7,6 +7,7 @@
 #include <QTime>
 #include <QDateTime>
 #include <QDebug>
+#include <limits>
 /*
  *   Interface for surface materials.
  *
@@ -108,7 +109,9 @@ public:
 
     QVector3D myUniformColor = QVector3D(0.0f, 0.0f, 0.0f);
 
-   float time = 1;
+
+    float time = std::numeric_limits<float>::max();
+
     void apply() override;
 };
 

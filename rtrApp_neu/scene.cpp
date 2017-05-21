@@ -6,10 +6,8 @@
 #include "geometries/cube.h" // geom::Cube
 #include "appwindow.h"
 #include "ui_appwindow.h"
-#include "scene.h"
-#include <QThread>
 #include <QTimer>
-
+#include <limits>
 
 using namespace std;
 
@@ -30,15 +28,12 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     auto dots_prog = createProgram(":/assets/shaders/dots.vert", ":/assets/shaders/dots.frag");
     shared_ptr<DotsMaterial> dotsMaterial = std::make_shared<DotsMaterial>(dots_prog);
 
-    auto proc_prog = createProgram(":/assets/shaders/proc.vert", ":/assets/shaders/proc.frag");
-    shared_ptr<ProcMaterial> procMaterial = std::make_shared<ProcMaterial>(proc_prog);
 
     //Store uniform material to enable modification through setNewRandomColor
-
     uniformMaterialL = uniformMaterial;
 
     // Workaround while ComboBox not implemented: --> Change Material here.
-    shared_ptr<Material> currentMaterial = toonMaterial;
+    shared_ptr<Material> currentMaterial = uniformMaterial;
 
     // store materials in map container
     materials_["Phong"] = phongMaterial;
@@ -57,11 +52,6 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     nodes_["Duck"]    = createNode(meshes_["Duck"], true);
     nodes_["Trefoil"] = createNode(meshes_["Trefoil"], true);
     nodes_["Cube"]    = createNode(meshes_["Cube"], true);
-
-
-
-    connect(timer, SIGNAL(timeout()), this, SLOT(draw()));
-    timer->start();
 
 
     // make the duck the current model
@@ -127,12 +117,6 @@ void Scene::changeMaterial(const QString &txt)
 
 void Scene::setNewRandomColor()
 {
-    QTime now;
-    float wtime = ((float) rand() / (RAND_MAX));
-    //qDebug() << "wtime :____", wtime;
-    uniformMaterialL->time = wtime;
-    update();
-
 
     double r = ((double) rand() / (RAND_MAX));
     double g = ((double) rand() / (RAND_MAX));
@@ -144,10 +128,8 @@ void Scene::setNewRandomColor()
 
 }
 
-
 void Scene::draw()
 {
-    update();
 
     assert(currentNode_);
     assert(camera_);
@@ -159,13 +141,52 @@ void Scene::draw()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    // draw selected node, apply current world transformation
-    worldTransform().rotate(5, QVector3D(0,1,0));
+
+    update();
     currentNode_->draw(*camera_, worldTransform_);
 
-    updateViewport();
+    //updateViewport(200,200);
 
 }
+
+void Scene::setWobble(bool activated) {
+    wobbleActivated = activated;
+}
+
+void Scene::setRotate(bool activated) {
+    rotateActivated = activated;
+}
+
+void Scene::update() {
+    parent_->update();
+
+    framesPassed+=1;
+
+    doWobble();
+    doRotate();
+
+    if (framesPassed >= 25) {
+        framesPassed=0;
+    }
+}
+
+void Scene::doRotate() {
+    if (rotateActivated) {
+        worldTransform().rotate(5, QVector3D(0,1,0));
+    }
+}
+
+void Scene::doWobble() {
+    if (!wobbleActivated) {
+        uniformMaterialL->time = std::numeric_limits<int>::max();
+        return;
+    }
+    if (framesPassed % 4) {
+        float wtime = framesPassed / 25.0;
+        uniformMaterialL->time = wtime;
+    }
+}
+
 
 void Scene::updateViewport(size_t width, size_t height)
 {

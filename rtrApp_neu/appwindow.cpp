@@ -29,7 +29,14 @@ AppWindow::AppWindow(QWidget *parent) :
             [this](const QString& txt) { scene().changeModel(txt); } );
     connect(ui->materialComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeMaterial(txt);} );
-
+    connect(ui->cb_wobble, &QCheckBox::stateChanged,
+            [this](int state) {
+                scene().setWobble(state > 0);
+            });
+    connect(ui->cb_rotate, &QCheckBox::stateChanged,
+            [this](int state) {
+                scene().setRotate(state > 0);
+            });
 
 }
 
@@ -47,12 +54,10 @@ Scene &AppWindow::scene()
     return ui->openGLWidget->scene();
 }
 
-void AppWindow::showUI()
-{
+void AppWindow::showUI() {
     ui->ui_container->show();
     // default pixel margins (on Mac)
     ui->appWindowLayout->setContentsMargins(12,12,12,12);
-
 }
 
 void AppWindow::on_cb_animation_stateChanged(int arg1)

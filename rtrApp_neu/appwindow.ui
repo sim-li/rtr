@@ -77,9 +77,16 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="cb_animation">
+       <widget class="QCheckBox" name="cb_wobble">
         <property name="text">
-         <string>Animation</string>
+         <string>Wobble</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_rotate">
+        <property name="text">
+         <string>Rotate</string>
         </property>
        </widget>
       </item>

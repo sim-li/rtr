@@ -11,6 +11,7 @@
 #include <map>    // std::map
 #include <QTimer>
 
+
 /*
  * OpenGL-based scene. Required objects are created in the constructor,
  * and the scene is rendered using render().
@@ -43,16 +44,16 @@ public slots:
     void draw();
 
     // trigger a redraw of the widget through this method
-    void update() {
-
-        parent_->update();
-
-    }
+    void update();
 
     // adjust camera / viewport / ... if drawing surface changes
     void updateViewport(size_t width, size_t height);
 
     void setNewRandomColor();
+
+    void setWobble(bool activated);
+
+    void setRotate(bool activated);
 
 protected:
 
@@ -86,8 +87,14 @@ protected:
 
     std::shared_ptr<UniformMaterial> uniformMaterialL;
 
+    void doWobble();
 
-    QTimer *timer = new QTimer(this);
+    void doRotate();
 
+    int framesPassed = 0;
+
+    bool wobbleActivated = false;
+
+    bool rotateActivated = false;
 };
 
