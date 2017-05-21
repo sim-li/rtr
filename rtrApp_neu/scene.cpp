@@ -7,6 +7,9 @@
 #include "appwindow.h"
 #include "ui_appwindow.h"
 #include "scene.h"
+#include <QThread>
+#include <QTimer>
+
 
 using namespace std;
 
@@ -54,6 +57,11 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     nodes_["Duck"]    = createNode(meshes_["Duck"], true);
     nodes_["Trefoil"] = createNode(meshes_["Trefoil"], true);
     nodes_["Cube"]    = createNode(meshes_["Cube"], true);
+
+
+
+    connect(timer, SIGNAL(timeout()), this, SLOT(draw()));
+    timer->start();
 
 
     // make the duck the current model
@@ -141,6 +149,7 @@ void Scene::setNewRandomColor()
 
 void Scene::draw()
 {
+    update();
     assert(currentNode_);
     assert(camera_);
 
@@ -152,7 +161,10 @@ void Scene::draw()
     glCullFace(GL_BACK);
 
     // draw selected node, apply current world transformation
+    worldTransform().rotate(5, QVector3D(0,1,0));
     currentNode_->draw(*camera_, worldTransform_);
+
+    updateViewport();
 
 }
 
