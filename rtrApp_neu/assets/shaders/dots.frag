@@ -40,10 +40,11 @@ out vec4 outColor;
 
 
 //in vec2 _st,
-float circle(in float _radius) {
+float circle(in float _radius, int density) {
     vec2 st = texCoord_FRA.xy; // / u_resolution
+    //old value: 3.0
 
-    st *= 3.0;          // Scale up the space by 3
+    st *= density;          // Scale up the space by 3
     st = fract(st);     // Wrap arround 1.0
 
     // Now we have 3 spaces that goes from 0-1
@@ -78,12 +79,11 @@ vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands) {
 
     vec3 d = material.k_diffuse;
 
-    if (circle(0.9) > 0) {
+    if (circle(0.3, 10.0) > 0) {
         d = vec3(0, 0.5, 0);
     }
 
     vec3 diffuse =  d * light.intensity * ndotl;
-
 
     // reflected light direction = perfect reflection direction
     vec3 r = reflect(lightDir, normalDir);
