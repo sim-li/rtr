@@ -135,7 +135,12 @@ public:
     // ambient light
     QVector3D ambientLightIntensity = QVector3D(0.5/3, 0.8/3, 1.0/3);
 
+    QVector3D dotColor = QVector3D(0.0, 0.5, 0.0);
+
+    float density = 10;
+    float radius = 0.5;
     int bands = 3;
+
     float specularBias = 9.0f;
 
     QVector2D uResolution = QVector2D(300, 300);

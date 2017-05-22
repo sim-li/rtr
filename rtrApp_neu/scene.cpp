@@ -48,15 +48,18 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     // add meshes of some procedural geometry objects (not loaded from OBJ files)
     meshes_["Cube"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), currentMaterial);
 
+    meshes_["Teapot"] = std::make_shared<Mesh>(":/assets/models/teapot/teapot.obj", currentMaterial);
+
     // pack each mesh into a scene node, along with a transform that scales
     // it to standard size [1,1,1]
     nodes_["Duck"]    = createNode(meshes_["Duck"], true);
     nodes_["Trefoil"] = createNode(meshes_["Trefoil"], true);
     nodes_["Cube"]    = createNode(meshes_["Cube"], true);
+    nodes_["Teapot"]    = createNode(meshes_["Teapot"], true);
 
 
     // make the duck the current model
-    changeModel("Duck");
+    changeModel("Teapot");
 
     // create default camera (0,0,4) -> (0,0,0), 45°
     float aspect = float(parent->width())/float(parent->height());
@@ -123,13 +126,11 @@ void Scene::changeMaterial(const QString &txt)
 {
     qDebug() << "Change material function called." << txt;
     update();
-
 }
 
 
 void Scene::setNewRandomColor()
 {
-
     double r = ((double) rand() / (RAND_MAX));
     double g = ((double) rand() / (RAND_MAX));
     double b = ((double) rand() / (RAND_MAX));

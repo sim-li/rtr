@@ -17,5 +17,10 @@
         <file>assets/shaders/toon.vert</file>
         <file>assets/shaders/uniform.frag</file>
         <file>assets/shaders/uniform.vert</file>
+        <file>assets/models/teapot/copyright.txt</file>
+        <file>assets/models/teapot/default.mtl</file>
+        <file>assets/models/teapot/default.png</file>
+        <file>assets/models/teapot/teapot.max</file>
+        <file>assets/models/teapot/teapot.obj</file>
     </qresource>
 </RCC>

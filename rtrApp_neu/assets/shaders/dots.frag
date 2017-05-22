@@ -11,6 +11,10 @@ struct ToonMaterial {
 uniform int bands;
 uniform float specularBias;
 
+uniform vec3 dotColor;
+uniform float density;
+uniform float radius;
+
 // point light // ambient light
 struct PointLight {
     vec3 intensity;
@@ -40,10 +44,11 @@ out vec4 outColor;
 
 
 //in vec2 _st,
-float circle(in float _radius) {
+float circle(in float _radius, float density) {
     vec2 st = texCoord_FRA.xy; // / u_resolution
+    //old value: 3.0
 
-    st *= 3.0;          // Scale up the space by 3
+    st *= density;       // Scale up the space by 3
     st = fract(st);     // Wrap arround 1.0
 
     // Now we have 3 spaces that goes from 0-1
@@ -55,49 +60,29 @@ float circle(in float _radius) {
 }
 
 
-// calculate Phong-style local illumination
 vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands) {
     bands -= 1;
 
-    // ambient part
-    // vec3 ambient = material.k_ambient * ambientLightIntensity
     vec3 ambient =  material.k_ambient * ambientLightIntensity;
-
-    // back face towards viewer?
     float ndotv = dot(normalDir,viewDir);
-
-    // visual debugging, you can safely comment this out
-    // if(ndotv<0)
-    //     return vec3(0,1,0);
-
-    // cos of angle between light and surface.
     float ndotl = max(dot(normalDir,-lightDir), 0);
 
-    // diffuse contribution
+    vec3 k_diffuse = material.k_diffuse;
 
-
-    vec3 d = material.k_diffuse;
-
-    if (circle(0.9) > 0) {
-        d = vec3(0, 0.5, 0);
+    if (circle(radius, density) > 0) {
+         k_diffuse = dotColor;
     }
 
-    vec3 diffuse =  d * light.intensity * ndotl;
+    vec3 diffuse = k_diffuse * light.intensity * ndotl;
 
-
-    // reflected light direction = perfect reflection direction
     vec3 r = reflect(lightDir, normalDir);
 
-    // angle between reflection dir and viewing dir
     float rdotv = max(dot(r, viewDir), 0.0);
 
-    // specular contribution
     vec3 specular = material.k_specular * light.intensity * pow(rdotv, material.shininess);
 
     vec3 dif = floor(diffuse * bands) / bands;
 
-
-    // return sum of all contributions
     return ambient + dif + step(specularBias, specular);
 }
 
