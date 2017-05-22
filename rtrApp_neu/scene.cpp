@@ -114,13 +114,11 @@ void Scene::changeMaterial(const QString &txt)
 {
     qDebug() << "Change material function called." << txt;
     update();
-
 }
 
 
 void Scene::setNewRandomColor()
 {
-
     double r = ((double) rand() / (RAND_MAX));
     double g = ((double) rand() / (RAND_MAX));
     double b = ((double) rand() / (RAND_MAX));

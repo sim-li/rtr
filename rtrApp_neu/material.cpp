@@ -53,6 +53,11 @@ void DotsMaterial::apply()
     prog_->setUniformValue("light.intensity", lightIntensity);
     prog_->setUniformValue("bands", bands);
     prog_->setUniformValue("specularBias", specularBias);
+
+    prog_->setUniformValue("dotColor", dotColor);
+    prog_->setUniformValue("density", density);
+    prog_->setUniformValue("radius", radius);
+
     // Canvas size! Set in updateViewport in scene.cpp
     prog_->setUniformValue("u_resolution", uResolution);
 }
