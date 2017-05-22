@@ -86,6 +86,8 @@ public:
 
    // bind underlying shader program and set required uniforms
    void apply() override;
+
+
 };
 
 class UniformMaterial : public Material {

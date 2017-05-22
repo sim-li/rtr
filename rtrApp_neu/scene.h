@@ -39,6 +39,7 @@ public slots:
     // change model according to combo box in UI
     void changeModel(const QString& txt);
     void changeMaterial(const QString& txt);
+    void changeBands(const QString& txt);
 
     // perform OpenGL rendering of the entire scene. Don't call this yourself.
     void draw();
@@ -86,6 +87,7 @@ protected:
     std::shared_ptr<Node> createNode(std::shared_ptr<Mesh> mesh, bool scale_to_1 = true);
 
     std::shared_ptr<UniformMaterial> uniformMaterialL;
+    std::shared_ptr<ToonMaterial> toonMaterialL;
 
     void doWobble();
 

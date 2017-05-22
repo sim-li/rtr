@@ -31,9 +31,10 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     //Store uniform material to enable modification through setNewRandomColor
     uniformMaterialL = uniformMaterial;
+    toonMaterialL = toonMaterial;
 
     // Workaround while ComboBox not implemented: --> Change Material here.
-    shared_ptr<Material> currentMaterial = dotsMaterial;
+    shared_ptr<Material> currentMaterial = toonMaterial;
 
     // store materials in map container
     materials_["Phong"] = phongMaterial;
@@ -107,6 +108,17 @@ void Scene::changeModel(const QString &txt)
 }
 
 
+
+void Scene::changeBands(const QString &txt)
+{
+    //currentNode_ = nodes_[txt];
+    int bands = txt.toInt();
+    toonMaterialL->bands = bands;
+
+     update();
+}
+
+
 void Scene::changeMaterial(const QString &txt)
 {
     qDebug() << "Change material function called." << txt;
@@ -146,6 +158,8 @@ void Scene::draw()
     currentNode_->draw(*camera_, worldTransform_);
 
     //updateViewport(200,200);
+
+
 
 }
 

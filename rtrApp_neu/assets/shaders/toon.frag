@@ -63,12 +63,11 @@ vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
     float rdotv = max( dot(r,viewDir), 0.0);
 
     // specular contribution
-    vec3 specular = material.k_specular * light.intensity *
-                    pow(rdotv, material.shininess);
+    vec3 specular = material.k_specular * light.intensity
+            * pow(rdotv, material.shininess);
 
     // return sum of all contributions
-    return ambient + floor(diffuse * bands) / bands + step(specularBias, specular);
-
+    return ambient + floor(diffuse * bands) / bands + step(specularBias, specular) + (specular);
 }
 
 void

@@ -27,8 +27,19 @@ AppWindow::AppWindow(QWidget *parent) :
     // combo box to change the model
     connect(ui->modelComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeModel(txt); } );
+
+
+    connect(ui->bandsComboBox, &QComboBox::currentTextChanged,
+            [this](const QString& txt) { scene().changeBands(txt); } );
+
+
+
     connect(ui->materialComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeMaterial(txt);} );
+
+
+
+
     connect(ui->cb_wobble, &QCheckBox::stateChanged,
             [this](int state) {
                 scene().setWobble(state > 0);
@@ -62,21 +73,7 @@ void AppWindow::showUI() {
 
 void AppWindow::on_cb_animation_stateChanged(int arg1)
 {
-//    // if checked arg1 is 2 else it is 0
 
-//    for(int jesushrist = 0 ; jesushrist !=-1 ; jesushrist++)
-//{
-
-//    if(AppWindow::ui->cb_animation->checkState() == 2)
-//    {
-//        qDebug() << "not running your fucking loop- why?";
-//        scene().worldTransform().rotate(-5, QVector3D(0,1,0));
-//        scene().setNewRandomColor();
-//    ui->openGLWidget->update();
-//    update();
-//    }
-//}
-//    ui->cb_animation->setCheckState(Qt::Unchecked);
 
 }
 
@@ -124,6 +121,8 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
         scene().worldTransform().rotate(5, QVector3D(1,0,0));
         ui->openGLWidget->update();
         break;
+
+
 
     // translate camera
     case Qt::Key_I:
