@@ -51,7 +51,6 @@ AppWindow::AppWindow(QWidget *parent) :
     connect(ui->radiusSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             [this](double value) { scene().setDotRadius((float) value); });
 
-
     connect(ui->densitySpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             [this](double value) { scene().setDotDensity((float) value); });
 }

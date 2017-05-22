@@ -59,12 +59,22 @@
        <widget class="QComboBox" name="materialComboBox">
         <item>
          <property name="text">
+          <string>Phong</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Toon</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Phong</string>
+          <string>Dots</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Proc</string>
          </property>
         </item>
        </widget>
@@ -226,7 +236,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+       <widget class="QDoubleSpinBox" name="densitySpinBox"/>
       </item>
       <item>
        <spacer name="verticalSpacer_2">

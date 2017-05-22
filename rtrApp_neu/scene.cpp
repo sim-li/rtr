@@ -59,8 +59,6 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     nodes_["Cube"]    = createNode(meshes_["Cube"], true);
     nodes_["Teapot"]    = createNode(meshes_["Teapot"], true);
 
-
-    // make the duck the current model
     changeModel("Teapot");
 
     // create default camera (0,0,4) -> (0,0,0), 45°
@@ -74,6 +72,10 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
         0.01,   // near plane
         10.0    // far plane
     );
+
+     //currentMaterial = toonMaterial;
+     //meshes_.at("Teapot")->= currentMaterial;
+
 
 }
 
