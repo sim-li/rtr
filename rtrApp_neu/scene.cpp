@@ -43,21 +43,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     materials_["Dots"] = dotsMaterial;
     materials_["Proc"] = procMaterial;
 
-    // load meshes from .obj files and assign shader programs to them
-    meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", currentMaterial);
-    meshes_["Trefoil"] = std::make_shared<Mesh>(":/assets/models/trefoil.obj", currentMaterial);
-
-    // add meshes of some procedural geometry objects (not loaded from OBJ files)
-    meshes_["Cube"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), currentMaterial);
-
-    meshes_["Teapot"] = std::make_shared<Mesh>(":/assets/models/teapot/teapot.obj", currentMaterial);
-
-    // pack each mesh into a scene node, along with a transform that scales
-    // it to standard size [1,1,1]
-    nodes_["Duck"]    = createNode(meshes_["Duck"], true);
-    nodes_["Trefoil"] = createNode(meshes_["Trefoil"], true);
-    nodes_["Cube"]    = createNode(meshes_["Cube"], true);
-    nodes_["Teapot"]    = createNode(meshes_["Teapot"], true);
+    initWithMaterial(currentMaterial);
 
     changeModel("Teapot");
 
@@ -73,10 +59,24 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
         10.0    // far plane
     );
 
-     //currentMaterial = toonMaterial;
-     //meshes_.at("Teapot")->= currentMaterial;
+}
 
+void Scene::initWithMaterial(std::shared_ptr<Material> material) {
+    // load meshes from .obj files and assign shader programs to them
+    meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", material);
+    meshes_["Trefoil"] = std::make_shared<Mesh>(":/assets/models/trefoil.obj", material);
 
+    // add meshes of some procedural geometry objects (not loaded from OBJ files)
+    meshes_["Cube"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), material);
+
+    meshes_["Teapot"] = std::make_shared<Mesh>(":/assets/models/teapot/teapot.obj", material);
+
+    // pack each mesh into a scene node, along with a transform that scales
+    // it to standard size [1,1,1]
+    nodes_["Duck"]    = createNode(meshes_["Duck"], true);
+    nodes_["Trefoil"] = createNode(meshes_["Trefoil"], true);
+    nodes_["Cube"]    = createNode(meshes_["Cube"], true);
+    nodes_["Teapot"]  = createNode(meshes_["Teapot"], true);
 }
 
 // helper to load shaders and create programs

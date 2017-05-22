@@ -68,6 +68,7 @@ public slots:
 
     void setB(int bIn);
 
+
 protected:
 
     // parent widget
@@ -114,6 +115,8 @@ protected:
     int b = 0;
 
     int framesPassed = 0;
+
+    void initWithMaterial(std::shared_ptr<Material> material);
 
 };
 

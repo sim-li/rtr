@@ -35,6 +35,9 @@ in vec3 normal_EC; // normalDirEC
 // output: color
 out vec4 outColor;
 
+vec3 to_cartoon_steps(vec3 light_term) {
+    return floor(light_term * bands) / bands;
+}
 
 // calculate Phong-style local illumination
 vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
@@ -67,7 +70,7 @@ vec3 toonIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir, int bands)
             * pow(rdotv, material.shininess);
 
     // return sum of all contributions
-    return ambient + floor(diffuse * bands) / bands + step(specularBias, specular) + (specular);
+    return ambient + to_cartoon_steps(diffuse) + step(specularBias, specular) + (specular);
 }
 
 void

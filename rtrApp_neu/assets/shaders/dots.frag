@@ -43,17 +43,16 @@ in vec3 normal_EC; // normalDirEC
 out vec4 outColor;
 
 
-//in vec2 _st,
+// Source: Book of shaders
 float circle(in float _radius, float density) {
     vec2 st = texCoord_FRA.xy; // / u_resolution
-    //old value: 3.0
 
-    st *= density;       // Scale up the space by 3
-    st = fract(st);     // Wrap arround 1.0
+    st *= density; // Scale up the space by 3
+    st = fract(st); // Wrap arround 1.0
 
     // Now we have 3 spaces that goes from 0-1
-    //color = vec3(st,0.0);
-    vec2 l = st-vec2(0.5);
+
+    vec2 l = st - vec2(0.5);
     return 1.-smoothstep(_radius - (_radius * 0.01),
                          _radius + (_radius * 0.01),
                          dot(l,l) * 4.0);
