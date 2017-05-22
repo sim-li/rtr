@@ -22,24 +22,26 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     auto toon_prog = createProgram(":/assets/shaders/toon.vert", ":/assets/shaders/toon.frag");
     shared_ptr<ToonMaterial> toonMaterial = std::make_shared<ToonMaterial>(toon_prog);
 
-    auto uniform_prog = createProgram(":/assets/shaders/uniform.vert", ":/assets/shaders/uniform.frag");
-    shared_ptr<UniformMaterial> uniformMaterial = std::make_shared<UniformMaterial>(uniform_prog);
+    auto proc_prog = createProgram(":/assets/shaders/proc.vert", ":/assets/shaders/proc.frag");
+    shared_ptr<ProcMaterial> procMaterial = std::make_shared<ProcMaterial>(proc_prog);
 
     auto dots_prog = createProgram(":/assets/shaders/dots.vert", ":/assets/shaders/dots.frag");
     shared_ptr<DotsMaterial> dotsMaterial = std::make_shared<DotsMaterial>(dots_prog);
 
-
     //Store uniform material to enable modification through setNewRandomColor
-    uniformMaterialL = uniformMaterial;
+    phongMaterialL = phongMaterial;
     toonMaterialL = toonMaterial;
+    dotsMaterialL = dotsMaterial;
+    procMaterialL = procMaterial;
 
     // Workaround while ComboBox not implemented: --> Change Material here.
-    shared_ptr<Material> currentMaterial = toonMaterial;
+    shared_ptr<Material> currentMaterial = dotsMaterial;
 
     // store materials in map container
     materials_["Phong"] = phongMaterial;
     materials_["Toon"] = toonMaterial;
-    materials_["Uniform"] = uniformMaterial;
+    materials_["Dots"] = dotsMaterial;
+    materials_["Proc"] = procMaterial;
 
     // load meshes from .obj files and assign shader programs to them
     meshes_["Duck"] = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", currentMaterial);
@@ -136,7 +138,7 @@ void Scene::setNewRandomColor()
     double b = ((double) rand() / (RAND_MAX));
 
     QVector3D color(r, g, b);
-    uniformMaterialL->myUniformColor = color;
+    procMaterialL->myUniformColor = color;
     update();
 
 }
@@ -157,11 +159,7 @@ void Scene::draw()
 
     update();
     currentNode_->draw(*camera_, worldTransform_);
-
     //updateViewport(200,200);
-
-
-
 }
 
 void Scene::setWobble(bool activated) {
@@ -170,6 +168,33 @@ void Scene::setWobble(bool activated) {
 
 void Scene::setRotate(bool activated) {
     rotateActivated = activated;
+}
+
+void Scene::setR(int rIn) {
+    r = rIn;
+    setDotColor(r, g, b);
+}
+
+void Scene::setG(int gIn) {
+    g = gIn;
+    setDotColor(r, g, b);
+}
+
+void Scene::setB(int bIn) {
+    b = bIn;
+    setDotColor(r, g, b);
+}
+
+void Scene::setDotColor(int r, int g, int b) {
+    dotsMaterialL->dotColor = QVector3D((float) r / 255, (float) g / 255, (float) b / 255);
+}
+
+void Scene::setDotDensity(float density) {
+    dotsMaterialL->density = density;
+}
+
+void Scene::setDotRadius(float radius) {
+    dotsMaterialL->radius = radius;
 }
 
 void Scene::update() {
@@ -193,19 +218,17 @@ void Scene::doRotate() {
 
 void Scene::doWobble() {
     if (!wobbleActivated) {
-        uniformMaterialL->time = std::numeric_limits<int>::max();
+        procMaterialL->time = std::numeric_limits<int>::max();
         return;
     }
     if (framesPassed % 4) {
         float wtime = framesPassed / 25.0;
-        uniformMaterialL->time = wtime;
+        procMaterialL->time = wtime;
     }
 }
 
 
-void Scene::updateViewport(size_t width, size_t height)
-{
-
+void Scene::updateViewport(size_t width, size_t height) {
     camera_->setAspectRatio(float(width)/float(height));
     //camera_->setAspectRatio(());
     glViewport(0,0,GLint(width),GLint(height));

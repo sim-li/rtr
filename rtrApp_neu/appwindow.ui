@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>661</width>
-    <height>453</height>
+    <height>563</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -130,52 +130,77 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="quitButton">
-        <property name="text">
-         <string>Quit</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolBox" name="toolBox">
-        <property name="currentIndex">
-         <number>1</number>
-        </property>
-        <widget class="QWidget" name="page">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>274</width>
-           <height>16</height>
-          </rect>
-         </property>
-         <attribute name="label">
-          <string>Page 1</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="page_2">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>274</width>
-           <height>16</height>
-          </rect>
-         </property>
-         <attribute name="label">
-          <string>Page 2</string>
-         </attribute>
-        </widget>
-       </widget>
-      </item>
-      <item>
        <widget class="QSlider" name="horizontalSlider">
         <property name="maximum">
          <number>255</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Dots Shader</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>R</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="rSpinBox">
+        <property name="maximum">
+         <number>255</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>G</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="gSpinBox">
+        <property name="maximum">
+         <number>255</number>
+        </property>
+        <property name="value">
+         <number>255</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>B</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="bSpinBox">
+        <property name="maximum">
+         <number>255</number>
         </property>
        </widget>
       </item>
@@ -187,7 +212,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="radius_sb"/>
+       <widget class="QDoubleSpinBox" name="radiusSpinBox">
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_3">
@@ -197,7 +226,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="density_sb"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
       </item>
       <item>
        <spacer name="verticalSpacer_2">
@@ -213,14 +242,34 @@
        </spacer>
       </item>
       <item>
-       <widget class="QCheckBox" name="cb_wobble">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Animations</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="wobbleCheckBox">
         <property name="text">
          <string>Wobble</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="cb_rotate">
+       <widget class="QCheckBox" name="rotateCheckBox">
         <property name="text">
          <string>Rotate</string>
         </property>
@@ -238,6 +287,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="quitButton">
+        <property name="text">
+         <string>Quit</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label">

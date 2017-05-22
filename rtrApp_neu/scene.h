@@ -56,6 +56,18 @@ public slots:
 
     void setRotate(bool activated);
 
+    void setDotColor(int r, int g, int b);
+
+    void setDotDensity(float density);
+
+    void setDotRadius(float radius);
+
+    void setR(int rIn);
+
+    void setG(int gIn);
+
+    void setB(int bIn);
+
 protected:
 
     // parent widget
@@ -86,17 +98,22 @@ protected:
     // helper for creating a node scaled to size 1
     std::shared_ptr<Node> createNode(std::shared_ptr<Mesh> mesh, bool scale_to_1 = true);
 
-    std::shared_ptr<UniformMaterial> uniformMaterialL;
+    std::shared_ptr<DotsMaterial> dotsMaterialL;
+    std::shared_ptr<PhongMaterial> phongMaterialL;
+    std::shared_ptr<ProcMaterial> procMaterialL;
     std::shared_ptr<ToonMaterial> toonMaterialL;
 
     void doWobble();
-
     void doRotate();
+
+    bool wobbleActivated = false;
+    bool rotateActivated = false;
+
+    int r = 0;
+    int g = 255;
+    int b = 0;
 
     int framesPassed = 0;
 
-    bool wobbleActivated = false;
-
-    bool rotateActivated = false;
 };
 

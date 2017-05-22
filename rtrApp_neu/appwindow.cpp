@@ -17,38 +17,43 @@ AppWindow::AppWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AppWindow)
 {
-    // connects what comes out of the Qt designer to this class
     ui->setupUi(this);
 
-    // quit button -> quit app
-    connect(ui->quitButton, &QPushButton::clicked,
-            []{ qApp->quit(); });
+    connect(ui->quitButton, &QPushButton::clicked, []{ qApp->quit(); });
 
-    // combo box to change the model
     connect(ui->modelComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeModel(txt); } );
-
 
     connect(ui->bandsComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeBands(txt); } );
 
-
-
     connect(ui->materialComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeMaterial(txt);} );
 
+    connect(ui->wobbleCheckBox, &QCheckBox::stateChanged,
+            [this](int state) { scene().setWobble(state > 0); });
+
+    connect(ui->rotateCheckBox, &QCheckBox::stateChanged,
+            [this](int state) { scene().setRotate(state > 0); });
+
+    connect(ui->rSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            [this](int value) { scene().setR(value); });
+
+    connect(ui->gSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            [this](int value) { scene().setG(value); });
+
+    connect(ui->bSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            [this](int value) { scene().setB(value); });
+
+    connect(ui->bSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            [this](int value) { scene().setB(value); });
+
+    connect(ui->radiusSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            [this](double value) { scene().setDotRadius((float) value); });
 
 
-
-    connect(ui->cb_wobble, &QCheckBox::stateChanged,
-            [this](int state) {
-                scene().setWobble(state > 0);
-            });
-    connect(ui->cb_rotate, &QCheckBox::stateChanged,
-            [this](int state) {
-                scene().setRotate(state > 0);
-            });
-
+    connect(ui->densitySpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            [this](double value) { scene().setDotDensity((float) value); });
 }
 
 AppWindow::~AppWindow()
