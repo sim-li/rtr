@@ -36,5 +36,7 @@
         <file>assets/shaders/vectors_per_triangle.frag</file>
         <file>assets/shaders/vectors_per_triangle.geom</file>
         <file>assets/shaders/vectors_per_triangle.vert</file>
+        <file>assets/textures/saltdesert_iran_NRM.png</file>
+        <file>assets/textures/saltdesert_iran.jpg</file>
     </qresource>
 </RCC>

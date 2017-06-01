@@ -56,12 +56,19 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     vectorsMaterial_->vectorToShow  = 0;
 
     // load textures
-    auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_day.jpg").mirrored());
-    auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_at_night_2048.jpg").mirrored());
-    auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_bathymetry_2048.jpg").mirrored());
-    auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_clouds_2048.jpg").mirrored());
-    auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048.jpg").mirrored());
-    auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048_NRM.png").mirrored());
+    //auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_day.jpg").mirrored());
+    //auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_at_night_2048.jpg").mirrored());
+    //auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_bathymetry_2048.jpg").mirrored());
+    //auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_clouds_2048.jpg").mirrored());
+    //auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048.jpg").mirrored());
+    //auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048_NRM.png").mirrored());
+
+    auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
+    auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
+    auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
+    auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
+    auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
+    auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran_NRM.png").mirrored());
 
     // tex parameters
     clouds->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
