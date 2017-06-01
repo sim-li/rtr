@@ -193,6 +193,7 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
         break;
 
     // rotate world
+    /*
     case Qt::Key_Left:
         scene().worldTransform().rotate(-5, QVector3D(0,1,0));
         ui->openGLWidget->update();
@@ -201,8 +202,32 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
         scene().worldTransform().rotate(5, QVector3D(0,1,0));
         ui->openGLWidget->update();
         break;
+    */
+    case Qt::Key_Left:
+        scene().worldTransform().rotate(-0.1, QVector3D(0,1,0));
+        ui->openGLWidget->update();
+        break;
+    case Qt::Key_Right:
+        scene().worldTransform().rotate(0.1, QVector3D(0,1,0));
+        ui->openGLWidget->update();
+        break;
+
+        // Forward: -DX +DZ
+    case Qt::Key_Up:
+        scene().worldTransform().rotate(-0.1, QVector3D(1,0,0));
+        //float
+        //scene().camera().translateViewPoint(QVector3D(0, 0, +0.1f));
+        ui->openGLWidget->update();
+        break;
+        // Backward: +DX -DZ
+    case Qt::Key_Down:
+        scene().worldTransform().rotate(0.1, QVector3D(1,0,0));
+        ui->openGLWidget->update();
+        break;
+
 
     // translate camera
+    /*
     case Qt::Key_Up:
         scene().camera().translateViewPoint(QVector3D(0,0,-0.1f));
         ui->openGLWidget->update();
@@ -211,6 +236,13 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
         scene().camera().translateViewPoint(QVector3D(0,0,+0.1f));
         ui->openGLWidget->update();
         break;
-
+    */
+    case Qt::Key_I:
+        scene().camera().translateViewPoint(QVector3D(0,0,-0.1f));
+        ui->openGLWidget->update();
+        break;
+    case Qt::Key_O:
+        scene().camera().translateViewPoint(QVector3D(0,0,+0.1f));
+        ui->openGLWidget->update();
     } // switch
 }

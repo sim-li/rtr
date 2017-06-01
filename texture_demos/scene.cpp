@@ -56,19 +56,21 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     vectorsMaterial_->vectorToShow  = 0;
 
     // load textures
-    //auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_day.jpg").mirrored());
-    //auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_at_night_2048.jpg").mirrored());
-    //auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_bathymetry_2048.jpg").mirrored());
-    //auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_clouds_2048.jpg").mirrored());
-    //auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048.jpg").mirrored());
-    //auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048_NRM.png").mirrored());
+    auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_day.jpg").mirrored());
+    auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_at_night_2048.jpg").mirrored());
+    auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_bathymetry_2048.jpg").mirrored());
+    auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_clouds_2048.jpg").mirrored());
+    auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048.jpg").mirrored());
+    auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048_NRM.png").mirrored());
 
+    /*
     auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
     auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
     auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
     auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
     auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran.jpg").mirrored());
     auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/saltdesert_iran_NRM.png").mirrored());
+    */
 
     // tex parameters
     clouds->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
@@ -103,7 +105,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     // rotate some models
     nodes_["Sphere"]->transformation.rotate(-90, QVector3D(1,0,0));
     nodes_["Torus"]->transformation.rotate(-60, QVector3D(1,0,0));
-    nodes_["Rect"]->transformation.rotate(30, QVector3D(1,0,0));
+    //nodes_["Rect"]->transformation.rotate(30, QVector3D(1,0,0));
 
     // current model and shader
     changeModel("Sphere");
@@ -111,10 +113,17 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // create default camera (0,0,4) -> (0,0,0), 45°
     float aspect = float(parent->width())/float(parent->height());
+
+    /*
+        QVector3D(0, 0.3f, 3), // look from
+        QVector3D(0, 0, 0), // look to
+        QVector3D(0, 1, 0), // this way is up
+    */
+
     camera_ = std::make_shared<Camera>(
-                QVector3D(0,0.3f,3), // look from
-                QVector3D(0,0,0), // look to
-                QVector3D(0,1,0), // this way is up
+                QVector3D(0, 0., 2), // look from
+                QVector3D(0, 0.05, 0), // look to
+                QVector3D(0, 1, 0), // this way is up
                 30.0,   // field of view in up direction
                 aspect, // aspect ratio
                 0.01,   // near plane

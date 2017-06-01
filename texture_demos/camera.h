@@ -30,9 +30,16 @@ public:
      *  with a vertical field of view of 45°.
      *
      */
-    explicit Camera(QVector3D from = QVector3D(0,0,2),
+
+    /*
+     *  explicit Camera(QVector3D from = QVector3D(0,0,2),
                     QVector3D to = QVector3D(0,0,0),
-                    QVector3D up = QVector3D(0,1,0),
+                    QVector3D up = QVector3D(0,0,1),
+
+    */
+    explicit Camera(QVector3D from = QVector3D(0,0,1),
+                    QVector3D to = QVector3D(0,0,-1),
+                    QVector3D up = QVector3D(1,0,0),
                     float fovy = 45.0,
                     float aspect_ratio = 1.0,
                     float near = 0.1,
