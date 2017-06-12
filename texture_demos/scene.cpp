@@ -121,7 +121,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     */
 
     camera_ = std::make_shared<Camera>(
-                QVector3D(0, 0., 2), // look from
+                QVector3D(0, 0.05, 2), // look from
                 QVector3D(0, 0.05, 0), // look to
                 QVector3D(0, 1, 0), // this way is up
                 30.0,   // field of view in up direction
