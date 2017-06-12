@@ -22,7 +22,8 @@ HEADERS      += \
     mesh/indexbuffer.h \
     mesh/mesh.h \
     mesh/vertexbuffer.h \
-    mesh/geometrybuffers.h
+    mesh/geometrybuffers.h \
+    cubemap.h
 
 # C++ SOURCE FILES TO BE COMPILED AND LINKED TOGETHER
 SOURCES      += \
@@ -39,7 +40,8 @@ SOURCES      += \
     mesh/indexbuffer.cpp \
     mesh/mesh.cpp \
     rtrglwidget.cpp \
-    geometries/parametric.cpp
+    geometries/parametric.cpp \
+    cubemap.cpp
 
 # RESOURCE FILES TO BE PROCESSED BY QT
 RESOURCES    += \
