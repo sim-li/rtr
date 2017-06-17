@@ -90,12 +90,17 @@ uniform vec3  ambientLightIntensity;
 vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
 
     // animation
-    vec2 uv_clouds = planet.animateClouds? uv+vec2(time*0.02,0) : uv;
+    //vec2 uv_clouds = planet.animateClouds? uv + vec2(time*0.02, 0) : uv;
+    vec2 uv_clouds = uv;
+
+    // Already moving incoming uv coords in main routine of shader
+    //vec2 uv_daytexture = uv + vec2(0, time*0.02);
+    vec2 uv_daytexture = uv;
 
     // texture lookups
-    vec3  dayCol = texture(planet.dayTexture, uv).rgb;
-    vec3  nightCol = texture(planet.nightTexture, uv).rgb;
-    bool  atSea = texture(planet.glossTexture, uv).r > 0.008;
+    vec3  dayCol = texture(planet.dayTexture, uv_daytexture).rgb;
+    vec3  nightCol = texture(planet.nightTexture, uv_daytexture).rgb;
+    bool  atSea = texture(planet.glossTexture, uv_daytexture).r > 0.008;
     float cloudDensity = texture(planet.cloudsTexture, uv_clouds).r;
 
     // make brighter / gamma correction
@@ -182,9 +187,10 @@ vec3 decodeNormal(vec3 normal) {
 }
 
 void main() {
+    vec2 moving_texcoord = texcoord_frag + vec2(0, time*0.02);
 
     // default normal in tangent space is (0,0,1).
-    vec3 bumpValue = texture(bump.tex, texcoord_frag).xyz;
+    vec3 bumpValue = texture(bump.tex, moving_texcoord).xyz;
 
     // get bump direction (in tangent space) from bump texture
     vec3 N = bump.use? decodeNormal(bumpValue) : vec3(0,0,1);
@@ -192,11 +198,11 @@ void main() {
     vec3 L = normalize(lightDir_TS);
 
     // calculate color using phong illumination
-    vec3 color = planetshader(N, V, L, texcoord_frag);
+    vec3 color = planetshader(N, V, L, moving_texcoord);
     
     // set fragment color
     if(phong.debug_texcoords)
-        outColor = vec4(texcoord_frag, 0, 1);
+        outColor = vec4(moving_texcoord, 0, 1);
     else if(bump.debug)
         outColor = vec4((N+vec3(1,1,1)/2), 1);
     else
