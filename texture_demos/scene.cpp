@@ -2,10 +2,6 @@
 #include <iostream> // std::cout etc.
 #include <assert.h> // assert()
 #include <random>   // random number generation
-<<<<<<< HEAD
-#include <cubemap.h>
-=======
->>>>>>> d7799a3811759db03fac8e6dc9a90bc3ad654bcf
 #include "geometries/cube.h" // geom::Cube
 #include "geometries/parametric.h" // geom::Sphere etc.
 #include <string>
@@ -20,9 +16,6 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     lastDrawTime_(clock_.now()),
     currentNode_(nullptr)
 {
-
-
-
 
     // check some OpenGL parameters
     {
@@ -62,37 +55,6 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     vectorsMaterial_ = std::make_shared<VectorsMaterial>(vectors_prog);
     vectorsMaterial_->vectorToShow  = 0;
 
-<<<<<<< HEAD
-    // load textures
-    /*
-    auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_day.jpg").mirrored());
-    auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_at_night_2048.jpg").mirrored());
-    auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_bathymetry_2048.jpg").mirrored());
-    auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_clouds_2048.jpg").mirrored());
-    auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048.jpg").mirrored());
-    auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048_NRM.png").mirrored());
-*/
-    // shared pointer cube tex /Users/banana/rtr/texture_demos/assets/textures/CubeMapping
-    auto cube  = std::make_shared<QOpenGLTexture>(QImage("assets/textures/CubeMapping").mirrored());
-
-    // than auto tex
-
-
-////assets/textures/Kah
-
-
-    auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/Kah/kah_clean_COLOR.png").mirrored());
-    auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/Kah/kah_clean_COLOR.png").mirrored());
-    auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/Kah/kah_clean_OCC.png").mirrored());
-    auto clouds = std::make_shared<QOpenGLTexture>(QImage(":assets/textures/Kah/kah_clean_CLOUDS.png").mirrored());
-    auto disp   = std::make_shared<QOpenGLTexture>(QImage(":assets/textures/Kah/kah_clean_SPEC.png").mirrored());
-    auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":assets/textures/Kah/kah_clean_NRM.png").mirrored());
-
-
-    // tex parameters
-    clouds->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
-    clouds->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
-=======
 
     auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
     auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/bumps.png").mirrored());
@@ -107,7 +69,6 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     day->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
     bumps->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
     disp->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
->>>>>>> d7799a3811759db03fac8e6dc9a90bc3ad654bcf
 
     // assign textures to material
     planetMaterial_->planet.dayTexture = day;
@@ -116,7 +77,6 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     planetMaterial_->planet.cloudsTexture = clouds;
     planetMaterial_->bump.tex = bumps;
     planetMaterial_->displacement.tex = disp;
-    planetMaterial_->planet.cubeMappingTexture = cube;
 
     // load meshes from .obj files and assign shader programs to them
     auto std = planetMaterial_;
