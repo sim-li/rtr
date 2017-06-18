@@ -1,11 +1,14 @@
 #include "scene.h"
-
 #include <iostream> // std::cout etc.
 #include <assert.h> // assert()
 #include <random>   // random number generation
+<<<<<<< HEAD
 #include <cubemap.h>
+=======
+>>>>>>> d7799a3811759db03fac8e6dc9a90bc3ad654bcf
 #include "geometries/cube.h" // geom::Cube
 #include "geometries/parametric.h" // geom::Sphere etc.
+#include <string>
 
 using namespace std;
 
@@ -55,9 +58,11 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     auto vectors_prog = createProgram(":/assets/shaders/vectors.vert",
                                       ":/assets/shaders/vectors.frag",
                                       ":/assets/shaders/vectors.geom");
+
     vectorsMaterial_ = std::make_shared<VectorsMaterial>(vectors_prog);
     vectorsMaterial_->vectorToShow  = 0;
 
+<<<<<<< HEAD
     // load textures
     /*
     auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_day.jpg").mirrored());
@@ -87,6 +92,22 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     // tex parameters
     clouds->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
     clouds->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+=======
+
+    auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
+    auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/bumps.png").mirrored());
+    auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/disp.png").mirrored());
+
+    // Default Texture to avoid errors
+    auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
+    auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
+    auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
+
+    // Do this for above textures to have infinite repeat.
+    day->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+    bumps->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+    disp->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+>>>>>>> d7799a3811759db03fac8e6dc9a90bc3ad654bcf
 
     // assign textures to material
     planetMaterial_->planet.dayTexture = day;
@@ -99,43 +120,27 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // load meshes from .obj files and assign shader programs to them
     auto std = planetMaterial_;
-    meshes_["Duck"]    = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", std);
 
     // add meshes of some procedural geometry objects (not loaded from OBJ files)
-    meshes_["Cube"]   = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
-    meshes_["Sphere"] = std::make_shared<Mesh>(make_shared<geom::Planet>(80,80), std);
-    meshes_["Torus"]  = std::make_shared<Mesh>(make_shared<geom::Torus>(4, 2, 80,20), std);
     meshes_["Rect"]   = std::make_shared<Mesh>(make_shared<geom::Rect>(20,20), std);
 
     // pack each mesh into a scene node, along with a transform that scales
     // it to standard size [1,1,1]
-    nodes_["Sphere"]  = createNode(meshes_["Sphere"], true);
-    nodes_["Torus"]   = createNode(meshes_["Torus"], true);
     nodes_["Rect"]    = createNode(meshes_["Rect"], true);
-    nodes_["Cube"]    = createNode(meshes_["Cube"], true);
-    nodes_["Duck"]    = createNode(meshes_["Duck"], true);
 
-    // rotate some models
-    nodes_["Sphere"]->transformation.rotate(-90, QVector3D(1,0,0));
-    nodes_["Torus"]->transformation.rotate(-60, QVector3D(1,0,0));
     //nodes_["Rect"]->transformation.rotate(30, QVector3D(1,0,0));
 
     // current model and shader
-    changeModel("Sphere");
-    changeShader("Phong");
+    changeModel("Rect");
+    changeShader("Day Texture");
 
     // create default camera (0,0,4) -> (0,0,0), 45°
-    float aspect = float(parent->width())/float(parent->height());
+    float aspect = float(parent->width()) /float(parent->height());
 
-    /*
-        QVector3D(0, 0.3f, 3), // look from
-        QVector3D(0, 0, 0), // look to
-        QVector3D(0, 1, 0), // this way is up
-    */
 
     camera_ = std::make_shared<Camera>(
-                QVector3D(0, 0.05, 2), // look from
-                QVector3D(0, 0.05, 0), // look to
+                QVector3D(0, 0.15, 2), // look from
+                QVector3D(0, 0.15, 0), // look to
                 QVector3D(0, 1, 0), // this way is up
                 30.0,   // field of view in up direction
                 aspect, // aspect ratio

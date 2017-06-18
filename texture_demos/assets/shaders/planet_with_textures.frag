@@ -103,7 +103,6 @@ vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
     float debugFactor = 1.0;
 
     if(planet.debug) {
-
         // visualize s texture coordinates using stripes
         if(mod(uv.x, 0.05) >= 0.025) {
             debugFactor = 0.7;

@@ -72,6 +72,7 @@ void PlanetMaterial::apply()
         prog_->setUniformValue("bump.debug", bump.debug);
     }
     prog_->setUniformValue("displacement.use", displacement.use);
+
     if(displacement.use) {
         prog_->setUniformValue("displacement.scale", displacement.scale);
         prog_->setUniformValue("displacement.tex", 5); displacement.tex->bind(5);
