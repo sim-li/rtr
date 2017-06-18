@@ -66,9 +66,12 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
 
     // Do this for above textures to have infinite repeat.
-    day->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
-    bumps->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
-    disp->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+    day->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::MirroredRepeat);
+    day->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::MirroredRepeat);
+    bumps->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::MirroredRepeat);
+    bumps->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::MirroredRepeat);
+    disp->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::MirroredRepeat);
+    disp->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::MirroredRepeat);
 
     // assign textures to material
     planetMaterial_->planet.dayTexture = day;

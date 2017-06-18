@@ -2,7 +2,6 @@
  * fragment shader for phong + textures + bumps
  *
  */
-
 #version 150
 
 // output - transformed to eye coordinates (EC)
@@ -28,19 +27,16 @@ uniform PointLight light;
 
 // Phong coefficients and exponent
 struct PhongMaterial {
-
     // basic Phong
     vec3 k_ambient;
     vec3 k_diffuse;
     vec3 k_specular;
     float shininess;
     bool debug_texcoords;
-
 };
 uniform PhongMaterial phong;
 
 struct PlanetMaterial {
-
     // additional textures
     bool useDayTexture;
     bool useNightTexture;
@@ -52,11 +48,9 @@ struct PlanetMaterial {
     sampler2D cloudsTexture;
     float night_scale;
     float night_blend_exp;
-
     // debugging
     bool debug;
     bool debugWaterLand;
-
     // animation
     bool animateClouds;
 
@@ -93,8 +87,6 @@ vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
     //vec2 uv_clouds = planet.animateClouds? uv + vec2(time*0.02, 0) : uv;
     vec2 uv_clouds = uv;
 
-    // Already moving incoming uv coords in main routine of shader
-    //vec2 uv_daytexture = uv + vec2(0, time*0.02);
     vec2 uv_daytexture = uv;
 
     // texture lookups
@@ -187,10 +179,8 @@ vec3 decodeNormal(vec3 normal) {
 }
 
 void main() {
-    vec2 moving_texcoord = texcoord_frag + vec2(0, time*0.02);
-
     // default normal in tangent space is (0,0,1).
-    vec3 bumpValue = texture(bump.tex, moving_texcoord).xyz;
+    vec3 bumpValue = texture(bump.tex, texcoord_frag).xyz;
 
     // get bump direction (in tangent space) from bump texture
     vec3 N = bump.use? decodeNormal(bumpValue) : vec3(0,0,1);
@@ -198,11 +188,11 @@ void main() {
     vec3 L = normalize(lightDir_TS);
 
     // calculate color using phong illumination
-    vec3 color = planetshader(N, V, L, moving_texcoord);
+    vec3 color = planetshader(N, V, L, texcoord_frag);
     
     // set fragment color
     if(phong.debug_texcoords)
-        outColor = vec4(moving_texcoord, 0, 1);
+        outColor = vec4(texcoord_frag, 0, 1);
     else if(bump.debug)
         outColor = vec4((N+vec3(1,1,1)/2), 1);
     else

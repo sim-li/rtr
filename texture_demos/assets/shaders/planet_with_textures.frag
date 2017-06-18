@@ -81,9 +81,8 @@ uniform DisplacementMaterial displacement;
  */
 
 vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
-    
     // animation
-    vec2 uv_clouds = planet.animateClouds? texcoord_frag+vec2(time*0.02,0) : texcoord_frag;
+    vec2 uv_clouds = planet.animateClouds? texcoord_frag + vec2(time*0.02,0) : texcoord_frag;
     
     // texture lookups
     vec3  dayCol = texture(planet.dayTexture, uv).rgb;
@@ -170,9 +169,7 @@ vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
 }
 
 
-
-void main() {
-    
+void main() {    
     // normalize normal after projection
     vec3 normalEC = normalize(normal_EC);
     
@@ -192,5 +189,4 @@ void main() {
     
     // set fragment color
     outColor = vec4(color, 1.0);
-    
 }

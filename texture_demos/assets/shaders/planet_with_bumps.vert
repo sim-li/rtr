@@ -35,6 +35,8 @@ struct DisplacementMaterial {
 };
 uniform DisplacementMaterial displacement;
 
+uniform float time;
+
 // output - transformed to eye coordinates (EC)
 out vec4 position_EC;
 out vec3 normal_EC;
@@ -46,14 +48,16 @@ out vec3 lightDir_TS;
 // tex coords - just copied
 out vec2 texcoord_frag;
 
-
 void main(void) {
+    //time * 0.1 would add a movement
+    vec2 movement = vec2(0, time * 0.1);
 
     // displacement mapping!
-    float disp = texture(displacement.tex, texcoord).r * displacement.scale;
+    float disp = texture(displacement.tex, texcoord + movement).r * displacement.scale;
+
     vec4 pos = vec4(position_MC,1);
     if(displacement.use)
-        pos += vec4(normal_MC,0)*disp;
+        pos += vec4(normal_MC,0) * disp;
 
     // vertex/fragment position in clip coordinates
     gl_Position  = modelViewProjectionMatrix * pos;
@@ -65,12 +69,14 @@ void main(void) {
     normal_EC = normalMatrix * normal_MC;
 
     // tex coords: just copy
-    texcoord_frag = texcoord;
+    texcoord_frag = texcoord + movement;
 
     // calculate position and T N B in world coordinates
     mat4 viewMatrixInverse = inverse(viewMatrix);
     vec4 wcPosition      = modelMatrix*vec4(position_MC,1.0);
-    vec4 wcEyePosition   = viewMatrixInverse*vec4(0,0,0,1); // only works for perspective projection
+    vec4 wcEyePosition   = viewMatrixInverse*vec4(0,0,0,1);
+
+    // only works for perspective projection
     vec4 wcLightPosition = viewMatrixInverse*light.position_EC;
     vec3 wcNormal        = (modelMatrix*vec4(normal_MC, 0)).xyz;
     vec3 wcTangent       = (modelMatrix*vec4(tangent_MC, 0)).xyz;
@@ -84,7 +90,4 @@ void main(void) {
     mat3 TBN = mat3(wcTangent, wcBitangent, wcNormal);
     lightDir_TS = wcLightDir * TBN;
     viewDir_TS  = wcViewDir * TBN;
-
 }
-
-
