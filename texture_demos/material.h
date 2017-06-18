@@ -91,6 +91,7 @@ public:
 
     // planet-specific properties
     struct Planet {
+        bool useCubeMapping = true;
         bool useDayTexture = false;
         bool useNightTexture = false;
         bool useGlossTexture = false;
@@ -99,6 +100,7 @@ public:
         std::shared_ptr<QOpenGLTexture> nightTexture;
         std::shared_ptr<QOpenGLTexture> glossTexture;
         std::shared_ptr<QOpenGLTexture> cloudsTexture;
+        std::shared_ptr<QOpenGLTexture> cubeMappingTexture;
         float night_scale = 1.0;
         float night_blend_exp = 3.0;
         bool debug = false;

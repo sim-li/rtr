@@ -39,5 +39,18 @@
         <file>assets/textures/saltdesert_iran_NRM.png</file>
         <file>assets/textures/saltdesert_iran.jpg</file>
         <file>assets/textures/saltdesert_iran_NRM.jpg</file>
+        <file>assets/textures/CubeMapping/negx.jpg</file>
+        <file>assets/textures/CubeMapping/negy.jpg</file>
+        <file>assets/textures/CubeMapping/negz.jpg</file>
+        <file>assets/textures/CubeMapping/posx.jpg</file>
+        <file>assets/textures/CubeMapping/posy.jpg</file>
+        <file>assets/textures/CubeMapping/posz.jpg</file>
+        <file>assets/textures/Kah/kah_clean.png</file>
+        <file>assets/textures/Kah/kah_clean_COLOR.png</file>
+        <file>assets/textures/Kah/kah_clean_DISP.png</file>
+        <file>assets/textures/Kah/kah_clean_NRM.png</file>
+        <file>assets/textures/Kah/kah_clean_OCC.png</file>
+        <file>assets/textures/Kah/kah_clean_SPEC.png</file>
+        <file>assets/textures/Kah/kah_lrg_CLOUDS.png</file>
     </qresource>
 </RCC>
