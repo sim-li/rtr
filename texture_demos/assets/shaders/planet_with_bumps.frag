@@ -14,6 +14,7 @@ in vec3 lightDir_TS;
 
 // tex coords - just copied
 in vec2 texcoord_frag;
+in float disp_frag;
 
 // output: color
 out vec4 outColor;
@@ -197,4 +198,6 @@ void main() {
         outColor = vec4((N+vec3(1,1,1)/2), 1);
     else
         outColor = vec4(color, 1.0);
+
+    outColor = vec4(disp_frag * 3, 0, 0, 1);
 }

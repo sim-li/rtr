@@ -47,6 +47,8 @@ out vec3 lightDir_TS;
 
 // tex coords - just copied
 out vec2 texcoord_frag;
+out float disp_frag;
+
 
 void main(void) {
     //time * 0.1 would add a movement
@@ -54,10 +56,13 @@ void main(void) {
 
     // displacement mapping!
     float disp = texture(displacement.tex, texcoord + movement).r * displacement.scale;
+    disp_frag = disp;
 
     vec4 pos = vec4(position_MC,1);
     if(displacement.use)
         pos += vec4(normal_MC,0) * disp;
+
+
 
     // vertex/fragment position in clip coordinates
     gl_Position  = modelViewProjectionMatrix * pos;
