@@ -33,5 +33,11 @@
         <file>assets/textures/earth/night.jpg</file>
         <file>assets/shaders/skybox.frag</file>
         <file>assets/shaders/skybox.vert</file>
+        <file>assets/textures/CubeMapping/negx.jpg</file>
+        <file>assets/textures/CubeMapping/negy.jpg</file>
+        <file>assets/textures/CubeMapping/negz.jpg</file>
+        <file>assets/textures/CubeMapping/posx.jpg</file>
+        <file>assets/textures/CubeMapping/posy.jpg</file>
+        <file>assets/textures/CubeMapping/posz.jpg</file>
     </qresource>
 </RCC>

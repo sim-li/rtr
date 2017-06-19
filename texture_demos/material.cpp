@@ -19,8 +19,8 @@ void VectorsMaterial::apply()
 void SkyboxMaterial::apply()
 {
     prog_->bind();
-    //prog_->setUniformValue("abc", abc);
-    //prog_->setUniformValue("specularEnvMap", specularEnvMap);
+    prog_->setUniformValue("cubeMap", 0);
+    cubeMap->bind(0);
 }
 
 

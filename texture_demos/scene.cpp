@@ -37,13 +37,13 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     }
 
 
-    //std::shared_ptr<QOpenGLTexture> cubeMap = makeCubeMap(":/assets/textures/CubeMapping");
-    //auto skybox_prog = createProgram(":/assets/shaders/skybox.vert ", ":/assets/shaders/skybox.frag");
-    //skyboxMaterial_ = std::make_shared<SkyboxMaterial>(skybox_prog);
-    //skyboxMaterial_->specularEnvMap = cubeMap;
+    std::shared_ptr<QOpenGLTexture> cubeMap = makeCubeMap(":/assets/textures/CubeMapping");
+    auto skybox_prog = createProgram(":/assets/shaders/skybox.vert", ":/assets/shaders/skybox.frag");
+    skyboxMaterial_ = std::make_shared<SkyboxMaterial>(skybox_prog);
+    skyboxMaterial_->cubeMap = cubeMap;
+    auto mesh = std::make_shared<Mesh>(make_shared<geom::Cube>(), skyboxMaterial_);
+    nodes_["Skybox"] = createNode(mesh, true);
 
-    //auto skyNode = Node::make("sky");
-    //skyNode->add(Shape::make(Mesh::makeCube(), skyMaterial));
     //auto skyNodeRoot = Node::make("skyRoot");
     //skyNodeRoot->children = {cameraNode, lightNode, skyNode};
 
@@ -109,6 +109,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     nodes_["Rect"]    = createNode(meshes_["Rect"], true);
     nodes_["Rect"].get()->transformation.scale(2.0f);
+    nodes_["Skybox"].get()->transformation.scale(2.0f);
     nodes_["Cube"]    = createNode(meshes_["Cube"], true);
 
     //nodes_["Rect"]->transformation.rotate(30, QVector3D(1,0,0));
@@ -322,6 +323,12 @@ void Scene::draw()
     // clear background, set OpenGL state
     glClearColor(bgcolor_[0], bgcolor_[1], bgcolor_[2], 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+
+    nodes_["Skybox"]->draw(*camera_, worldTransform_);
+
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glCullFace(GL_BACK);

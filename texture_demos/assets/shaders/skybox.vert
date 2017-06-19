@@ -1,26 +1,32 @@
 #version 150
 
-struct Transform {
-    mat4 projection;
-    mat4 inverseView;
-    mat4 view;
-    mat4 model;
-};
+// transformation matrices
+uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
+uniform mat3 normalMatrix;
 
-in vec3 position;
+// in: position and normal vector in model coordinates (_MC), texcoords
+in vec3 position_MC;
+in vec3 normal_MC;
+in vec2 texcoord;
 
-uniform Transform transform;
-
-out vec3 directionW;
-//out vec4 vPosition;
+// position + normal vector in eye coordinates (_EC), texcoords
+out vec4 position_EC;
+out vec3 normal_EC;
+out vec2 texcoord_frag;
 
 void main(void) {
-    // Transform to world space
-    // Only consider the direction to the vertex
-    directionW = vec3(transform.view * vec4(position, 0.0));
-    // The cube already *is* in camera coordinates
 
-//    vPosition = transform.projection * transform.inverseView * vec4(position, 1.0);
-    gl_Position = transform.projection * vec4(position, 1.0);
-//    vPosition = gl_Position;
+    // position to eye coordinates
+    position_EC = modelViewMatrix * vec4(position_MC,1);
+
+    // normal to eye coordinates
+    normal_EC = normalMatrix * normal_MC;
+
+    // just copy tex coords
+    texcoord_frag = texcoord;
+
+    // position to clip coordinates
+    gl_Position = projectionMatrix * position_EC;
+
 }

@@ -65,8 +65,7 @@ class SkyboxMaterial: public Material {
 public:
     SkyboxMaterial(std::shared_ptr<QOpenGLShaderProgram> prog) : Material(prog) {}
 
-    std::shared_ptr<QOpenGLTexture> specularEnvMap;
-    bool abc = false;
+    std::shared_ptr<QOpenGLTexture> cubeMap;
 
     void apply() override;
 };
