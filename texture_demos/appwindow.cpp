@@ -5,11 +5,9 @@
  */
 
 #include <assert.h>
-
 #include <QApplication>
 #include <QKeyEvent>
 #include <QDesktopWidget>
-
 #include "appwindow.h"
 #include "ui_appwindow.h"
 #include "scene.h"
@@ -29,11 +27,9 @@ AppWindow::AppWindow(QWidget *parent) :
 
     // else set sensible initial size
     if(!restored) {
-
         // available part of the desktop (minus dock/taskbar etc.)
         QDesktopWidget desktop;
         QRect avail = desktop.availableGeometry(desktop.primaryScreen());
-
         // default size = 70% of available desktop
         setGeometry(50,50,avail.width()*0.7, avail.height()*0.7);
     }
@@ -47,7 +43,7 @@ AppWindow::AppWindow(QWidget *parent) :
     // combo box to change the model
     connect(ui->modelComboBox, &QComboBox::currentTextChanged,
             [this](const QString& txt) { scene().changeModel(txt);
-    } );
+    });
 
     // combo box to change the shader
     connect(ui->shaderComboBox, &QComboBox::currentTextChanged, [this](const QString& txt) {
@@ -56,8 +52,7 @@ AppWindow::AppWindow(QWidget *parent) :
             ui->animationCheckbox->setVisible(true);
         else
             ui->animationCheckbox->setVisible(false);
-
-    } );
+    });
 
     // main shader parameters
     connect(ui->blackBgRadioButton, &QRadioButton::clicked,
@@ -154,95 +149,77 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
 {
     assert(event);
 
-    // qDebug() << "modifier: " << event->modifiers() << " key code: " << event->key();
-
     // keys with Shift pressed
     if(event->modifiers() & Qt::ShiftModifier) {
-
         switch(event->key()) {
-
-        // move light
-        case Qt::Key_Left:
-            scene().moveLight(-0.1f,0);
-            break;
-        case Qt::Key_Right:
-            scene().moveLight(0.1f,0);
-            break;
-        case Qt::Key_Up:
-            scene().moveLight(0,0.1f);
-            break;
-        case Qt::Key_Down:
-            scene().moveLight(0,-0.1f);
-            break;
+            // move light
+            case Qt::Key_Left:
+                scene().moveLight(-0.1f,0);
+                break;
+            case Qt::Key_Right:
+                scene().moveLight(0.1f,0);
+                break;
+            case Qt::Key_Up:
+                scene().moveLight(0, 0.1f);
+                break;
+            case Qt::Key_Down:
+                scene().moveLight(0,-0.1f);
+                break;
         }
         return;
-
     }
 
     // keys without Shift pressed
     switch(event->key()) {
+        case Qt::Key_H:
+            ui->ui_container->isHidden()? showUI() : hideUI();
+            break;
 
-    // key 'h': show/hide UI
-    case Qt::Key_H:
-        ui->ui_container->isHidden()? showUI() : hideUI();
-        break;
+        case Qt::Key_Q:
+            close();
+            break;
 
-    // key 'q': quit app
-    case Qt::Key_Q:
-        close();
-        break;
+        case Qt::Key_Left:
+            scene().worldTransform().rotate(-5, QVector3D(0,1,0));
+            ui->openGLWidget->update();
+            break;
 
-    // rotate world
-    /*
-    case Qt::Key_Left:
-        scene().worldTransform().rotate(-5, QVector3D(0,1,0));
-        ui->openGLWidget->update();
-        break;
-    case Qt::Key_Right:
-        scene().worldTransform().rotate(5, QVector3D(0,1,0));
-        ui->openGLWidget->update();
-        break;
-    */
-    case Qt::Key_Left:
-        scene().worldTransform().rotate(-0.1, QVector3D(0,1,0));
-        ui->openGLWidget->update();
-        break;
-    case Qt::Key_Right:
-        scene().worldTransform().rotate(0.1, QVector3D(0,1,0));
-        ui->openGLWidget->update();
-        break;
+        case Qt::Key_Right:
+            scene().worldTransform().rotate(5, QVector3D(0,1,0));
+            ui->openGLWidget->update();
+            break;
 
-        // Forward: -DX +DZ
-    case Qt::Key_Up:
-        scene().worldTransform().rotate(-0.1, QVector3D(1,0,0));
-        //float
-        //scene().camera().translateViewPoint(QVector3D(0, 0, +0.1f));
-        ui->openGLWidget->update();
-        break;
-        // Backward: +DX -DZ
-    case Qt::Key_Down:
-        scene().worldTransform().rotate(0.1, QVector3D(1,0,0));
-        ui->openGLWidget->update();
-        break;
+        case Qt::Key_Up:
+            scene().worldTransform().rotate(-0.1, QVector3D(1,0,0));
+            //scene().camera().translateViewPoint(QVector3D(0, 0, +0.1f)); //-?
+            ui->openGLWidget->update();
+            break;
 
+        case Qt::Key_Down:
+            scene().worldTransform().rotate(0.1, QVector3D(1,0,0));
+            ui->openGLWidget->update();
+            break;
 
-    // translate camera
-    /*
-    case Qt::Key_Up:
-        scene().camera().translateViewPoint(QVector3D(0,0,-0.1f));
-        ui->openGLWidget->update();
-        break;
-    case Qt::Key_Down:
-        scene().camera().translateViewPoint(QVector3D(0,0,+0.1f));
-        ui->openGLWidget->update();
-        break;
-    */
-    case Qt::Key_I:
-        scene().camera().translateViewPoint(QVector3D(0,0,-0.1f));
-        ui->openGLWidget->update();
-        break;
-    case Qt::Key_O:
-        scene().camera().translateViewPoint(QVector3D(0,0,+0.1f));
-        ui->openGLWidget->update();
-    } // switch
+        case Qt::Key_I:
+            scene().camera().translateViewPoint(QVector3D(0,0,-0.1f));
+            ui->openGLWidget->update();
+            break;
+
+        case Qt::Key_O:
+            scene().camera().translateViewPoint(QVector3D(0,0,+0.1f));
+            ui->openGLWidget->update();
+            break;
+
+        case Qt::Key_W:
+            scene().worldTransform().translate(0, 0.1f, 0);
+            //scene().camera().translateViewPoint(QVector3D(+0.1, 0, 0));
+            ui->openGLWidget->update();
+            break;
+
+        case Qt::Key_S:
+            scene().worldTransform().translate(0, -0.1f, 0);
+            //scene().camera().translateViewPoint(QVector3D(+0.1, 0, 0));
+            ui->openGLWidget->update();
+            break;
+    }
 }

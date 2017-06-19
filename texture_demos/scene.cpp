@@ -50,7 +50,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     // load shader source files and compile them into OpenGL program objects
     auto planet_prog = createProgram(":/assets/shaders/planet_with_bumps.vert", ":/assets/shaders/planet_with_bumps.frag");
     planetMaterial_ = std::make_shared<PlanetMaterial>(planet_prog);
-    planetMaterial_->light.position_EC = QVector3D(4,0,2);
+    //planetMaterial_->light.position_EC = QVector3D(4,0,2);
     planetMaterial_->phong.shininess = 10;
 
     // program (with additional geometry shader) to visualize wireframe
@@ -118,14 +118,16 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     float aspect = float(parent->width()) / float(parent->height());
 
     camera_ = std::make_shared<Camera>(
-        QVector3D(0, 0.15, 2), // look from
-        QVector3D(0, 0.15, 0), // look to
-        QVector3D(0, 1, 0), // this way is up
-        30.0,   // field of view in up direction
-        aspect, // aspect ratio
-        0.01,   // near plane
-        10.0    // far plane
+        QVector3D(0, 0.15, 2),  // look from
+        QVector3D(0, 0.15, 0),  // look to
+        QVector3D(0, 1, 0),     // this way is up
+        30.0,                   // field of view in up direction
+        aspect,                 // aspect ratio
+        0.01,                   // near plane
+        10.0                    // far plane
     );
+
+    camera_->translateViewPoint(QVector3D(0, 0, -0.6f));
 
     // make sure we redraw when the timer hits
     connect(&timer_, SIGNAL(timeout()), this, SLOT(update()));

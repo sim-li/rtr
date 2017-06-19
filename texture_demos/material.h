@@ -94,7 +94,7 @@ public:
 
     // light position: up right from the camera, in eye coordinates
     struct PointLight {
-        QVector4D position_EC = QVector4D(0, 5, 10,1);
+        QVector4D position_EC = QVector4D(4, 5.0f, 2, 1);
         QVector3D intensity = QVector3D(1,1,1);
     } light;
 
