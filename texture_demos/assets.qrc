@@ -31,5 +31,7 @@
         <file>assets/textures/earth/disp.jpg</file>
         <file>assets/textures/earth/gloss.jpg</file>
         <file>assets/textures/earth/night.jpg</file>
+        <file>assets/shaders/skybox.frag</file>
+        <file>assets/shaders/skybox.vert</file>
     </qresource>
 </RCC>

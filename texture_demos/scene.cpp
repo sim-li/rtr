@@ -5,6 +5,7 @@
 #include "geometries/cube.h" // geom::Cube
 #include "geometries/parametric.h" // geom::Sphere etc.
 #include <string>
+#include "cubemap.h"
 
 using namespace std;
 
@@ -34,6 +35,18 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &texsize);
         cout << "max texture size: " << texsize << "x" << texsize << endl;
     }
+
+
+    //std::shared_ptr<QOpenGLTexture> cubeMap = makeCubeMap(":/assets/textures/CubeMapping");
+    //auto skybox_prog = createProgram(":/assets/shaders/skybox.vert ", ":/assets/shaders/skybox.frag");
+    //skyboxMaterial_ = std::make_shared<SkyboxMaterial>(skybox_prog);
+    //skyboxMaterial_->specularEnvMap = cubeMap;
+
+    //auto skyNode = Node::make("sky");
+    //skyNode->add(Shape::make(Mesh::makeCube(), skyMaterial));
+    //auto skyNodeRoot = Node::make("skyRoot");
+    //skyNodeRoot->children = {cameraNode, lightNode, skyNode};
+
 
     // load shader source files and compile them into OpenGL program objects
     auto planet_prog = createProgram(":/assets/shaders/planet_with_bumps.vert", ":/assets/shaders/planet_with_bumps.frag");
@@ -85,11 +98,18 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     auto std = planetMaterial_;
 
     // add meshes of some procedural geometry objects (not loaded from OBJ files)
-    meshes_["Rect"]   = std::make_shared<Mesh>(make_shared<geom::Rect>(20,20), std);
+
+    //512
+    meshes_["Rect"]   = std::make_shared<Mesh>(make_shared<geom::Rect>(512, 512), std);
+    meshes_["Cube"]   = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
+
 
     // pack each mesh into a scene node, along with a transform that scales
     // it to standard size [1,1,1]
+
     nodes_["Rect"]    = createNode(meshes_["Rect"], true);
+    nodes_["Rect"].get()->transformation.scale(2.0f);
+    nodes_["Cube"]    = createNode(meshes_["Cube"], true);
 
     //nodes_["Rect"]->transformation.rotate(30, QVector3D(1,0,0));
 

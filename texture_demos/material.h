@@ -61,6 +61,16 @@ public:
 
 };
 
+class SkyboxMaterial: public Material {
+public:
+    SkyboxMaterial(std::shared_ptr<QOpenGLShaderProgram> prog) : Material(prog) {}
+
+    std::shared_ptr<QOpenGLTexture> specularEnvMap;
+    bool abc = false;
+
+    void apply() override;
+};
+
 
 class PlanetMaterial : public Material {
 public:
@@ -85,7 +95,7 @@ public:
 
     // light position: up right from the camera, in eye coordinates
     struct PointLight {
-        QVector4D position_EC = QVector4D(2,2,0,1);
+        QVector4D position_EC = QVector4D(0, 5, 10,1);
         QVector3D intensity = QVector3D(1,1,1);
     } light;
 

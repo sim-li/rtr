@@ -122,6 +122,7 @@ protected:
     std::shared_ptr<PlanetMaterial> planetMaterial_, material_;
     std::shared_ptr<WireframeMaterial> wireframeMaterial_;
     std::shared_ptr<VectorsMaterial> vectorsMaterial_;
+    std::shared_ptr<SkyboxMaterial> skyboxMaterial_;
 
     // additional debugging information to show
     bool drawUsingPlanetShader = true;

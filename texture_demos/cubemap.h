@@ -20,9 +20,7 @@
  *  +X, +Y, +Z, -X, -Y, -Z
  *
  */
-std::shared_ptr<QOpenGLTexture>
-makeCubeMap(std::string path_to_images, std::array<std::string,6> sides =
-        {{"posx.jpg", "posy.jpg", "posz.jpg", "negx.jpg", "negy.jpg", "negz.jpg"}});
+std::shared_ptr<QOpenGLTexture> makeCubeMap(std::string path_to_images, std::array<std::string,6> sides = {{"posx.jpg", "posy.jpg", "posz.jpg", "negx.jpg", "negy.jpg", "negz.jpg"}});
 
 
 

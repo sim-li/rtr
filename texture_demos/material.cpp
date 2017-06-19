@@ -13,8 +13,16 @@ void VectorsMaterial::apply()
     prog_->setUniformValue("vectorColor", vectorColor);
     prog_->setUniformValue("vectorToShow", vectorToShow);
     prog_->setUniformValue("scale", scale);
-
 }
+
+
+void SkyboxMaterial::apply()
+{
+    prog_->bind();
+    //prog_->setUniformValue("abc", abc);
+    //prog_->setUniformValue("specularEnvMap", specularEnvMap);
+}
+
 
 void PlanetMaterial::apply()
 {
