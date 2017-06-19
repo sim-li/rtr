@@ -199,5 +199,15 @@ void main() {
     else
         outColor = vec4(color, 1.0);
 
-    outColor = vec4(disp_frag * 3, 0, 0, 1);
+    if (disp_frag > 0.5) {
+        outColor = vec4(255, 0, 0, 1);
+    } else if (disp_frag > 0.35) {
+        outColor = vec4(0, 255, 0, 1);
+    } else if (disp_frag > 0.1) {
+        outColor = vec4(0, 0, 255, 1);
+    } else {
+        outColor = vec4(255, 255, 0, 1);
+    }
+
+    //outColor = vec4(disp_frag * 3, 0, 0, 1);
 }
