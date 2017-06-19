@@ -154,5 +154,7 @@ protected:
     // helper for creating a node scaled to size 1
     std::shared_ptr<Node> createNode(std::shared_ptr<Mesh> mesh, bool scale_to_1 = true);
 
+    bool activateSkybox;
+
 };
 

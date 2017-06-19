@@ -36,17 +36,16 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
         cout << "max texture size: " << texsize << "x" << texsize << endl;
     }
 
+    activateSkybox = false;
 
-    std::shared_ptr<QOpenGLTexture> cubeMap = makeCubeMap(":/assets/textures/CubeMapping");
-    auto skybox_prog = createProgram(":/assets/shaders/skybox.vert", ":/assets/shaders/skybox.frag");
-    skyboxMaterial_ = std::make_shared<SkyboxMaterial>(skybox_prog);
-    skyboxMaterial_->cubeMap = cubeMap;
-    auto mesh = std::make_shared<Mesh>(make_shared<geom::Cube>(), skyboxMaterial_);
-    nodes_["Skybox"] = createNode(mesh, true);
-
-    //auto skyNodeRoot = Node::make("skyRoot");
-    //skyNodeRoot->children = {cameraNode, lightNode, skyNode};
-
+    if (activateSkybox){
+        std::shared_ptr<QOpenGLTexture> cubeMap = makeCubeMap(":/assets/textures/CubeMapping");
+        auto skybox_prog = createProgram(":/assets/shaders/skybox.vert", ":/assets/shaders/skybox.frag");
+        skyboxMaterial_ = std::make_shared<SkyboxMaterial>(skybox_prog);
+        skyboxMaterial_->cubeMap = cubeMap;
+        auto skyboxMesh = std::make_shared<Mesh>(make_shared<geom::Cube>(), skyboxMaterial_);
+        nodes_["Skybox"] = createNode(skyboxMesh, true);
+    }
 
     // load shader source files and compile them into OpenGL program objects
     auto planet_prog = createProgram(":/assets/shaders/planet_with_bumps.vert", ":/assets/shaders/planet_with_bumps.frag");
@@ -67,7 +66,6 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     vectorsMaterial_ = std::make_shared<VectorsMaterial>(vectors_prog);
     vectorsMaterial_->vectorToShow  = 0;
-
 
     auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
     auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/bumps.png").mirrored());
@@ -98,43 +96,39 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     auto std = planetMaterial_;
 
     // add meshes of some procedural geometry objects (not loaded from OBJ files)
-
-    //512
-    meshes_["Rect"]   = std::make_shared<Mesh>(make_shared<geom::Rect>(512, 512), std);
+    int size = 512 / 2;
+    meshes_["Rect"]   = std::make_shared<Mesh>(make_shared<geom::Rect>(size, size), std);
     meshes_["Cube"]   = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
-
 
     // pack each mesh into a scene node, along with a transform that scales
     // it to standard size [1,1,1]
 
-    nodes_["Rect"]    = createNode(meshes_["Rect"], true);
+    nodes_["Rect"] = createNode(meshes_["Rect"], true);
     nodes_["Rect"].get()->transformation.scale(2.0f);
-    nodes_["Skybox"].get()->transformation.scale(2.0f);
-    nodes_["Cube"]    = createNode(meshes_["Cube"], true);
-
-    //nodes_["Rect"]->transformation.rotate(30, QVector3D(1,0,0));
+    nodes_["Cube"] = createNode(meshes_["Cube"], true);
+    if (activateSkybox) {
+        nodes_["Skybox"].get()->transformation.scale(2.0f);
+    }
 
     // current model and shader
     changeModel("Rect");
     changeShader("Day Texture");
 
     // create default camera (0,0,4) -> (0,0,0), 45°
-    float aspect = float(parent->width()) /float(parent->height());
-
+    float aspect = float(parent->width()) / float(parent->height());
 
     camera_ = std::make_shared<Camera>(
-                QVector3D(0, 0.15, 2), // look from
-                QVector3D(0, 0.15, 0), // look to
-                QVector3D(0, 1, 0), // this way is up
-                30.0,   // field of view in up direction
-                aspect, // aspect ratio
-                0.01,   // near plane
-                10.0    // far plane
-                );
+        QVector3D(0, 0.15, 2), // look from
+        QVector3D(0, 0.15, 0), // look to
+        QVector3D(0, 1, 0), // this way is up
+        30.0,   // field of view in up direction
+        aspect, // aspect ratio
+        0.01,   // near plane
+        10.0    // far plane
+    );
 
     // make sure we redraw when the timer hits
-    connect(&timer_, SIGNAL(timeout()), this, SLOT(update()) );
-
+    connect(&timer_, SIGNAL(timeout()), this, SLOT(update()));
 }
 
 // helper to load shaders and create programs
@@ -324,10 +318,11 @@ void Scene::draw()
     glClearColor(bgcolor_[0], bgcolor_[1], bgcolor_[2], 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
-
-    nodes_["Skybox"]->draw(*camera_, worldTransform_);
+    if (activateSkybox) {
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+        nodes_["Skybox"]->draw(*camera_, worldTransform_);
+    }
 
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
@@ -344,7 +339,6 @@ void Scene::draw()
     // show vectors in addition?
     if(vectorsMaterial_->vectorToShow != 0)
         replaceMaterialAndDrawScene(vectorsMaterial_);
-
 }
 
 void Scene::replaceMaterialAndDrawScene(shared_ptr<Material> material)

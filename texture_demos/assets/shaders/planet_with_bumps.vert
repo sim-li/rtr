@@ -63,7 +63,6 @@ void main(void) {
         pos += vec4(normal_MC,0) * disp;
 
 
-
     // vertex/fragment position in clip coordinates
     gl_Position  = modelViewProjectionMatrix * pos;
 
