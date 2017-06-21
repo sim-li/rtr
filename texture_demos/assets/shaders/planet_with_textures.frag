@@ -14,6 +14,8 @@
 in vec4  position_EC;
 in vec3  normal_EC;
 in vec2  texcoord_frag;
+in float disp_frag;
+
 
 // output: color
 out vec4 outColor;

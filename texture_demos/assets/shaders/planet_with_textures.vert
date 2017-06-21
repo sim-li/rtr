@@ -29,9 +29,29 @@ in vec2 texcoord;
 out vec4 position_EC;
 out vec3 normal_EC;
 out vec2 texcoord_frag;
+out float disp_frag;
+
+
+struct DisplacementMaterial {
+    bool use;
+    float scale;
+    sampler2D tex;
+};
+uniform DisplacementMaterial displacement;
+
+uniform float time;
+
 
 
 void main(void) {
+
+    vec2 movement = vec2(0, time * 0.1);
+
+
+    float disp = texture(displacement.tex, texcoord + movement).r * displacement.scale;
+    disp_frag = disp;
+
+
 
     // position to eye coordinates
     position_EC = modelViewMatrix * vec4(position_MC,1);
