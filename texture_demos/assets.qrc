@@ -39,5 +39,11 @@
         <file>assets/textures/CubeMapping/posx.jpg</file>
         <file>assets/textures/CubeMapping/posy.jpg</file>
         <file>assets/textures/CubeMapping/posz.jpg</file>
+        <file>assets/textures/RedPlanet/negx.jpg</file>
+        <file>assets/textures/RedPlanet/negy.jpg</file>
+        <file>assets/textures/RedPlanet/negz.jpg</file>
+        <file>assets/textures/RedPlanet/posx.jpg</file>
+        <file>assets/textures/RedPlanet/posy.jpg</file>
+        <file>assets/textures/RedPlanet/posz.jpg</file>
     </qresource>
 </RCC>

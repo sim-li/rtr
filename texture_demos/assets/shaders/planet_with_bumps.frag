@@ -194,22 +194,15 @@ void main() {
     float y = 0.09;
     // set fragment color
     if(phong.debug_texcoords)
-       //outColor = vec4(texcoord_frag, 0, 1);
-        if (disp_frag < x){
-        outColor = vec4( 0, 0, disp_frag * 3, 1); // blau
-        }else if (disp_frag > y ){
-        outColor = vec4(disp_frag * 3, 0, 0, 1); //rot
-        }else if (disp_frag > 0.075 && disp_frag < 0.09){
-        outColor = vec4( 0,disp_frag * 3, 0, 1); //gruen
-        }else{
-        outColor = vec4(disp_frag *3, disp_frag * 3, 0, 1);
-}
+       outColor = vec4(texcoord_frag, 0, 1);
+
+
 
     else if(bump.debug)
         outColor = vec4((N+vec3(1,1,1)/2), 1);
     else
         outColor = vec4(color, 1.0);
-    /*)
+
         if (disp_frag > 0.05) {
             outColor = vec4(255, 0, 0, 1);
         } else if (disp_frag > 0.035) {
@@ -219,5 +212,5 @@ void main() {
         } else {
             outColor = vec4(255, 255, 0, 1);
         }
-    */
+
 }
