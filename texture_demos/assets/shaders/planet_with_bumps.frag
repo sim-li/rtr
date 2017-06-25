@@ -89,26 +89,23 @@ vec3 gammaCorrection(vec3 col) {
 
 vec3 textureByHeight() {
     if (disp_frag > 0.05) {
-       return snowCol;
+       return texture(planet.snowTexture, uv).rgb;
      } else if (disp_frag > 0.035) {
-       return rockCol;
+       return  texture(planet.rockTexture, uv).rgb;
      } else if (disp_frag > 0.01) {
-       return gammaCorrection(dayCol);
+       return gammaCorrection(texture(planet.dayTexture, uv).rgb;
      } else {
-      return gammaCorrection(dayCol);
+      return gammaCorrection(texture(planet.dayTexture, uv).rgb;
      }
 }
 
 vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv, int nom) {
-
     // texture lookups
-    vec3  dayCol = textureByHeight().rgb;
-    vec3  rockCol = texture(planet.rockTexture, uv).rgb;
-    vec3  snowCol = texture(planet.snowTexture, uv).rgb;
+    vec3  dayCol = textureByHeight();
+
     vec3  nightCol = texture(planet.nightTexture, uv).rgb;
     bool  atSea = texture(planet.glossTexture, uv).r > 0.008;
     float cloudDensity = texture(planet.cloudsTexture, uv).r;
-
 
     nightCol = pow(nightCol, vec3(0.5)) * planet.night_scale;
     cloudDensity = pow(cloudDensity, 0.8);
