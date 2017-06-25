@@ -202,9 +202,9 @@ void main() {
         outColor = vec4(color, 1.0);
 
        if (disp_frag > 0.05) {
-            //color = planetshader(N,V,L,texcoord_frag, 1);
-        //    outColor = vec4(color, 1.0);
-            outColor = vec4(255, 0, 0, 1);
+            color = planetshader(N,V,L,texcoord_frag, 1);
+            outColor = vec4(color, 1.0);
+        //    outColor = vec4(255, 0, 0, 1);
         } else if (/*disp_frag > 0.035 ||*/ normal_EC == vec3(0,-1,0)) {
            outColor = vec4(0, 255, 0, 1);
         } else if (disp_frag > 0.01) {
@@ -214,5 +214,7 @@ void main() {
            outColor = vec4(123,123,1, 1.0);
 
         }
+
+
 
 }

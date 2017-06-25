@@ -81,7 +81,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // Do this for above textures to have infinite repeat.
     day->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::MirroredRepeat);
-    day->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::ClampToBorder);
+    day->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::MirroredRepeat);
     bumps->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::MirroredRepeat);
     bumps->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::MirroredRepeat);
     disp->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::MirroredRepeat);
