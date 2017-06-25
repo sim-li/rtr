@@ -67,24 +67,29 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     vectorsMaterial_ = std::make_shared<VectorsMaterial>(vectors_prog);
     vectorsMaterial_->vectorToShow  = 0;
 
-    auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
+    //auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
+    auto day  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/blackrock.jpg").mirrored());
     auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/bumps.png").mirrored());
     auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/disp.png").mirrored());
 
     // Default Texture to avoid errors
     auto night  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
-    auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
+    auto gloss  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/blackrock.jpg").mirrored());
     auto clouds = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
+
+
 
     // Do this for above textures to have infinite repeat.
     day->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::MirroredRepeat);
-    day->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::MirroredRepeat);
+    day->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::ClampToBorder);
     bumps->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::MirroredRepeat);
     bumps->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::MirroredRepeat);
     disp->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::MirroredRepeat);
     disp->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::MirroredRepeat);
 
     // assign textures to material
+
+
     planetMaterial_->planet.dayTexture = day;
     planetMaterial_->planet.nightTexture = night;
     planetMaterial_->planet.glossTexture = gloss;
@@ -288,7 +293,12 @@ void Scene::changeShader(const QString &txt)
 void Scene::toggleAnimation(bool flag)
 {
     if(flag) {
-        timer_.start(1000.0 / 60.0); // update *roughly* every 60 ms
+        //the higher  this is the slower the animation
+            int i = 0;
+        for(i = 0; i <= 150; i++) {
+            timer_.start(1000.0 / 60.0); // update *roughly* every 60 ms
+        }
+        i = 0;
     } else {
         timer_.stop();
     }

@@ -82,7 +82,7 @@ uniform vec3  ambientLightIntensity;
  *  Calculate surface color based on Phong illumination model.
  */
 
-vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
+vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv, int nom) {
 
     // animation
     //vec2 uv_clouds = planet.animateClouds? uv + vec2(time*0.02, 0) : uv;
@@ -143,7 +143,7 @@ vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
     }
 
     // clouds at day?
-    if(planet.useCloudsTexture) {
+    if(planet.useCloudsTexture || nom == 1) {
         diffuseCoeff = (1.0-cloudDensity)*diffuseCoeff
                        + cloudDensity*vec3(1.5,1.5,1.5);
     }
@@ -189,9 +189,7 @@ void main() {
     vec3 L = normalize(lightDir_TS);
 
     // calculate color using phong illumination
-    vec3 color = planetshader(N, V, L, texcoord_frag);
-    float x = 0.075;
-    float y = 0.09;
+    vec3 color = planetshader(N, V, L, texcoord_frag, 1);
     // set fragment color
     if(phong.debug_texcoords)
        outColor = vec4(texcoord_frag, 0, 1);
@@ -203,14 +201,18 @@ void main() {
     else
         outColor = vec4(color, 1.0);
 
-        if (disp_frag > 0.05) {
+       if (disp_frag > 0.05) {
+            //color = planetshader(N,V,L,texcoord_frag, 1);
+        //    outColor = vec4(color, 1.0);
             outColor = vec4(255, 0, 0, 1);
-        } else if (disp_frag > 0.035) {
-            outColor = vec4(0, 255, 0, 1);
+        } else if (/*disp_frag > 0.035 ||*/ normal_EC == vec3(0,-1,0)) {
+           outColor = vec4(0, 255, 0, 1);
         } else if (disp_frag > 0.01) {
             outColor = vec4(0, 0, 255, 1);
         } else {
-            outColor = vec4(255, 255, 0, 1);
+          // color = planetshader(N,V,L,texcoord_frag, 2);
+           outColor = vec4(123,123,1, 1.0);
+
         }
 
 }
