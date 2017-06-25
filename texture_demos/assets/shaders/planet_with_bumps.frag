@@ -44,6 +44,8 @@ struct PlanetMaterial {
     bool useGlossTexture;
     bool useCloudsTexture;
     sampler2D dayTexture;
+    sampler2D snowTexture;
+    sampler2D rockTexture;
     sampler2D nightTexture;
     sampler2D glossTexture;
     sampler2D cloudsTexture;
@@ -81,23 +83,33 @@ uniform vec3  ambientLightIntensity;
 /*
  *  Calculate surface color based on Phong illumination model.
  */
+vec3 gammaCorrection(vec3 col) {
+    return pow(col, vec3(0.6))*2.0;
+}
+
+vec3 textureByHeight() {
+    if (disp_frag > 0.05) {
+       return snowCol;
+     } else if (disp_frag > 0.035) {
+       return rockCol;
+     } else if (disp_frag > 0.01) {
+       return gammaCorrection(dayCol);
+     } else {
+      return gammaCorrection(dayCol);
+     }
+}
 
 vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv, int nom) {
 
-    // animation
-    //vec2 uv_clouds = planet.animateClouds? uv + vec2(time*0.02, 0) : uv;
-    vec2 uv_clouds = uv;
-
-    vec2 uv_daytexture = uv;
-
     // texture lookups
-    vec3  dayCol = texture(planet.dayTexture, uv_daytexture).rgb;
-    vec3  nightCol = texture(planet.nightTexture, uv_daytexture).rgb;
-    bool  atSea = texture(planet.glossTexture, uv_daytexture).r > 0.008;
-    float cloudDensity = texture(planet.cloudsTexture, uv_clouds).r;
+    vec3  dayCol = textureByHeight().rgb;
+    vec3  rockCol = texture(planet.rockTexture, uv).rgb;
+    vec3  snowCol = texture(planet.snowTexture, uv).rgb;
+    vec3  nightCol = texture(planet.nightTexture, uv).rgb;
+    bool  atSea = texture(planet.glossTexture, uv).r > 0.008;
+    float cloudDensity = texture(planet.cloudsTexture, uv).r;
 
-    // make brighter / gamma correction
-    dayCol = pow(dayCol, vec3(0.6))*2.0;
+
     nightCol = pow(nightCol, vec3(0.5)) * planet.night_scale;
     cloudDensity = pow(cloudDensity, 0.8);
 
@@ -193,28 +205,8 @@ void main() {
     // set fragment color
     if(phong.debug_texcoords)
        outColor = vec4(texcoord_frag, 0, 1);
-
-
-
     else if(bump.debug)
         outColor = vec4((N+vec3(1,1,1)/2), 1);
     else
         outColor = vec4(color, 1.0);
-
-       if (disp_frag > 0.05) {
-            color = planetshader(N,V,L,texcoord_frag, 1);
-            outColor = vec4(color, 1.0);
-        //    outColor = vec4(255, 0, 0, 1);
-        } else if (/*disp_frag > 0.035 ||*/ normal_EC == vec3(0,-1,0)) {
-           outColor = vec4(0, 255, 0, 1);
-        } else if (disp_frag > 0.01) {
-            outColor = vec4(0, 0, 255, 1);
-        } else {
-          // color = planetshader(N,V,L,texcoord_frag, 2);
-           outColor = vec4(123,123,1, 1.0);
-
-        }
-
-
-
 }

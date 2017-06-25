@@ -1,9 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
-
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
-
 #include <memory>
 
 /*
@@ -107,6 +105,8 @@ public:
         bool useCloudsTexture = false;
         std::shared_ptr<QOpenGLTexture> dayTexture;
         std::shared_ptr<QOpenGLTexture> nightTexture;
+        std::shared_ptr<QOpenGLTexture> snowTexture;
+        std::shared_ptr<QOpenGLTexture> rockTexture;
         std::shared_ptr<QOpenGLTexture> glossTexture;
         std::shared_ptr<QOpenGLTexture> cloudsTexture;
         std::shared_ptr<QOpenGLTexture> cubeMappingTexture;

@@ -67,8 +67,10 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     vectorsMaterial_ = std::make_shared<VectorsMaterial>(vectors_prog);
     vectorsMaterial_->vectorToShow  = 0;
 
-    //auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
-    auto day  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/blackrock.jpg").mirrored());
+    auto day    = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/day.jpg").mirrored());
+    auto rock   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/blackrock.jpg").mirrored());
+    auto snow  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/snow.jpg").mirrored());
+
     auto bumps  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/bumps.png").mirrored());
     auto disp   = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/desert/disp.png").mirrored());
 
@@ -91,6 +93,8 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
 
     planetMaterial_->planet.dayTexture = day;
+    planetMaterial_->planet.rockTexture = rock;
+    planetMaterial_->planet.snowTexture = snow;
     planetMaterial_->planet.nightTexture = night;
     planetMaterial_->planet.glossTexture = gloss;
     planetMaterial_->planet.cloudsTexture = clouds;
