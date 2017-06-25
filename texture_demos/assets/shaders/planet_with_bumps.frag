@@ -93,9 +93,9 @@ vec3 textureByHeight() {
      } else if (disp_frag > 0.035) {
        return  texture(planet.rockTexture, uv).rgb;
      } else if (disp_frag > 0.01) {
-       return gammaCorrection(texture(planet.dayTexture, uv).rgb;
+       return gammaCorrection(texture(planet.dayTexture, uv)).rgb;
      } else {
-      return gammaCorrection(texture(planet.dayTexture, uv).rgb;
+      return gammaCorrection(texture(planet.dayTexture, uv)).rgb;
      }
 }
 
