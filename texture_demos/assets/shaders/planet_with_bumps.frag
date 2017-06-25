@@ -87,21 +87,21 @@ vec3 gammaCorrection(vec3 col) {
     return pow(col, vec3(0.6))*2.0;
 }
 
-vec3 textureByHeight() {
+vec3 textureByHeight(vec2 uv) {
     if (disp_frag > 0.05) {
-       return texture(planet.snowTexture, uv).rgb;
-     } else if (disp_frag > 0.035) {
-       return  texture(planet.rockTexture, uv).rgb;
+       return texture(planet.snowTexture, uv);
+     } else if (disp_frag > 0.035)
+       return  texture(planet.rockTexture, uv);
      } else if (disp_frag > 0.01) {
-       return gammaCorrection(texture(planet.dayTexture, uv)).rgb;
+       return gammaCorrection(texture(planet.dayTexture, uv));
      } else {
-      return gammaCorrection(texture(planet.dayTexture, uv)).rgb;
+      return gammaCorrection(texture(planet.dayTexture, uv));
      }
 }
 
 vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv, int nom) {
     // texture lookups
-    vec3  dayCol = textureByHeight();
+    vec3  dayCol = textureByHeight(uv).rgb;
 
     vec3  nightCol = texture(planet.nightTexture, uv).rgb;
     bool  atSea = texture(planet.glossTexture, uv).r > 0.008;
