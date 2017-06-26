@@ -73,10 +73,18 @@ AppWindow::AppWindow(QWidget *parent) :
             [this](bool onOrOff) { scene().toggleBumpMapping(onOrOff); } );
     connect(ui->dispMapCheckBox, &QCheckBox::stateChanged,
             [this](bool onOrOff) { scene().toggleDisplacementMapping(onOrOff); } );
+
     connect(ui->bumpMapSlider, &QSlider::valueChanged,
-            [this](int value) { scene().setBumpMapScale(float(value)/100.0); } );
+            [this](int value) {
+        qDebug() << "Bump-Mapping-Value: " << float(value) / 100.0;
+        scene().setBumpMapScale(float(value)/100.0);
+    });
+
     connect(ui->dispMapSlider, &QSlider::valueChanged,
-            [this](int value) { scene().setDisplacementMapScale(float(value)/100.0); } );
+            [this](int value) {
+        qDebug() << "Displacement-Mapping-Value: " << float(value) / 100.0;
+        scene().setDisplacementMapScale(float(value)/100.0);
+    });
 
     // wireframe / vector shaders
     connect(ui->wireframeCheckBox, &QCheckBox::stateChanged,
@@ -94,15 +102,17 @@ AppWindow::AppWindow(QWidget *parent) :
 
 // called when initially shown
 void AppWindow::setDefaultUIValues() {
-
     ui->sunlightSlider->setValue(85.0);
     ui->nightLightSlider->setValue(20.0);
     ui->blendExpSlider->setValue(30.0);
-    ui->bumpMapSlider->setValue(10.0);
-    ui->dispMapSlider->setValue(10.0);
+
+    ui->bumpMapSlider->setValue(58.0);
+    ui->dispMapSlider->setValue(33.0);
+    ui->bumpMapCheckbox->setChecked(true);
+    ui->dispMapCheckBox->setChecked(true);
+
     ui->vectorScaleSlider->setValue(10.0);
     ui->greyBgRadioButton->setChecked(true);
-
 }
 
 void AppWindow::closeEvent(QCloseEvent *event)
