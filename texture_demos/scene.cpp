@@ -36,10 +36,10 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
         cout << "max texture size: " << texsize << "x" << texsize << endl;
     }
 
-    activateSkybox = false;
+    activateSkybox = true;
 
     if (activateSkybox){
-        std::shared_ptr<QOpenGLTexture> cubeMap = makeCubeMap(":/assets/textures/CubeMapping");
+        std::shared_ptr<QOpenGLTexture> cubeMap = makeCubeMap(":/assets/textures/RedPlanet");
         auto skybox_prog = createProgram(":/assets/shaders/skybox.vert", ":/assets/shaders/skybox.frag");
         skyboxMaterial_ = std::make_shared<SkyboxMaterial>(skybox_prog);
         skyboxMaterial_->cubeMap = cubeMap;
@@ -304,6 +304,11 @@ void Scene::toggleAnimation(bool flag)
     }
     planetMaterial_->planet.animateClouds = flag;
 }
+
+
+
+\
+
 
 void Scene::draw()
 {

@@ -220,14 +220,19 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
             ui->openGLWidget->update();
             break;
 
-        case Qt::Key_W:
-            scene().worldTransform().translate(0, 0.1f, 0);
+
+
+
+
+            //Vertical
+        case Qt::Key_T:
+            scene().worldTransform().translate(0, 0.002f, 0);
             //scene().camera().translateViewPoint(QVector3D(+0.1, 0, 0));
             ui->openGLWidget->update();
             break;
 
-        case Qt::Key_S:
-            scene().worldTransform().translate(0, -0.1f, 0);
+        case Qt::Key_G:
+            scene().worldTransform().translate(0, -0.002f, 0);
             //scene().camera().translateViewPoint(QVector3D(+0.1, 0, 0));
             ui->openGLWidget->update();
             break;
