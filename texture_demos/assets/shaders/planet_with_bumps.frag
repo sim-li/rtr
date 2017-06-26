@@ -56,8 +56,8 @@ struct PlanetMaterial {
     bool debugWaterLand;
     // animation
     bool animateClouds;
-
 };
+
 uniform PlanetMaterial planet;
 
 struct BumpMaterial {

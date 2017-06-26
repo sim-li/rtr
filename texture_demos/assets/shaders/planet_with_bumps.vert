@@ -36,6 +36,7 @@ struct DisplacementMaterial {
 uniform DisplacementMaterial displacement;
 
 uniform float time;
+uniform float rotation;
 
 // output - transformed to eye coordinates (EC)
 out vec4 position_EC;
@@ -51,11 +52,12 @@ out float disp_frag;
 
 
 void main(void) {
-    //time * 0.1 would add a movement
+    //time > 0 ? 0 + rotation: 0
     vec2 movement = vec2(0, time * 0.1);
 
     // displacement mapping!
     float disp = texture(displacement.tex, texcoord + movement).r * displacement.scale;
+
     disp_frag = disp;
 
     vec4 pos = vec4(position_MC,1);

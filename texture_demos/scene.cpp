@@ -186,6 +186,8 @@ void Scene::changeModel(const QString &txt)
 
 }
 
+
+
 void Scene::changeShader(const QString &txt)
 {
     if(txt == "None") {
@@ -378,3 +380,9 @@ void Scene::updateViewport(size_t width, size_t height)
     glViewport(0,0,GLint(width),GLint(height));
 }
 
+void Scene::updateRotation(float x) {
+    rotation = rotation + x;
+    qDebug() << "Got a rotation of" << rotation;
+    planetMaterial_->rotation = rotation;
+
+}

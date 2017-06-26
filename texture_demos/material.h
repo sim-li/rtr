@@ -78,6 +78,8 @@ public:
     // animation time
     float time = 0.0;
 
+    float rotation = 0.0;
+
     // ambient light
     QVector3D ambientLightIntensity = QVector3D(0.3f,0.3f,0.3f);
 
@@ -115,6 +117,7 @@ public:
         bool debug = false;
         bool debugWaterLand = false;
         bool animateClouds = false;
+        float rotation = 0.0;
     } planet;
 
     // bump mapping

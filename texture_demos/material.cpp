@@ -71,7 +71,7 @@ void PlanetMaterial::apply()
     prog_->setUniformValue("planet.debug", planet.debug);
     prog_->setUniformValue("planet.debugWaterLand", planet.debugWaterLand);
     prog_->setUniformValue("planet.animateClouds", planet.animateClouds);
-
+    prog_->setUniformValue("planet.rotation", planet.rotation);
     // bump & displacement mapping
     prog_->setUniformValue("bump.use", bump.use);
     if(bump.use) {

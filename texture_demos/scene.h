@@ -98,6 +98,8 @@ public slots:
     // adjust camera / viewport / ... if drawing surface changes
     void updateViewport(size_t width, size_t height);
 
+    void updateRotation(float x);
+
 protected:
 
     // parent widget
@@ -155,6 +157,8 @@ protected:
     std::shared_ptr<Node> createNode(std::shared_ptr<Mesh> mesh, bool scale_to_1 = true);
 
     bool activateSkybox;
+
+    float rotation = 0.0;
 
 };
 
