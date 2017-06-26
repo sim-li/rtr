@@ -14,8 +14,6 @@
 in vec4  position_EC;
 in vec3  normal_EC;
 in vec2  texcoord_frag;
-in float disp_frag;
-
 
 // output: color
 out vec4 outColor;
@@ -84,28 +82,13 @@ uniform DisplacementMaterial displacement;
 
 vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
     // animation
-    vec3 bumpValue = texture(bump.tex, texcoord_frag).xyz;
-
-
     vec2 uv_clouds = planet.animateClouds? texcoord_frag + vec2(time*0.02,0) : texcoord_frag;
     
     // texture lookups
-    vec3  dayCol         = texture(planet.dayTexture, uv).rgb;
-    bool  atSea          = texture(planet.glossTexture, uv).r > 0.008;
-    float cloudDensity  = texture(planet.cloudsTexture, uv_clouds).r;
-    vec3  nightCol      = texture(planet.nightTexture, uv).rgb;
-
-
-    if (disp_frag > 0.05) {
-        outColor = vec4(255, 0, 0, 1);
-    } else if (disp_frag > 0.035) {
-        outColor = (texcoord_frag,0,1);
-    } else if (disp_frag > 0.01) {
-        outColor = vec4(0, 0, 255, 1);
-    } else {
-        outColor = vec4(255, 255, 0, 1);
-    }
-
+    vec3  dayCol = texture(planet.dayTexture, uv).rgb;
+    vec3  nightCol = texture(planet.nightTexture, uv).rgb;
+    bool  atSea = texture(planet.glossTexture, uv).r > 0.008;
+    float cloudDensity = texture(planet.cloudsTexture, uv_clouds).r;
     
     // make brighter / gamma correction
     dayCol = pow(dayCol, vec3(0.6))*2.0;
@@ -148,8 +131,6 @@ vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
     else
         ndotl = max(ndotl, 0.0);
 
-
-
     // diffuse contribution
     vec3 diffuseCoeff = planet.useDayTexture? dayCol : phong.k_diffuse;
     if(planet.debugWaterLand) {
@@ -183,7 +164,6 @@ vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv) {
     vec3 specular = specularCoeff * light.intensity * pow(rdotv, exponent);
  
     // return sum of all contributions
-
     return ambient + diffuse + specular;
     
 }
@@ -206,12 +186,7 @@ void main() {
     
     // calculate color using phong illumination
     vec3 color = planetshader(normalEC, viewdirEC, lightDirEC, texcoord_frag);
-
+    
     // set fragment color
-
-
-
     outColor = vec4(color, 1.0);
-
-
 }
