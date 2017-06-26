@@ -102,6 +102,8 @@ AppWindow::AppWindow(QWidget *parent) :
 
 // called when initially shown
 void AppWindow::setDefaultUIValues() {
+    scene().camera().translateViewPoint(QVector3D(0,0,-0.3f));
+
     ui->sunlightSlider->setValue(85.0);
     ui->nightLightSlider->setValue(20.0);
     ui->blendExpSlider->setValue(30.0);
@@ -221,20 +223,20 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
             break;
 
 
-
-
-
-            //Vertical
-        case Qt::Key_T:
-            scene().worldTransform().translate(0, 0.002f, 0);
-            //scene().camera().translateViewPoint(QVector3D(+0.1, 0, 0));
-            ui->openGLWidget->update();
+        case Qt::Key_W:
+            if (flyUpKeyPresses > -7) {
+                flyUpKeyPresses--;
+                scene().worldTransform().translate(0, 0.01f, 0);
+                ui->openGLWidget->update();
+            }
             break;
 
-        case Qt::Key_G:
-            scene().worldTransform().translate(0, -0.002f, 0);
-            //scene().camera().translateViewPoint(QVector3D(+0.1, 0, 0));
-            ui->openGLWidget->update();
+        case Qt::Key_S:
+            if (flyUpKeyPresses < 9) {
+                flyUpKeyPresses++;
+                scene().worldTransform().translate(0, -0.01f, 0);
+                ui->openGLWidget->update();
+            }
             break;
     }
 }

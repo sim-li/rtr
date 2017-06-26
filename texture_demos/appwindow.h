@@ -67,5 +67,7 @@ private:
 
     // this is where the app remembers its settings, i.e. window size
     QSettings settings_;
+
+    int flyUpKeyPresses = 0;
 };
 
