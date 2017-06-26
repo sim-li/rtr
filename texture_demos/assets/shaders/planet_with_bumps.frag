@@ -88,13 +88,14 @@ vec3 gammaCorrection(vec3 col) {
 }
 
 vec3 textureByHeight(vec2 uv) {
-    if (disp_frag > 0.05) {
-       return texture(planet.snowTexture, uv);
-     } else if (disp_frag > 0.035)
-       return  texture(planet.rockTexture, uv);
-     } else if (disp_frag > 0.01) {
-       return gammaCorrection(texture(planet.dayTexture, uv));
-     } else {
+    if (disp_frag > 0.05)
+    {return texture(planet.snowTexture, uv);}
+    else if (disp_frag > 0.035)
+       {return  texture(planet.rockTexture, uv);}
+      else if(disp_frag > 0.01)
+      { return gammaCorrection(texture(planet.dayTexture, uv));}
+      else
+    {
       return gammaCorrection(texture(planet.dayTexture, uv));
      }
 }
