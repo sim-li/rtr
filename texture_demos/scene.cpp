@@ -298,7 +298,7 @@ void Scene::toggleAnimation(bool flag)
 {
     if(flag) {
         //the higher  this is the slower the animation
-            timer_.start(1000.0 / 60.0); // update *roughly* every 60 ms
+            timer_.start(1000.0 / 20.0); // update *roughly* every 60 ms
     } else {
         timer_.stop();
     }
