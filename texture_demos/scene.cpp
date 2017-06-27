@@ -105,7 +105,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     auto std = planetMaterial_;
 
     // add meshes of some procedural geometry objects (not loaded from OBJ files)
-    int size = 512 / 2;
+    int size = 20;
     meshes_["Rect"]   = std::make_shared<Mesh>(make_shared<geom::Rect>(size, size), std);
     meshes_["Cube"]   = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
 

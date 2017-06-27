@@ -50,6 +50,8 @@ out vec3 lightDir_TS;
 out vec2 texcoord_frag;
 out float disp_frag;
 
+out vec3 surfaceAngle;
+
 
 void main(void) {
     //time > 0 ? 0 + rotation: 0
@@ -84,7 +86,14 @@ void main(void) {
 
     // only works for perspective projection
     vec4 wcLightPosition = viewMatrixInverse*light.position_EC;
+
+
+
     vec3 wcNormal        = (modelMatrix*vec4(normal_MC, 0)).xyz;
+
+    vec3 surfaceAngle =dot(wcNormal, normal_MC);
+
+
     vec3 wcTangent       = (modelMatrix*vec4(tangent_MC, 0)).xyz;
     vec3 wcBitangent     = (modelMatrix*vec4(bitangent_MC, 0)).xyz;
 

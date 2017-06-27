@@ -52,7 +52,7 @@ vec3 phongIllum(vec3 normalDir, vec3 viewDir, vec3 lightDir)
     float ndotv = dot(normalDir,viewDir);
 
     // cos of angle between light and surface.
-    float ndotl = max(dot(normalDir,-lightDir),0);
+    float ndotl = max(dot(normalDir, -lightDir),0);
     
     // diffuse contribution
     vec3 diffuse = phong.k_diffuse * light.intensity * ndotl;

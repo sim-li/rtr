@@ -16,6 +16,8 @@ in vec3 lightDir_TS;
 in vec2 texcoord_frag;
 in float disp_frag;
 
+in vec3 surfaceAngle;
+
 // output: color
 out vec4 outColor;
 
@@ -207,4 +209,12 @@ void main() {
         outColor = vec4((N+vec3(1,1,1)/2), 1);
     else
         outColor = vec4(color, 1.0);
+
+    if (surfaceAngle > 10) {
+        outColor = vec4(1, 0, 0, 1.0);
+    } else if (surfaceAngle > 45) {
+        outColor = vec4(0, 1, 0, 1.0);
+    } else if (surfaceAngle > 90) {
+        outColor = vec4(0, 0, 1, 1.0);
+    }
 }
