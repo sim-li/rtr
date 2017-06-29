@@ -50,7 +50,7 @@ out vec3 lightDir_TS;
 out vec2 texcoord_frag;
 out float disp_frag;
 
-out vec3 surfaceAngle;
+out float surfaceAngle;
 
 
 void main(void) {
@@ -91,7 +91,7 @@ void main(void) {
 
     vec3 wcNormal        = (modelMatrix*vec4(normal_MC, 0)).xyz;
 
-    vec3 surfaceAngle =dot(wcNormal, normal_MC);
+    surfaceAngle = dot(wcNormal, normal_MC);
 
 
     vec3 wcTangent       = (modelMatrix*vec4(tangent_MC, 0)).xyz;
