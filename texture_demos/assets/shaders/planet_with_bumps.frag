@@ -89,7 +89,30 @@ vec3 gammaCorrection(vec3 col) {
     return pow(col, vec3(0.6))*2.0;
 }
 
+float terrain_min = 0.01;
+float terrain_max = 0.015;
+
+float rock_min = 0.0220;
+float rock_max = 0.035;
+
+float snow_min = 0.05;
+float snow_max = 0.08;
+
+
 vec3 textureColByHeight(vec2 uv) {
+    if(disp_frag > terr){
+        vec3 textureCol = texture(planet.dayTexture, uv).rgb;
+        return gammaCorrection(textureCol);
+    } else if (disp_frag > 0.035) {
+        return  texture(planet.rockTexture, uv).rgb;
+    } else if (disp_frag > 0.05) {
+        return texture(planet.snowTexture, uv).rgb;
+    } else {
+        vec3 textureCol = texture(planet.dayTexture, uv).rgb;
+        return gammaCorrection(textureCol);
+    }
+
+/*vec3 textureColByHeight(vec2 uv) {
     if (disp_frag > 0.05) {
         return texture(planet.snowTexture, uv).rgb;
     } else if (disp_frag > 0.035) {
@@ -101,6 +124,7 @@ vec3 textureColByHeight(vec2 uv) {
         vec3 textureCol = texture(planet.dayTexture, uv).rgb;
         return gammaCorrection(textureCol);
     }
+*/
 }
 
 vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv, int nom) {
@@ -209,7 +233,7 @@ void main() {
         outColor = vec4((N+vec3(1,1,1)/2), 1);
     else
         outColor = vec4(color, 1.0);
-
+/*
     if (surfaceAngle > 0.10) {
         outColor = vec4(1, 0, 0, 1.0);
     } else if (surfaceAngle > 0.45) {
@@ -217,4 +241,5 @@ void main() {
     } else if (surfaceAngle > 0.90) {
         outColor = vec4(0, 0, 1, 1.0);
     }
+*/
 }
