@@ -91,7 +91,6 @@ vec3 gammaCorrection(vec3 col) {
 
 
 vec3 textureColByHeight(vec2 uv) {
-    return texture(planet.dayTexture, uv).rgb;
     //float DAY_HEIGHT_MIN = 0.01;
     float DAY_HEIGHT_MAX = 0.038;
 
@@ -225,7 +224,7 @@ void main() {
     // calculate color using phong illumination
     vec3 color = planetshader(N, V, L, texcoord_frag, 1);
     outColor = vec4(color, 1.0);
-/*
+
     float shininess = 10.0f;
     vec3 intensity = 0.2 * color;
     intensity += color * 0.7 * max(0, dot(N, L));
@@ -245,6 +244,4 @@ void main() {
 
     float fogFactor = (u_FogDist.y - distance) / (u_FogDist.y - u_FogDist.x);
     outColor = mix(u_FogColor, v_Color, clamp(fogFactor, 0.0, 1.0));
-    */
-
 }

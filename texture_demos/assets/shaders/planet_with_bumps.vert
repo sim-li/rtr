@@ -115,6 +115,4 @@ void main(void) {
     //vec4 positionV = transform.projection * transform.inverseView * positionW;
     vec4 positionV = projectionMatrix * viewMatrixInverse * wcPosition;
     distance = positionV.w;
-    gl_Position = positionV;
-
 }
