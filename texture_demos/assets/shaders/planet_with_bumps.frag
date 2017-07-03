@@ -99,32 +99,70 @@ float snow_min = 0.05;
 float snow_max = 0.08;
 
 
+
 vec3 textureColByHeight(vec2 uv) {
-    if(disp_frag > terr){
+    /*
+    if(disp_frag > 0.01){
         vec3 textureCol = texture(planet.dayTexture, uv).rgb;
         return gammaCorrection(textureCol);
     } else if (disp_frag > 0.035) {
-        return  texture(planet.rockTexture, uv).rgb;
+        return  texture(planet.snowTexture, uv).rgb;
     } else if (disp_frag > 0.05) {
         return texture(planet.snowTexture, uv).rgb;
     } else {
         vec3 textureCol = texture(planet.dayTexture, uv).rgb;
         return gammaCorrection(textureCol);
     }
-
-/*vec3 textureColByHeight(vec2 uv) {
-    if (disp_frag > 0.05) {
-        return texture(planet.snowTexture, uv).rgb;
-    } else if (disp_frag > 0.035) {
-        return  texture(planet.rockTexture, uv).rgb;
-    } else if(disp_frag > 0.01) {
-        vec3 textureCol = texture(planet.dayTexture, uv).rgb;
-        return gammaCorrection(textureCol);
-    } else {
-        vec3 textureCol = texture(planet.dayTexture, uv).rgb;
-        return gammaCorrection(textureCol);
-    }
 */
+    float a = 0.01;
+    float b = 0.015;
+    float c = 0.035;
+    float d = 0.08;
+
+    float bb = 0.01;
+    float cc = 0.022;
+    float dd = 0.050;
+    //float _c = 0.022;
+
+
+
+
+    //outColor = vec4(texcoord_frag, 0, 1);
+            if (disp_frag < a){
+           outColor = vec4( 0, 0, disp_frag * 3, 1); // blau
+
+
+            }else if (disp_frag < b ){
+            outColor = vec4(disp_frag * 3, 0, 0, 1); //rot
+
+            } else if (disp_frag <= cc) {
+
+                 disp_frag -= b;
+                 disp_frag /= (cc - b);
+
+                 outColor = vec4(disp_frag * 3, 0, 0, 1) * (1.0 - disp_frag);
+                 outColor += vec4( 0,disp_frag * 3, 0, 1) * disp_frag;
+
+            }else if (disp_frag < c ){
+            outColor = vec4( 0,disp_frag * 3, 0, 1); //gruen
+
+            } else if (disp_frag <= dd) {
+
+                 disp_frag -= c;
+                 disp_frag /= (dd - c);
+
+                 outColor = vec4( 0,disp_frag * 3, 0, 1); //gruen
+                 outColor = vec4( disp_frag*3,disp_frag * 3, 0, 1); //gelb
+
+
+            }else if (disp_frag < d){
+            outColor = vec4( disp_frag*3,disp_frag * 3, 0, 1); //gelb
+
+
+            }else{
+            outColor = vec4(0,disp_frag *3, disp_frag * 3, 1);
+
+
 }
 
 vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv, int nom) {
@@ -233,6 +271,59 @@ void main() {
         outColor = vec4((N+vec3(1,1,1)/2), 1);
     else
         outColor = vec4(color, 1.0);
+/*
+    float a = 0.01;
+    float b = 0.015;
+    float c = 0.035;
+    float d = 0.08;
+
+    float bb = 0.01;
+    float cc = 0.022;
+    float dd = 0.050;
+    //float _c = 0.022;
+
+
+
+
+    //outColor = vec4(texcoord_frag, 0, 1);
+            if (disp_frag < a){
+           outColor = vec4( 0, 0, disp_frag * 3, 1); // blau
+
+
+            }else if (disp_frag < b ){
+            outColor = vec4(disp_frag * 3, 0, 0, 1); //rot
+
+            } else if (disp_frag <= cc) {
+
+                 disp_frag -= b;
+                 disp_frag /= (cc - b);
+
+                 outColor = vec4(disp_frag * 3, 0, 0, 1) * (1.0 - disp_frag);
+                 outColor += vec4( 0,disp_frag * 3, 0, 1) * disp_frag;
+
+            }else if (disp_frag < c ){
+            outColor = vec4( 0,disp_frag * 3, 0, 1); //gruen
+
+            } else if (disp_frag <= dd) {
+
+                 disp_frag -= c;
+                 disp_frag /= (dd - c);
+
+                 outColor = vec4( 0,disp_frag * 3, 0, 1); //gruen
+                 outColor = vec4( disp_frag*3,disp_frag * 3, 0, 1); //gelb
+
+
+            }else if (disp_frag < d){
+            outColor = vec4( disp_frag*3,disp_frag * 3, 0, 1); //gelb
+
+
+            }else{
+            outColor = vec4(0,disp_frag *3, disp_frag * 3, 1);
+    }
+
+*/
+
+
 /*
     if (surfaceAngle > 0.10) {
         outColor = vec4(1, 0, 0, 1.0);

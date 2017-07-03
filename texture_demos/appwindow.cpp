@@ -115,7 +115,7 @@ void AppWindow::setDefaultUIValues() {
 
     ui->vectorScaleSlider->setValue(10.0);
     ui->greyBgRadioButton->setChecked(true);
-    ui->animationCheckbox->setChecked(true);
+    ui->animationCheckbox->setChecked(false);
 }
 
 void AppWindow::closeEvent(QCloseEvent *event)

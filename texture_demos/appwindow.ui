@@ -255,11 +255,17 @@
          </item>
          <item>
           <widget class="QCheckBox" name="animationCheckbox">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="focusPolicy">
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
             <string>cloud animation</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
