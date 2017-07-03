@@ -189,4 +189,27 @@ void main() {
     
     // set fragment color
     outColor = vec4(color, 1.0);
+
+    vec3 intensity = 0.2 * dayCol;
+    intensity += dayCol * 0.7 * max(0, dot(N, L));
+    intensity += vec3(0.15) * pow(max(0, dot(reflect(-E, N), L)), shininess);
+
+
+
+    vec2 u_FogDist = vec2(15.0, 35.0);
+    vec4 v_Color;
+    v_Color.rgb = intensity;
+    v_Color.a = 1.0;
+    vec4 u_FogColor;
+    u_FogColor.rgb = vec3(0.8, 0.8, 0.8);
+    u_FogColor.a = 1.0;
+
+    u_FogColor.a = exp(distance)/100;
+
+
+    float fogFactor = (u_FogDist.y - distance) / (u_FogDist.y - u_FogDist.x);
+     color = mix(u_FogColor, v_Color, clamp(fogFactor, 0.0, 1.0));
+
+
+
 }

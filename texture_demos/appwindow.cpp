@@ -241,14 +241,18 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
             break;
 
         case Qt::Key_A:
-            qDebug() << "A Rotation";
-            scene().updateRotation(1.0f);
+            if (flySideKeyPresses < 9) {
+            flySideKeyPresses++;
+            scene().worldTransform().translate(-0.01f, 0, 0);
+            ui->openGLWidget->update();}
             break;
 
         case Qt::Key_D:
-            qDebug() << "D Rotation";
-            scene().updateRotation(-1.0f);
-            break;
+            if (flySideKeyPresses < 9) {
+            flySideKeyPresses--;
+            scene().worldTransform().translate(0.01f, 0, 0);
+            ui->openGLWidget->update();}
+             break;
 
     }
 }

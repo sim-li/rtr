@@ -21,6 +21,10 @@ in vec3 tangent_MC;
 in vec3 bitangent_MC;
 in vec2 texcoord;
 
+
+
+
+
 // point light
 struct PointLight {
     vec3 intensity;
@@ -49,6 +53,9 @@ out vec3 lightDir_TS;
 // tex coords - just copied
 out vec2 texcoord_frag;
 out float disp_frag;
+out float distance;
+
+
 
 out float surfaceAngle;
 
@@ -87,13 +94,10 @@ void main(void) {
     // only works for perspective projection
     vec4 wcLightPosition = viewMatrixInverse*light.position_EC;
 
+    //surfaceAngle = dot(wcNormal, normal_MC);
 
 
     vec3 wcNormal        = (modelMatrix*vec4(normal_MC, 0)).xyz;
-
-    surfaceAngle = dot(wcNormal, normal_MC);
-
-
     vec3 wcTangent       = (modelMatrix*vec4(tangent_MC, 0)).xyz;
     vec3 wcBitangent     = (modelMatrix*vec4(bitangent_MC, 0)).xyz;
 
@@ -105,4 +109,12 @@ void main(void) {
     mat3 TBN = mat3(wcTangent, wcBitangent, wcNormal);
     lightDir_TS = wcLightDir * TBN;
     viewDir_TS  = wcViewDir * TBN;
+
+
+
+    //vec4 positionV = transform.projection * transform.inverseView * positionW;
+    vec4 positionV = projectionMatrix * viewMatrixInverse * wcPosition;
+    distance = positionV.w;
+    gl_Position = positionV;
+
 }

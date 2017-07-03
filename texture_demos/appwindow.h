@@ -69,5 +69,7 @@ private:
     QSettings settings_;
 
     int flyUpKeyPresses = 0;
+    int flySideKeyPresses = 0;
+
 };
 
