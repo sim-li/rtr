@@ -89,17 +89,33 @@ vec3 gammaCorrection(vec3 col) {
     return pow(col, vec3(0.6))*2.0;
 }
 
+
 vec3 textureColByHeight(vec2 uv) {
-    if (disp_frag > 0.05) {
+    //float DAY_HEIGHT_MIN = 0.01;
+    float DAY_HEIGHT_MAX = 0.038;
+
+    //float ROCK_HEIGHT_MIN = 0.038;
+    float ROCK_HEIGHT_MAX = 0.048;
+
+    //float SNOW_HEIGHT_MIN = 0.048;s
+    float SNOW_HEIGHT_MAX = 0.055;
+
+    float FADE_HEIGHT = 0.005;
+
+    vec3 textureCol = texture(planet.dayTexture, uv).rgb;
+
+    if (disp_frag < DAY_HEIGHT_MAX) {
+        return gammaCorrection(textureCol);
+    } else if (disp_frag < ROCK_HEIGHT_MAX - FADE_HEIGHT) {
+        /*float fadeLevel = (disp_frag - ROCK_HEIGHT) / (SNOW_HEIGHT - ROCK_HEIGHT);
+        return texture(planet.snowTexture, uv).rgb * fadeLevel + texture(planet.rockTexture, uv).rgb * (1 - fadeLevel);
+        */
+        float fadeLevel = (disp_frag - DAY_HEIGHT_MAX) / (ROCK_HEIGHT_MAX - DAY_HEIGHT_MAX);
+        return gammaCorrection(textureCol) * (1.0 - fadeLevel) + texture(planet.rockTexture, uv).rgb * fadeLevel;
+    } else if (disp_frag < ROCK_HEIGHT_MAX){
+        return texture(planet.rockTexture, uv).rgb;
+    } else if (disp_frag < SNOW_HEIGHT_MAX) {
         return texture(planet.snowTexture, uv).rgb;
-    } else if (disp_frag > 0.035) {
-        return  texture(planet.rockTexture, uv).rgb;
-    } else if(disp_frag > 0.01) {
-        vec3 textureCol = texture(planet.dayTexture, uv).rgb;
-        return gammaCorrection(textureCol);
-    } else {
-        vec3 textureCol = texture(planet.dayTexture, uv).rgb;
-        return gammaCorrection(textureCol);
     }
 }
 
@@ -202,6 +218,7 @@ void main() {
 
     // calculate color using phong illumination
     vec3 color = planetshader(N, V, L, texcoord_frag, 1);
+
     // set fragment color
     if(phong.debug_texcoords)
        outColor = vec4(texcoord_frag, 0, 1);
@@ -210,11 +227,4 @@ void main() {
     else
         outColor = vec4(color, 1.0);
 
-    if (surfaceAngle > 0.10) {
-        outColor = vec4(1, 0, 0, 1.0);
-    } else if (surfaceAngle > 0.45) {
-        outColor = vec4(0, 1, 0, 1.0);
-    } else if (surfaceAngle > 0.90) {
-        outColor = vec4(0, 0, 1, 1.0);
-    }
 }

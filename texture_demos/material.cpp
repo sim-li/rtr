@@ -50,22 +50,16 @@ void PlanetMaterial::apply()
     prog_->setUniformValue("planet.useNightTexture", planet.useNightTexture);
     prog_->setUniformValue("planet.useGlossTexture", planet.useGlossTexture);
     prog_->setUniformValue("planet.useCloudsTexture", planet.useCloudsTexture);
-    if(planet.useDayTexture) {
-        prog_->setUniformValue("planet.dayTexture", 0);
-        planet.dayTexture->bind(0);
-    }
-    if(planet.useNightTexture) {
-        prog_->setUniformValue("planet.nightTexture", 1);
-        planet.nightTexture->bind(1);
-    }
-    if(planet.useGlossTexture) {
-        prog_->setUniformValue("planet.glossTexture", 2);
-        planet.glossTexture->bind(2);
-    }
-    if(planet.useCloudsTexture) {
-        prog_->setUniformValue("planet.cloudsTexture", 3);
-        planet.cloudsTexture->bind(3);
-    }
+
+    prog_->setUniformValue("planet.dayTexture", 0);
+    planet.dayTexture->bind(0);
+
+    prog_->setUniformValue("planet.rockTexture", 1);
+    planet.rockTexture->bind(1);
+
+    prog_->setUniformValue("planet.snowTexture", 2);
+    planet.snowTexture->bind(2);
+
     prog_->setUniformValue("planet.night_scale", planet.night_scale);
     prog_->setUniformValue("planet.night_blend_exp", planet.night_blend_exp);
 
