@@ -91,33 +91,28 @@ vec3 gammaCorrection(vec3 col) {
 
 
 vec3 textureColByHeight(vec2 uv) {
-    //float DAY_HEIGHT_MIN = 0.01;
+    // Source: http://www.mbsoftworks.sk/index.php?page=tutorials&series=1&tutorial=24
     float DAY_HEIGHT_MAX = 0.038;
-
-    //float ROCK_HEIGHT_MIN = 0.038;
     float ROCK_HEIGHT_MAX = 0.048;
-
-    //float SNOW_HEIGHT_MIN = 0.048;s
     float SNOW_HEIGHT_MAX = 0.055;
-
-    float FADE_HEIGHT = 0.005;
-
+    float FADE_HEIGHT = 0.015;
     vec3 textureCol = texture(planet.dayTexture, uv).rgb;
 
     if (disp_frag < DAY_HEIGHT_MAX) {
         return gammaCorrection(textureCol);
-    } else if (disp_frag < ROCK_HEIGHT_MAX - FADE_HEIGHT) {
-        /*float fadeLevel = (disp_frag - ROCK_HEIGHT) / (SNOW_HEIGHT - ROCK_HEIGHT);
-        return texture(planet.snowTexture, uv).rgb * fadeLevel + texture(planet.rockTexture, uv).rgb * (1 - fadeLevel);
-        */
-        float fadeLevel = (disp_frag - DAY_HEIGHT_MAX) / (ROCK_HEIGHT_MAX - DAY_HEIGHT_MAX);
+    } else if (disp_frag > DAY_HEIGHT_MAX && disp_frag < DAY_HEIGHT_MAX + FADE_HEIGHT) {
+        float baseHeight = disp_frag - DAY_HEIGHT_MAX;
+        float fadeLevel =  baseHeight / (ROCK_HEIGHT_MAX - DAY_HEIGHT_MAX);
         return gammaCorrection(textureCol) * (1.0 - fadeLevel) + texture(planet.rockTexture, uv).rgb * fadeLevel;
-    } else if (disp_frag < ROCK_HEIGHT_MAX){
+    } else if (disp_frag < ROCK_HEIGHT_MAX) {
         return texture(planet.rockTexture, uv).rgb;
+    } else if (disp_frag > ROCK_HEIGHT_MAX && disp_frag < ROCK_HEIGHT_MAX + FADE_HEIGHT) {
+        float baseHeight = disp_frag - ROCK_HEIGHT_MAX;
+        float fadeLevel =  baseHeight / (SNOW_HEIGHT_MAX - ROCK_HEIGHT_MAX);
+        return texture(planet.rockTexture, uv).rgb * (1.0 - fadeLevel) + texture(planet.snowTexture, uv).rgb * fadeLevel;
     } else if (disp_frag < SNOW_HEIGHT_MAX) {
         return texture(planet.snowTexture, uv).rgb;
     }
-
 }
 
 vec3 planetshader(vec3 n, vec3 v, vec3 l, vec2 uv, int nom) {
