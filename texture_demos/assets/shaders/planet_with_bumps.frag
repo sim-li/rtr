@@ -92,25 +92,31 @@ vec3 gammaCorrection(vec3 col) {
 
 vec3 textureColByHeight(vec2 uv) {
     // Source: http://www.mbsoftworks.sk/index.php?page=tutorials&series=1&tutorial=24
-    float DAY_HEIGHT_MAX = 0.038;
-    float ROCK_HEIGHT_MAX = 0.048;
-    float SNOW_HEIGHT_MAX = 0.055;
     float FADE_HEIGHT = 0.015;
+    float DAY_HEIGHT_MAX = 0.045;
+    float ROCK_HEIGHT_MAX = 0.55;
+    float SNOW_HEIGHT_MAX = 0.060;
+
+    float range1 = 0.045;
+    float range2 = 0.050;
+    float range3 = 0.055;
+    float range4 = 0.060;
+
     vec3 textureCol = texture(planet.dayTexture, uv).rgb;
 
-    if (disp_frag < DAY_HEIGHT_MAX) {
+    if (disp_frag >= 0 && disp_frag <= range1) {
         return gammaCorrection(textureCol);
-    } else if (disp_frag > DAY_HEIGHT_MAX && disp_frag < DAY_HEIGHT_MAX + FADE_HEIGHT) {
-        float baseHeight = disp_frag - DAY_HEIGHT_MAX;
-        float fadeLevel =  baseHeight / (ROCK_HEIGHT_MAX - DAY_HEIGHT_MAX);
+    } else if (disp_frag <= range2) {
+        float baseHeight = disp_frag - range1;
+        float fadeLevel =  baseHeight / (range2 - range1);
         return gammaCorrection(textureCol) * (1.0 - fadeLevel) + texture(planet.rockTexture, uv).rgb * fadeLevel;
-    } else if (disp_frag < ROCK_HEIGHT_MAX) {
+    } else if (disp_frag <= range3) {
         return texture(planet.rockTexture, uv).rgb;
-    } else if (disp_frag > ROCK_HEIGHT_MAX && disp_frag < ROCK_HEIGHT_MAX + FADE_HEIGHT) {
-        float baseHeight = disp_frag - ROCK_HEIGHT_MAX;
-        float fadeLevel =  baseHeight / (SNOW_HEIGHT_MAX - ROCK_HEIGHT_MAX);
-        return texture(planet.rockTexture, uv).rgb * (1.0 - fadeLevel) + texture(planet.snowTexture, uv).rgb * fadeLevel;
-    } else if (disp_frag < SNOW_HEIGHT_MAX) {
+    } else if (disp_frag <= range4) {
+        float baseHeight = disp_frag - range3;
+        float fadeLevel =  baseHeight / (range4 - range3);
+        return texture(planet.rockTexture, uv).rgb * (1.0 - fadeLevel) * texture(planet.snowTexture, uv).rgb * fadeLevel;
+    } else {
         return texture(planet.snowTexture, uv).rgb;
     }
 }
