@@ -12,7 +12,6 @@ uniform mat4 viewMatrix;
 in vec4 position_EC;
 in vec3 normal_EC;
 in vec2 texcoord_frag;
-in vec3 dir;
 
 // output: color
 out vec4 outColor;
@@ -23,6 +22,6 @@ void main(void)
     bool usePerspective = projectionMatrix[2][3] != 0.0;
     vec3 toVertEC = usePerspective ? normalize(position_EC.xyz) : vec3(0, 0, -1);
     vec3 toVertWC = (inverse(viewMatrix) * vec4(toVertEC, 0)).xyz;
-    vec3 sky = texture(cubeMap, dir).rgb;
+    vec3 sky = texture(cubeMap, toVertWC).rgb;
     outColor = vec4(sky, 0);
 }

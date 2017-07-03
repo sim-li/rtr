@@ -115,7 +115,7 @@ void AppWindow::setDefaultUIValues() {
 
     ui->vectorScaleSlider->setValue(10.0);
     ui->greyBgRadioButton->setChecked(true);
-    ui->animationCheckbox->setChecked(false);
+    ui->animationCheckbox->setChecked(true);
 }
 
 void AppWindow::closeEvent(QCloseEvent *event)
@@ -241,18 +241,14 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
             break;
 
         case Qt::Key_A:
-            if (flySideKeyPresses < 9) {
-            flySideKeyPresses++;
-            scene().worldTransform().translate(-0.01f, 0, 0);
-            ui->openGLWidget->update();}
+            qDebug() << "A Rotation";
+            scene().updateRotation(1.0f);
             break;
 
         case Qt::Key_D:
-            if (flySideKeyPresses < 9) {
-            flySideKeyPresses--;
-            scene().worldTransform().translate(0.01f, 0, 0);
-            ui->openGLWidget->update();}
-             break;
+            qDebug() << "D Rotation";
+            scene().updateRotation(-1.0f);
+            break;
 
     }
 }
