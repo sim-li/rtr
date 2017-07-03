@@ -22,9 +22,6 @@ in vec3 bitangent_MC;
 in vec2 texcoord;
 
 
-
-
-
 // point light
 struct PointLight {
     vec3 intensity;
