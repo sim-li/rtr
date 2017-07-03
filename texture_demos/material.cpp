@@ -18,11 +18,9 @@ void VectorsMaterial::apply()
 
 void SkyboxMaterial::apply()
 {
-    /*
     prog_->bind();
     prog_->setUniformValue("cubeMap", 0);
     cubeMap->bind(0);
-    */
 }
 
 
@@ -54,11 +52,25 @@ void PlanetMaterial::apply()
     prog_->setUniformValue("planet.dayTexture", 0);
     planet.dayTexture->bind(0);
 
-    prog_->setUniformValue("planet.rockTexture", 1);
-    planet.rockTexture->bind(1);
+    if(planet.useNightTexture) {
+        prog_->setUniformValue("planet.nightTexture", 1);
+        planet.nightTexture->bind(1);
+    }
+    if(planet.useGlossTexture) {
+        prog_->setUniformValue("planet.glossTexture", 2);
+        planet.glossTexture->bind(2);
+    }
+    if(planet.useCloudsTexture) {
+        prog_->setUniformValue("planet.cloudsTexture", 3);
+        planet.cloudsTexture->bind(3);
+    }
 
-    prog_->setUniformValue("planet.snowTexture", 2);
-    planet.snowTexture->bind(2);
+
+    prog_->setUniformValue("planet.rockTexture", 4);
+    planet.rockTexture->bind(4);
+
+    prog_->setUniformValue("planet.snowTexture", 5);
+    planet.snowTexture->bind(5);
 
     prog_->setUniformValue("planet.night_scale", planet.night_scale);
     prog_->setUniformValue("planet.night_blend_exp", planet.night_blend_exp);
@@ -72,14 +84,14 @@ void PlanetMaterial::apply()
     prog_->setUniformValue("bump.use", bump.use);
     if(bump.use) {
         prog_->setUniformValue("bump.scale", bump.scale);
-        prog_->setUniformValue("bump.tex", 4); bump.tex->bind(4);
+        prog_->setUniformValue("bump.tex", 6); bump.tex->bind(6);
         prog_->setUniformValue("bump.debug", bump.debug);
     }
     prog_->setUniformValue("displacement.use", displacement.use);
 
     if(displacement.use) {
         prog_->setUniformValue("displacement.scale", displacement.scale);
-        prog_->setUniformValue("displacement.tex", 5); displacement.tex->bind(5);
+        prog_->setUniformValue("displacement.tex", 7); displacement.tex->bind(7);
     }
 
 }
