@@ -1,13 +1,10 @@
 #include "scene.h"
-
 #include <iostream> // std::cout etc.
 #include <assert.h> // assert()
 #include <random>   // random number generation
-
 #include "geometries/cube.h" // geom::Cube
 #include "geometries/parametric.h" // geom::Sphere etc.
 #include "cubemap.h"
-
 #include <QtMath>
 #include <QMessageBox>
 
@@ -52,6 +49,9 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // make sure we redraw when the timer hits
     connect(&timer_, SIGNAL(timeout()), this, SLOT(update()) );
+
+
+    setSceneNode("Scene");
 
 }
 
@@ -109,6 +109,7 @@ void Scene::makeNodes()
     // full-screen rectangles for post processing
     meshes_["original"]  = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1),
                                                   post_materials_["original"]);
+
     nodes_["original"]   = createNode(meshes_["original"], false);
 
     meshes_["blur"]      = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1),
@@ -131,7 +132,6 @@ void Scene::makeNodes()
     nodes_["Torus"]   = createNode(meshes_["Torus"], true);
     nodes_["Duck"]    = createNode(meshes_["Duck"], true);
     nodes_["Teapot"]  = createNode(meshes_["Teapot"], true);
-
 }
 
 // once the nodes_ map is filled, construct a hierarchical scene from it
