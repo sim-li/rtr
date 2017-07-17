@@ -98,7 +98,8 @@ void Scene::makeNodes()
     post_materials_["gauss_2"] = make_shared<PostMaterial>(gaussB,12);
 
     // load meshes from .obj files and assign shader programs to them
-    meshes_["Duck"]    = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", std);
+    //meshes_["Duck"]    = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", std);
+    meshes_["Duck"]    = std::make_shared<Mesh>(":/assets/models/satelite/DeepSpace1_11.obj", std);
     meshes_["Teapot"]  = std::make_shared<Mesh>(":/assets/models/teapot/teapot.obj", std);
 
     // add meshes of some procedural geometry objects (not loaded from OBJ files)

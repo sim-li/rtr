@@ -4,5 +4,12 @@
         <file>assets/models/duck/duck.obj.mtl</file>
         <file>assets/models/duck/duckCM.png</file>
         <file>assets/models/teapot/teapot.obj</file>
+        <file>assets/models/satelite/DS1_tex_01.psd</file>
+        <file>assets/models/satelite/foil_silver_ramp.png</file>
+        <file>assets/models/satelite/foil_gold_ramp.png</file>
+        <file>assets/models/satelite/foil_n.png</file>
+        <file>assets/models/satelite/DS1_tex_01.png</file>
+        <file>assets/models/satelite/DS1_tex_01.mtl</file>
+        <file>assets/models/satelite/DeepSpace1_11.obj</file>
     </qresource>
 </RCC>
