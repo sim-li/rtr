@@ -4,5 +4,7 @@
         <file>assets/models/duck/duck.obj.mtl</file>
         <file>assets/models/duck/duckCM.png</file>
         <file>assets/models/teapot/teapot.obj</file>
+        <file>assets/models/moon/moon.obj</file>
+        <file>assets/models/moon/moon.mtl</file>
     </qresource>
 </RCC>

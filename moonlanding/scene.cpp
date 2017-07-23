@@ -49,10 +49,6 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // make sure we redraw when the timer hits
     connect(&timer_, SIGNAL(timeout()), this, SLOT(update()) );
-
-
-    setSceneNode("Scene");
-
 }
 
 void Scene::makeNodes()
@@ -88,6 +84,7 @@ void Scene::makeNodes()
 
     auto blur = createProgram(":/assets/shaders/post.vert",
                               ":/assets/shaders/blur.frag");
+
     post_materials_["blur"] = make_shared<PostMaterial>(blur, 11);
 
     auto gaussA = createProgram(":/assets/shaders/post.vert",
@@ -98,6 +95,9 @@ void Scene::makeNodes()
     post_materials_["gauss_2"] = make_shared<PostMaterial>(gaussB,12);
 
     // load meshes from .obj files and assign shader programs to them
+
+
+
     meshes_["Duck"]    = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", std);
     meshes_["Teapot"]  = std::make_shared<Mesh>(":/assets/models/teapot/teapot.obj", std);
 
@@ -109,6 +109,11 @@ void Scene::makeNodes()
     // full-screen rectangles for post processing
     meshes_["original"]  = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1),
                                                   post_materials_["original"]);
+
+    meshes_["Moon"]    = std::make_shared<Mesh>(":/assets/models/moon/moon.obj", std);
+    nodes_["Moon"]  = createNode(meshes_["Moon"], true);
+
+
 
     nodes_["original"]   = createNode(meshes_["original"], false);
 
@@ -145,7 +150,10 @@ void Scene::makeScene()
     nodes_["World"]->children.push_back(nodes_["Scene"]);
 
     // initial model to be shown in the scene
-    nodes_["Scene"]->children.push_back(nodes_["Cube"]);
+    nodes_["Scene"]->children.push_back(nodes_["Sphere"]);
+    nodes_["Sphere"]->transformation.translate(QVector3D(0.6, 0.0, 0.0));
+
+    nodes_["Scene"]->children.push_back(nodes_["Moon"]);
 
     // add camera node
     nodes_["Camera"] = createNode(nullptr, false);
@@ -211,8 +219,8 @@ void Scene::setSceneNode(QString node)
     auto n = nodes_[node];
     assert(n);
 
-    nodes_["Scene"]->children.clear();
-    nodes_["Scene"]->children.push_back(n);
+    //nodes_["Scene"]->children.clear();
+    //nodes_["Scene"]->children.push_back(n);
 
     update();
 }

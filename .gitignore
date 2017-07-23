@@ -1,9 +1,8 @@
 build-rtr*
-build-texture_demos*
+uild-texture_demos*
 *.pro.user
 
 build-rtr*
-rtrApp.pro*
 
 rtrApp/rtrApp.pro.user
 rtrApp.pro.user*
