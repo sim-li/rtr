@@ -69,7 +69,10 @@ void Scene::makeNodes()
 
     // make multiple instances of (non-) textured Phong material
     materials_["red"] = std::make_shared<TexturedPhongMaterial>(phong_prog,1);
-    materials_["red"]->phong.k_diffuse = QVector3D(0.8f,0.1f,0.1f);
+
+    //materials_["red"]->phong.k_diffuse = QVector3D(0.8f,0.1f,0.1f);
+    materials_["red"]->phong.k_diffuse = QVector3D(1.0f, 1.0f, 1.0f);
+
     materials_["red"]->phong.k_ambient = materials_["red"]->phong.k_diffuse * 0.3f;
     materials_["red"]->phong.shininess = 80;
     materials_["red"]->envmap.useEnvironmentTexture = true;
@@ -94,49 +97,33 @@ void Scene::makeNodes()
     post_materials_["gauss_1"] = make_shared<PostMaterial>(gaussA,11);
     post_materials_["gauss_2"] = make_shared<PostMaterial>(gaussB,12);
 
-    // load meshes from .obj files and assign shader programs to them
+
+    //meshes_["Spaceship"]  = std::make_shared<Mesh>(":/assets/models/teapot/teapot.obj", std);
+
+    meshes_["Spaceship"]   = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
+    meshes_["Sun"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80,80), std);
+    meshes_["Moon"]    = std::make_shared<Mesh>(":/assets/models/moon/moon.obj", std);
+
+    nodes_["Moon"]  = createNode(meshes_["Moon"], true);
+    nodes_["Sun"]  = createNode(meshes_["Sun"], true);
+    nodes_["Spaceship"]  = createNode(meshes_["Spaceship"], true);
 
 
-
-    meshes_["Duck"]    = std::make_shared<Mesh>(":/assets/models/duck/duck.obj", std);
-    meshes_["Teapot"]  = std::make_shared<Mesh>(":/assets/models/teapot/teapot.obj", std);
-
-    // add meshes of some procedural geometry objects (not loaded from OBJ files)
-    meshes_["Cube"]   = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
-    meshes_["Sphere"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80,80), std);
-    meshes_["Torus"]  = std::make_shared<Mesh>(make_shared<geom::Torus>(4, 2, 80,20), std);
-
-    // full-screen rectangles for post processing
+    // Post-processing
     meshes_["original"]  = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1),
                                                   post_materials_["original"]);
-
-    meshes_["Moon"]    = std::make_shared<Mesh>(":/assets/models/moon/moon.obj", std);
-    nodes_["Moon"]  = createNode(meshes_["Moon"], true);
-
-
-
     nodes_["original"]   = createNode(meshes_["original"], false);
-
     meshes_["blur"]      = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1),
                                                   post_materials_["blur"]);
     nodes_["blur"]       = createNode(meshes_["blur"], false);
-
     meshes_["gauss_1"]   = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["gauss_1"]);
     nodes_["gauss_1"]    = createNode(meshes_["gauss_1"], false);
     meshes_["gauss_2"]   = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["gauss_2"]);
     nodes_["gauss_2"]    = createNode(meshes_["gauss_2"], false);
-
-    // initial state of post processing phases
     nodes_["post_pass_1"] = nodes_["blur"];
     nodes_["post_pass_2"] = nullptr;
 
-    // pack each mesh into a scene node, along with a transform that scales
-    // it to standard size [1,1,1]
-    nodes_["Cube"]    = createNode(meshes_["Cube"], true);
-    nodes_["Sphere"]  = createNode(meshes_["Sphere"], true);
-    nodes_["Torus"]   = createNode(meshes_["Torus"], true);
-    nodes_["Duck"]    = createNode(meshes_["Duck"], true);
-    nodes_["Teapot"]  = createNode(meshes_["Teapot"], true);
+
 }
 
 // once the nodes_ map is filled, construct a hierarchical scene from it
@@ -144,18 +131,15 @@ void Scene::makeScene()
 {
     // world contains the scene plus the camera
     nodes_["World"] = createNode(nullptr, false);
-
-    // scene means everything but the camera
     nodes_["Scene"] = createNode(nullptr, false);
     nodes_["World"]->children.push_back(nodes_["Scene"]);
 
     // initial model to be shown in the scene
-    nodes_["Scene"]->children.push_back(nodes_["Sphere"]);
-    nodes_["Sphere"]->transformation.translate(QVector3D(0.6, 0.0, 0.0));
-
+    nodes_["Scene"]->children.push_back(nodes_["Sun"]);
     nodes_["Scene"]->children.push_back(nodes_["Moon"]);
+    nodes_["Scene"]->children.push_back(nodes_["Spaceship"]);
+    nodes_["Sun"]->transformation.translate(QVector3D(0.6, 0.0, 0.0));
 
-    // add camera node
     nodes_["Camera"] = createNode(nullptr, false);
     nodes_["Camera"]->transformation.translate(QVector3D(0,0.5,3)); // move camera back and up a bit
     nodes_["Camera"]->transformation.rotate(-7.5, QVector3D(1,0,0)); // look down on scene
@@ -218,10 +202,8 @@ void Scene::setSceneNode(QString node)
 {
     auto n = nodes_[node];
     assert(n);
-
     //nodes_["Scene"]->children.clear();
     //nodes_["Scene"]->children.push_back(n);
-
     update();
 }
 
