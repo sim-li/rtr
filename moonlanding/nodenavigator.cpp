@@ -103,7 +103,6 @@ void ModelTrackball::mouseReleaseEvent(QMouseEvent *)
 
 void ModelTrackball::wheelEvent(QWheelEvent *event)
 {
-
     camera_->transformation.translate(QVector3D(0,0,-event->delta()/100.0));
 }
 
