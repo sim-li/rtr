@@ -156,5 +156,26 @@ public:
 
 };
 
+class BloomMaterial : public Material {
+public:
+    // constructor requires existing shader program
+    BloomMaterial(std::shared_ptr<QOpenGLShaderProgram> prog, int texunit = 0, int texunit2 = 0)
+        : Material(prog), tex_unit(texunit), tex_unit_2(texunit2) {}
+
+    // the texture to be post processed
+    GLint scene_tex_id;
+    GLint hilit_tex_id;
+
+    // the image size ("resolution") of the texture, needs to be set from outside
+    QSize image_size;
+
+    // texture unit to be used
+    int tex_unit;
+    int tex_unit_2;
+
+    // bind underlying shader program and set required uniforms
+    void apply(unsigned int light_pass = 0) override;
+};
+
 
 #endif // MATERIAL_H

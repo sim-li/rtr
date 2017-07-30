@@ -73,11 +73,22 @@ void Scene::makeNodes() {
     auto blur = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/blur.frag");
     post_materials_["blur"] = make_shared<PostMaterial>(blur, 11);
 
+
+    auto hilit  = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/highlight.frag");
+    auto bloom  = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/bloom.frag");
+    post_materials_["hilit"] = std::make_shared<PostMaterial>(hilit, 14);
+    bloomMaterial = std::make_shared<BloomMaterial>(bloom, 15, 16);
+
+
     meshes_["original"]  = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["original"]);
     meshes_["blur"]      = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["blur"]);
+    meshes_["hilit"]    = std::make_shared<Mesh>(make_shared<geom::RectXY>(1,1), post_materials_["hilit"]);
+    meshes_["bloom"]    = std::make_shared<Mesh>(make_shared<geom::RectXY>(1,1), bloomMaterial);
 
     nodes_["original"] = createNode(meshes_["original"], false);
+    nodes_["hilit"]    = createNode(meshes_["hilit"], false);
     nodes_["blur"] = createNode(meshes_["blur"], false);
+    nodes_["bloom"]    = createNode(meshes_["bloom"], false);
 
     nodes_["post_pass_1"] = nodes_["blur"];
     nodes_["post_pass_2"] = nullptr;
@@ -221,13 +232,13 @@ void Scene::setPostFilterKernelSize(int n) {
 
 void Scene::useSimpleBlur() {
     nodes_["post_pass_1"] = nodes_["blur"];
-    nodes_["post_pass_2"] = nullptr;
+    nodes_["post_pass_2"] = nodes_["bloom"];
     update();
 }
 
 void Scene::useTwoPassGauss() {
     nodes_["post_pass_1"] = nodes_["gauss_1"];
-    nodes_["post_pass_2"] = nodes_["gauss_2"];
+    nodes_["post_pass_2"] = nodes_["bloom"];
     update();
 }
 

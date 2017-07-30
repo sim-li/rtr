@@ -146,6 +146,7 @@ protected:
 
     std::shared_ptr<TexturedPhongMaterial> makePhongMaterialWithColor(QVector3D color);
 
+    std::shared_ptr<BloomMaterial> bloomMaterial;
 
 };
 
