@@ -54,6 +54,8 @@ public:
     // texture unit to be used
     int tex_unit;
 
+    int time;
+
     // bind underlying shader program and set required uniforms
     void apply(unsigned int light_pass = 0) override;
 

@@ -48,6 +48,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // make sure we redraw when the timer hits
     connect(&timer_, SIGNAL(timeout()), this, SLOT(update()) );
+    qDebug() << "Made it through constructor";
 }
 
 
@@ -300,7 +301,10 @@ void Scene::updateViewport(size_t width, size_t height) {
     fbo2_.reset();
 }
 
+// !!!!! init fbo
 void Scene::draw() {
+
+    /////////////////////////////////////
     // calculate animation time
     chrono::milliseconds millisec_since_first_draw;
     chrono::milliseconds millisec_since_last_draw;
@@ -315,6 +319,10 @@ void Scene::draw() {
     float t = millisec_since_first_draw.count() / 1000.0f;
     for(auto mat : materials_)
         mat.second->time = t;
+    for(auto mat : post_materials_)
+        mat.second->time = t;
+
+    ///////////////////////////////
 
     // create an FBO to render the scene into
     if(!fbo1_) {
@@ -326,25 +334,79 @@ void Scene::draw() {
         auto fbo_format = QOpenGLFramebufferObjectFormat();
         fbo_format.setAttachment(QOpenGLFramebufferObject::Depth);
 
+
         // create some FBOs for post processing
-        fbo1_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale, parent_->height()*pixel_scale, fbo_format);
-        fbo2_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale, parent_->height()*pixel_scale, fbo_format);
-        // qDebug() << "FBO size =" << fbo_->size();
+        fbo1_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                          parent_->height()*pixel_scale,
+                                                          fbo_format);
+        fbo2_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                           parent_->height()*pixel_scale,
+                                                           fbo_format);
+        fbo3_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                           parent_->height()*pixel_scale,
+                                                           fbo_format);
+        fbo4_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                           parent_->height()*pixel_scale,
+                                                           fbo_format);
+        fbo5_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                           parent_->height()*pixel_scale,
+                                                           fbo_format);
+//         qDebug() << "FBO size =" << fbo_->size();
     }
 
+
     // draw the actual scene into fbo1
+
+    /// draw hilit
     fbo1_->bind();
     draw_scene_();
     fbo1_->release();
 
-
-
     auto fbo_to_be_rendered = fbo1_;
+    auto node_to_be_rendered = nodes_["hilit"];
 
-    //TODO: Use commented out version -> this is for DEBUG.
-    //auto node_to_be_rendered = nodes_["post_pass_1"];
-    auto node_to_be_rendered = nodes_["original"];
+    /// draw blur of hilit
+    fbo2_->bind();
+    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+    fbo2_->release();
 
+    fbo_to_be_rendered = fbo2_;
+    node_to_be_rendered = nodes_["blur"];
+
+    /// draw original
+    fbo3_->bind();
+    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+    fbo3_->release();
+
+
+    bloomMaterial->scene_tex_id = fbo1_->texture();
+    bloomMaterial->hilit_tex_id = fbo3_->texture();
+    bloomMaterial->apply();
+
+    node_to_be_rendered = nodes_["bloom"];
+    post_draw_full_(*node_to_be_rendered);
+
+//    if (m_useGray) {
+//        fbo4_->bind();
+//        post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+//        fbo4_->release();
+//        fbo_to_be_rendered = fbo4_;
+//        node_to_be_rendered = nodes_["grayscale"];
+//        //final draw
+//        post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+//    }
+
+
+
+
+    //////////////////
+    // Possibly causes crash
+//    fbo1_->bind();
+//    draw_scene_();
+//    fbo1_->release();
+//    fbo_to_be_rendered = fbo1_;
+//    node_to_be_rendered = nodes_["Sphere"];
+//    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
 
     // second pass?
     if(nodes_["post_pass_2"]) {
@@ -355,36 +417,45 @@ void Scene::draw() {
         node_to_be_rendered = nodes_["post_pass_2"];
     }
 
-
+    ///////////////////////////
     // final rendering pass, into visible framebuffer (object)
-    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+    if(split_display_) {
+        post_draw_split_(*fbo1_, *nodes_["original"],
+                         *fbo_to_be_rendered, *node_to_be_rendered);
+    } else {
+        //post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+    }
 
-
+    /////////////////////////
     // extract FBI image and display in the UI, every 20 frames
-
     static size_t framecount=20-2; // initially will render twice
     if(show_FBOs_) {
         if(++framecount % 20 == 0) {
             emit displayBufferContents(0, "rendered scene", fbo1_->toImage());
+            emit displayBufferContents(1, "rendered scene", fbo2_->toImage());
+            emit displayBufferContents(2, "rendered scene", fbo3_->toImage());
+            emit displayBufferContents(3, "rendered scene", fbo4_->toImage());
+            emit displayBufferContents(4, "rendered scene", fbo5_->toImage());
+
             if(nodes_["post_pass_2"])
                 emit displayBufferContents(1, "post pass 1", fbo2_->toImage());
         }
     }
-
 }
 
-void Scene::draw_scene_() {
+void Scene::draw_scene_()
+{
 
     // set camera based on node in scene graph
     QMatrix4x4 camToWorld = nodes_["World"]->toWorldTransform(nodes_["Camera"]);
     float aspect = float(parent_->width())/float(parent_->height());
-    LookAtCamera camera(camToWorld*QVector3D(0,0,0), // look from
+    LookAtCamera camera(camToWorld*QVector3D(0,0,2), // look from
                         camToWorld*QVector3D(0,0,-1), // look along -Z
                         camToWorld*QVector3D(0,1,0), // this way is up
                         30.0f,   // field of view in up direction
                         aspect, // aspect ratio
                         0.01f,   // near plane
-                        15.0f    // far plane
+                        30.0f    // far plane
                         );
 
     // clear buffer
@@ -413,6 +484,19 @@ void Scene::draw_scene_() {
         glBlendFunc(GL_ONE,GL_ONE);
         glDepthFunc(GL_EQUAL);
     }
+}
+
+void Scene::post_draw_full_(Node &node) {
+    // set up transformation matrices
+    PostProcessingCamera camera;
+
+    // initial state for drawing full-viewport rectangles
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
+
+    // draw single full screen rectangle with post processing material
+    node.draw(camera);
 }
 
 void Scene::post_draw_full_(QOpenGLFramebufferObject &fbo, Node& node) {
