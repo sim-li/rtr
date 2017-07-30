@@ -63,9 +63,6 @@ AppWindow::AppWindow(QWidget *parent) :
             [this](bool) { scene().setBackgroundColor(QVector3D(1,1,1)); } );
     connect(ui->light0Slider, &QSlider::valueChanged,
             [this](int value) { scene().setLightIntensity(0, float(value)/100.0); } );
-    connect(ui->modelComboBox, &QComboBox::currentTextChanged,
-            [this](QString value) { scene().setSceneNode(value); } );
-
     connect(ui->ambientSlider, &QSlider::valueChanged,
             [this](int value) { scene().setAmbientScale(float(value)/20.0); } );
     connect(ui->diffuseSlider, &QSlider::valueChanged,
@@ -78,6 +75,8 @@ AppWindow::AppWindow(QWidget *parent) :
     // post processing parameters -------------------------------
     connect(ui->postFilterComboBox, &QComboBox::currentTextChanged,
             [this](QString value) {
+
+
         if(value == "Blur") {
             hideBufferContents();
             ui->post_kernel_size->setEnabled(true);
@@ -87,6 +86,8 @@ AppWindow::AppWindow(QWidget *parent) :
             hideBufferContents();
             ui->post_kernel_size->setDisabled(true);
         }
+
+
     } );
     connect(ui->splitScreenCheckbox, &QCheckBox::toggled,
             [this](bool value) { scene().toggleSplitDisplay(value); } );

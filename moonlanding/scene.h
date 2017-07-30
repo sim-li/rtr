@@ -62,8 +62,7 @@ public slots:
     void toggleSplitDisplay(bool value);
     void toggleFBODisplay(bool value);
 
-    // change the node to be rendered in the scene
-    void setSceneNode(QString node);
+
 
     // pass key/mouse events to navigators
     void keyPressEvent(QKeyEvent *event);
