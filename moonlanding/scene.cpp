@@ -109,11 +109,12 @@ void Scene::makeScene() {
     nodes_["Moon"]->children.push_back(nodes_["Spaceship"]);
     nodes_["Moon"]->children.push_back(nodes_["Sun"]);
 
-    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 1.3, 0.0));
+    //0.8->1.4
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 0.8, 0.0));
     nodes_["Spaceship"]->transformation.scale(0.2);
 
     nodes_["Camera"] = createNode(nullptr, false);
-    nodes_["Camera"]->transformation.translate(QVector3D(0, 0.5, 9)); // move camera back and up a bit
+    nodes_["Camera"]->transformation.translate(QVector3D(0, 4, 15)); // move camera back and up a bit
     nodes_["Camera"]->transformation.rotate(-7.5, QVector3D(1, 0,0)); // look down on scene
 
     nodes_["Spaceship"]->children.push_back(nodes_["Camera"]);
@@ -129,6 +130,8 @@ void Scene::makeScene() {
     //nodes_["Light0"]->transformation.translate(QVector3D(-0.55f, 0.68f, 1.34f));
     nodes_["Light0"]->transformation.translate(QVector3D(0.35f, 0.553f, 2.0169f));
 
+
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, -1.3, 0.0));
 }
 
 
