@@ -50,14 +50,11 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 }
 
 
-void Scene::makeNodes()
-{
+void Scene::makeNodes() {
     materials_["white"] = makePhongMaterialWithColor(QVector3D(1.0f, 1.0f, 1.0f));
     materials_["white_original"] = materials_["white"];
     auto std = materials_["white"];
-
     materials_["red"] = makePhongMaterialWithColor(QVector3D(1.0f, 0.0f, 0.0f));
-
 
     meshes_["Spaceship"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
     meshes_["Sun"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80, 80), materials_["red"]);
@@ -68,20 +65,21 @@ void Scene::makeNodes()
     nodes_["Sun"]  = createNode(meshes_["Sun"], true);
     nodes_["Spaceship"]  = createNode(meshes_["Spaceship"], true);
 
-    // Post-processing
     auto orig = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/original.frag");
     post_materials_["original"] = make_shared<PostMaterial>(orig, 10);
     auto blur = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/blur.frag");
     post_materials_["blur"] = make_shared<PostMaterial>(blur, 11);
+
     auto gaussA = createProgram(":/assets/shaders/post.vert",":/assets/shaders/gauss_9x9_passA.frag");
     auto gaussB = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/gauss_9x9_passB.frag");
-
     post_materials_["gauss_1"] = make_shared<PostMaterial>(gaussA,11);
     post_materials_["gauss_2"] = make_shared<PostMaterial>(gaussB,12);
+
     meshes_["original"]  = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["original"]);
     meshes_["blur"]      = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["blur"]);
     meshes_["gauss_1"]   = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["gauss_1"]);
     meshes_["gauss_2"]   = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["gauss_2"]);
+
 
     nodes_["original"] = createNode(meshes_["original"], false);
     nodes_["blur"] = createNode(meshes_["blur"], false);
@@ -105,9 +103,9 @@ std::shared_ptr<TexturedPhongMaterial> Scene::makePhongMaterialWithColor(QVector
 }
 
 
+
 // once the nodes_ map is filled, construct a hierarchical scene from it
-void Scene::makeScene()
-{
+void Scene::makeScene() {
     // world contains the scene plus the camera
     nodes_["World"] = createNode(nullptr, false);
     nodes_["Scene"] = createNode(nullptr, false);
@@ -141,9 +139,7 @@ void Scene::makeScene()
 
 
 // helper to load shaders and create programs
-shared_ptr<QOpenGLShaderProgram>
-Scene::createProgram(const string& vertex, const string& fragment, const string& geom)
-{
+shared_ptr<QOpenGLShaderProgram> Scene::createProgram(const string& vertex, const string& fragment, const string& geom) {
     auto p = make_shared<QOpenGLShaderProgram>();
     if(!p->addShaderFromSourceFile(QOpenGLShader::Vertex, vertex.c_str()))
         qFatal("could not add vertex shader");
@@ -161,10 +157,7 @@ Scene::createProgram(const string& vertex, const string& fragment, const string&
 
 // helper to make a node from a mesh, and
 // scale the mesh to standard size 1 of desired
-shared_ptr<Node>
-Scene::createNode(shared_ptr<Mesh> mesh,
-                  bool scale_to_1)
-{
+shared_ptr<Node> Scene::createNode(shared_ptr<Mesh> mesh, bool scale_to_1) {
     QMatrix4x4 transform;
     if(scale_to_1) {
         float r = mesh->geometry()->bbox().maxExtent();
@@ -175,8 +168,7 @@ Scene::createNode(shared_ptr<Mesh> mesh,
 }
 
 
-void Scene::toggleAnimation(bool flag)
-{
+void Scene::toggleAnimation(bool flag) {
     if(flag) {
         timer_.start(1000.0 / 60.0); // update *roughly* every 60 ms
     } else {
@@ -188,35 +180,31 @@ void Scene::toggleAnimation(bool flag)
 void Scene::setBackgroundColor(QVector3D rgb) {
     bgcolor_ = rgb; update();
 }
+
 // methods to change common material parameters
-void Scene::setLightIntensity(size_t i, float v)
-{
+void Scene::setLightIntensity(size_t i, float v) {
     if(i>=lightNodes_.size())
         return;
     for(auto mat : materials_)
         mat.second->lights[i].intensity = v; update();
 }
 
-void Scene::setAmbientScale(float v)
-{
+void Scene::setAmbientScale(float v) {
     materials_["white"]->phong.k_ambient = materials_["white_original"]->phong.k_ambient * v;
     update();
 }
 
-void Scene::setDiffuseScale(float v)
-{
+void Scene::setDiffuseScale(float v) {
     materials_["white"]->phong.k_diffuse = materials_["white_original"]->phong.k_diffuse * v;
     update();
 }
 
-void Scene::setSpecularScale(float v)
-{
+void Scene::setSpecularScale(float v) {
     materials_["white"]->phong.k_specular = materials_["white_original"]->phong.k_specular * v;
     update();
 }
 
-void Scene::setShininess(float v)
-{
+void Scene::setShininess(float v) {
     materials_["white"]->phong.shininess = v;
     update();
 }
@@ -240,18 +228,18 @@ void Scene::useTwoPassGauss() {
     nodes_["post_pass_2"] = nodes_["gauss_2"];
     update();
 }
-void Scene::toggleJittering(bool value)
-{
+
+void Scene::toggleJittering(bool value) {
     for(auto m : post_materials_) m.second->use_jitter = value;
     update();
 }
-void Scene::toggleSplitDisplay(bool value)
-{
+
+void Scene::toggleSplitDisplay(bool value) {
     split_display_ = value;
     update();
 }
-void Scene::toggleFBODisplay(bool value)
-{
+
+void Scene::toggleFBODisplay(bool value) {
     show_FBOs_ = value;
     update();
 }
@@ -269,30 +257,28 @@ void Scene::keyPressEvent(QKeyEvent *event) {
 
 }
 // mouse press events all processed by trackball navigator
-void Scene::mousePressEvent(QMouseEvent *event)
-{
+void Scene::mousePressEvent(QMouseEvent *event) {
     navigator_->mousePressEvent(event); update();
 }
-void Scene::mouseMoveEvent(QMouseEvent *event)
-{
+
+void Scene::mouseMoveEvent(QMouseEvent *event) {
     navigator_->mouseMoveEvent(event); update();
 }
-void Scene::mouseReleaseEvent(QMouseEvent *event)
-{
+
+void Scene::mouseReleaseEvent(QMouseEvent *event) {
     navigator_->mouseReleaseEvent(event); update();
 }
+
 void Scene::wheelEvent(QWheelEvent *event) {
     navigator_->wheelEvent(event); update();
 }
 
 // trigger a redraw of the widget through this method
-void Scene::update()
-{
+void Scene::update() {
     parent_->update();
 }
 
-void Scene::updateViewport(size_t width, size_t height)
-{
+void Scene::updateViewport(size_t width, size_t height) {
     glViewport(0,0,GLint(width),GLint(height));
 
     // discard existing FBOs; need to re-create with new size
@@ -300,8 +286,7 @@ void Scene::updateViewport(size_t width, size_t height)
     fbo2_.reset();
 }
 
-void Scene::draw()
-{
+void Scene::draw() {
     // calculate animation time
     chrono::milliseconds millisec_since_first_draw;
     chrono::milliseconds millisec_since_last_draw;
@@ -374,8 +359,7 @@ void Scene::draw()
     */
 }
 
-void Scene::draw_scene_()
-{
+void Scene::draw_scene_() {
 
     // set camera based on node in scene graph
     QMatrix4x4 camToWorld = nodes_["World"]->toWorldTransform(nodes_["Camera"]);
@@ -417,8 +401,7 @@ void Scene::draw_scene_()
     }
 }
 
-void Scene::post_draw_full_(QOpenGLFramebufferObject &fbo, Node& node)
-{
+void Scene::post_draw_full_(QOpenGLFramebufferObject &fbo, Node& node) {
     // set up transformation matrices
     PostProcessingCamera camera;
 
@@ -441,9 +424,7 @@ void Scene::post_draw_full_(QOpenGLFramebufferObject &fbo, Node& node)
     node.draw(camera);
 }
 
-void Scene::post_draw_split_(QOpenGLFramebufferObject &fbo1, Node& node1,
-                             QOpenGLFramebufferObject &fbo2, Node& node2)
-{
+void Scene::post_draw_split_(QOpenGLFramebufferObject &fbo1, Node& node1, QOpenGLFramebufferObject &fbo2, Node& node2) {
     // set up transformation matrices
     PostProcessingCamera camera;
 
