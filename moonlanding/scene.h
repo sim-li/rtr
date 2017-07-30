@@ -62,8 +62,7 @@ public slots:
     void toggleSplitDisplay(bool value);
     void toggleFBODisplay(bool value);
 
-    // change the node to be rendered in the scene
-    void setSceneNode(QString node);
+
 
     // pass key/mouse events to navigators
     void keyPressEvent(QKeyEvent *event);
@@ -143,6 +142,9 @@ protected:
     // helpers to construct the objects and to build the hierarchical scene
     void makeNodes();
     void makeScene();
+
+    std::shared_ptr<TexturedPhongMaterial> makePhongMaterialWithColor(QVector3D color);
+
 
 };
 

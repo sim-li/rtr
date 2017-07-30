@@ -35,11 +35,15 @@ vec2 rand2(vec2 xy)
 void main(void)
 {
     vec2 image_size = vec2(image_width, image_height);
+    //TODO: Remove, used for debug
     vec2 kernel_size = vec2(kernel_width, kernel_height);
+
     vec2 size = kernel_size / image_size;
     vec2 center = (kernel_size - vec2(1.0,1.0)) / 2.0;
 
     vec3 color = vec3(0,0,0);
+
+
     for (int x = 0; x < kernel_width; x++) {
         for (int y = 0; y < kernel_height; y++) {
             vec2 jitter = use_jitter? rand2(texcoord_frag) * 2.0 - 1.0 : vec2(0,0);
@@ -48,7 +52,8 @@ void main(void)
         }
     }
     color *= 1.0/float(kernel_size.x*kernel_size.y);
-    
+
+
     // out to frame buffer
     outColor = vec4(color, 1);
     // outColor = vec4(texcoord_frag.s, texcoord_frag.t, 0, 1);

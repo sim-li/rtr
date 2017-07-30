@@ -46,7 +46,7 @@ public:
     void keyPressEvent(QKeyEvent *event) override;
 
     // how much translation for one key press?
-    float speed = 0.05f;
+    float speed = 1.5f;
 
 };
 
