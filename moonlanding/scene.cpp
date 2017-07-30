@@ -104,29 +104,31 @@ void Scene::makeScene() {
     nodes_["World"]->children.push_back(nodes_["Scene"]);
 
     // initial model to be shown in the scene
-    nodes_["Scene"]->children.push_back(nodes_["Sun"]);
-    nodes_["Scene"]->children.push_back(nodes_["Moon"]);
-    nodes_["Scene"]->children.push_back(nodes_["Spaceship"]);
 
-    nodes_["Spaceship"]->transformation.translate(QVector3D(0.4, 0.7, 0.0));
+    nodes_["Scene"]->children.push_back(nodes_["Moon"]);
+    nodes_["Moon"]->children.push_back(nodes_["Spaceship"]);
+    nodes_["Moon"]->children.push_back(nodes_["Sun"]);
+
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 1.3, 0.0));
     nodes_["Spaceship"]->transformation.scale(0.2);
 
     nodes_["Camera"] = createNode(nullptr, false);
     nodes_["Camera"]->transformation.translate(QVector3D(0, 0.5, 9)); // move camera back and up a bit
     nodes_["Camera"]->transformation.rotate(-7.5, QVector3D(1, 0,0)); // look down on scene
+
     nodes_["Spaceship"]->children.push_back(nodes_["Camera"]);
+
+    nodes_["Sun"]->transformation.translate(QVector3D(2.0, 2.0, -10.0));
+    nodes_["Sun"]->transformation.scale(1.5);
 
     // add a light relative to the world
     nodes_["Light0"] = createNode(nullptr, false);
-
     lightNodes_.push_back(nodes_["Light0"]);
     nodes_["Sun"]->children.push_back(nodes_["Light0"]);
 
-    nodes_["Sun"]->transformation.translate(QVector3D(2.0, 1.0, -10.0));
-    nodes_["Sun"]->transformation.scale(3.0);
+    //nodes_["Light0"]->transformation.translate(QVector3D(-0.55f, 0.68f, 1.34f));
+    nodes_["Light0"]->transformation.translate(QVector3D(0.35f, 0.553f, 2.0169f));
 
-    nodes_["Light0"]->transformation.translate(QVector3D(-0.55f, 0.68f, 4.34f)); // above camera
-    //nodes_["Light0"]->transformation.translate(QVector3D(2.45f, 1.98274f, -5.0107f)); // above camera
 }
 
 
@@ -175,10 +177,13 @@ void Scene::setBackgroundColor(QVector3D rgb) {
 
 // methods to change common material parameters
 void Scene::setLightIntensity(size_t i, float v) {
-    if(i>=lightNodes_.size())
+    if(i>=lightNodes_.size()) {
         return;
-    for(auto mat : materials_)
-        mat.second->lights[i].intensity = v; update();
+    }
+    for(auto mat : materials_) {
+        mat.second->lights[i].intensity = v;
+        update();
+    }
 }
 
 void Scene::setAmbientScale(float v) {
@@ -320,8 +325,8 @@ void Scene::draw() {
     auto fbo_to_be_rendered = fbo1_;
 
     //TODO: Use commented out version -> this is for DEBUG.
-    auto node_to_be_rendered = nodes_["post_pass_1"];
-    //auto node_to_be_rendered = nodes_["original"];
+    //auto node_to_be_rendered = nodes_["post_pass_1"];
+    auto node_to_be_rendered = nodes_["original"];
 
 
     // second pass?
@@ -362,7 +367,7 @@ void Scene::draw_scene_() {
                         30.0f,   // field of view in up direction
                         aspect, // aspect ratio
                         0.01f,   // near plane
-                        10.0f    // far plane
+                        15.0f    // far plane
                         );
 
     // clear buffer

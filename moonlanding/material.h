@@ -114,7 +114,8 @@ public:
     } envmap;
 
     struct PointLight {
-        QVector4D position_WC = QVector4D(0, 1, 10, 1);
+        QVector4D position_WC = QVector4D(0, 0, 0, 1);
+        //QVector4D position_WC = QVector4D(0, 1, -6, 1);
         QVector3D color = QVector3D(1,1,1);
         float intensity = 0.5;
     };
