@@ -200,18 +200,14 @@ void AppWindow::keyPressEvent(QKeyEvent *event)
     assert(event);
 
     switch(event->key()) {
+        case Qt::Key_H:
+            ui->ui_container->isHidden()? showUI() : hideUI();
+            return;
 
-    // key 'h': show/hide UI
-    case Qt::Key_H:
-        ui->ui_container->isHidden()? showUI() : hideUI();
-        return;
-
-    // key 'q': quit app
-    case Qt::Key_Q:
-        close();
-        return;
-
-    } // switch
+        case Qt::Key_Q:
+            close();
+            return;
+    }
 
     // pass events on to scene
     scene().keyPressEvent(event);

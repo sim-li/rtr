@@ -50,6 +50,23 @@ public:
 
 };
 
+class SpaceshipNavigator : public NodeNavigator {
+public:
+
+    SpaceshipNavigator(std::shared_ptr<Node> node,
+                      std::shared_ptr<Node> world,
+                      std::shared_ptr<Node> camera)
+        : NodeNavigator(node,world,camera)
+    {}
+
+    // use (shift) cursor keys to move things around
+    void keyPressEvent(QKeyEvent *event) override;
+
+    // how much translation for one key press?
+    float speed = 1.5f;
+
+};
+
 class RotateZoom : public NodeNavigator {
 public:
 

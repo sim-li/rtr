@@ -40,6 +40,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     makeScene();
 
     navigator_ = std::make_unique<ModelTrackball>(nodes_["Scene"], nodes_["World"], nodes_["Camera"]);
+    spaceshipNavigator_ = std::make_unique<SpaceshipNavigator>(nodes_["Spaceship"], nodes_["World"], nodes_["Camera"]);
     lightNavigator_ = std::make_unique<PositionNavigator>(nodes_["Light0"], nodes_["World"], nodes_["Camera"]);
     cameraNavigator_ = std::make_unique<RotateCameraY>(nullptr, nullptr, nodes_["Camera"]);
 
@@ -47,6 +48,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // make sure we redraw when the timer hits
     connect(&timer_, SIGNAL(timeout()), this, SLOT(update()) );
+    qDebug() << "Made it through constructor";
 }
 
 
@@ -57,6 +59,7 @@ void Scene::makeNodes() {
     materials_["red"] = makePhongMaterialWithColor(QVector3D(1.0f, 0.0f, 0.0f));
 
     meshes_["Spaceship"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
+    //meshes_["Spaceship"] = std::make_shared<Mesh>(":/assets/models/spaceship/spaceship2.obj", std);
     meshes_["Sun"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80, 80), materials_["red"]);
     //meshes_["Moon"] = std::make_shared<Mesh>(":/assets/models/moon/moon.obj", std);
     meshes_["Moon"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80,80), std);
@@ -71,11 +74,22 @@ void Scene::makeNodes() {
     auto blur = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/blur.frag");
     post_materials_["blur"] = make_shared<PostMaterial>(blur, 11);
 
+
+    auto hilit  = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/highlight.frag");
+    auto bloom  = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/bloom.frag");
+    post_materials_["hilit"] = std::make_shared<PostMaterial>(hilit, 14);
+    bloomMaterial = std::make_shared<BloomMaterial>(bloom, 15, 16);
+
+
     meshes_["original"]  = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["original"]);
     meshes_["blur"]      = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["blur"]);
+    meshes_["hilit"]    = std::make_shared<Mesh>(make_shared<geom::RectXY>(1,1), post_materials_["hilit"]);
+    meshes_["bloom"]    = std::make_shared<Mesh>(make_shared<geom::RectXY>(1,1), bloomMaterial);
 
     nodes_["original"] = createNode(meshes_["original"], false);
+    nodes_["hilit"]    = createNode(meshes_["hilit"], false);
     nodes_["blur"] = createNode(meshes_["blur"], false);
+    nodes_["bloom"]    = createNode(meshes_["bloom"], false);
 
     nodes_["post_pass_1"] = nodes_["blur"];
     nodes_["post_pass_2"] = nullptr;
@@ -104,29 +118,34 @@ void Scene::makeScene() {
     nodes_["World"]->children.push_back(nodes_["Scene"]);
 
     // initial model to be shown in the scene
-    nodes_["Scene"]->children.push_back(nodes_["Sun"]);
-    nodes_["Scene"]->children.push_back(nodes_["Moon"]);
-    nodes_["Scene"]->children.push_back(nodes_["Spaceship"]);
 
-    nodes_["Spaceship"]->transformation.translate(QVector3D(0.4, 0.7, 0.0));
+    nodes_["Scene"]->children.push_back(nodes_["Moon"]);
+    nodes_["Moon"]->children.push_back(nodes_["Spaceship"]);
+    nodes_["Moon"]->children.push_back(nodes_["Sun"]);
+
+    //0.8->1.4
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 1.4, 0.0));
     nodes_["Spaceship"]->transformation.scale(0.2);
 
     nodes_["Camera"] = createNode(nullptr, false);
-    nodes_["Camera"]->transformation.translate(QVector3D(0, 0.5, 9)); // move camera back and up a bit
+    nodes_["Camera"]->transformation.translate(QVector3D(0, 4, 15)); // move camera back and up a bit
     nodes_["Camera"]->transformation.rotate(-7.5, QVector3D(1, 0,0)); // look down on scene
+
     nodes_["Spaceship"]->children.push_back(nodes_["Camera"]);
+
+    nodes_["Sun"]->transformation.translate(QVector3D(2.0, 2.0, -10.0));
+    nodes_["Sun"]->transformation.scale(1.5);
 
     // add a light relative to the world
     nodes_["Light0"] = createNode(nullptr, false);
-
     lightNodes_.push_back(nodes_["Light0"]);
     nodes_["Sun"]->children.push_back(nodes_["Light0"]);
 
-    nodes_["Sun"]->transformation.translate(QVector3D(2.0, 1.0, -10.0));
-    nodes_["Sun"]->transformation.scale(3.0);
+    //nodes_["Light0"]->transformation.translate(QVector3D(-0.55f, 0.68f, 1.34f));
+    nodes_["Light0"]->transformation.translate(QVector3D(0.35f, 0.553f, 2.0169f));
 
-    nodes_["Light0"]->transformation.translate(QVector3D(-0.55f, 0.68f, 4.34f)); // above camera
-    //nodes_["Light0"]->transformation.translate(QVector3D(2.45f, 1.98274f, -5.0107f)); // above camera
+
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, -1.3, 0.0));
 }
 
 
@@ -175,10 +194,13 @@ void Scene::setBackgroundColor(QVector3D rgb) {
 
 // methods to change common material parameters
 void Scene::setLightIntensity(size_t i, float v) {
-    if(i>=lightNodes_.size())
+    if(i>=lightNodes_.size()) {
         return;
-    for(auto mat : materials_)
-        mat.second->lights[i].intensity = v; update();
+    }
+    for(auto mat : materials_) {
+        mat.second->lights[i].intensity = v;
+        update();
+    }
 }
 
 void Scene::setAmbientScale(float v) {
@@ -211,13 +233,13 @@ void Scene::setPostFilterKernelSize(int n) {
 
 void Scene::useSimpleBlur() {
     nodes_["post_pass_1"] = nodes_["blur"];
-    nodes_["post_pass_2"] = nullptr;
+    nodes_["post_pass_2"] = nodes_["bloom"];
     update();
 }
 
 void Scene::useTwoPassGauss() {
     nodes_["post_pass_1"] = nodes_["gauss_1"];
-    nodes_["post_pass_2"] = nodes_["gauss_2"];
+    nodes_["post_pass_2"] = nodes_["bloom"];
     update();
 }
 
@@ -245,6 +267,7 @@ void Scene::keyPressEvent(QKeyEvent *event) {
     } else {
         cameraNavigator_->keyPressEvent(event);
     }
+    spaceshipNavigator_->keyPressEvent(event);
     update();
 
 }
@@ -278,7 +301,10 @@ void Scene::updateViewport(size_t width, size_t height) {
     fbo2_.reset();
 }
 
+// !!!!! init fbo
 void Scene::draw() {
+
+    /////////////////////////////////////
     // calculate animation time
     chrono::milliseconds millisec_since_first_draw;
     chrono::milliseconds millisec_since_last_draw;
@@ -293,6 +319,10 @@ void Scene::draw() {
     float t = millisec_since_first_draw.count() / 1000.0f;
     for(auto mat : materials_)
         mat.second->time = t;
+    for(auto mat : post_materials_)
+        mat.second->time = t;
+
+    ///////////////////////////////
 
     // create an FBO to render the scene into
     if(!fbo1_) {
@@ -304,25 +334,79 @@ void Scene::draw() {
         auto fbo_format = QOpenGLFramebufferObjectFormat();
         fbo_format.setAttachment(QOpenGLFramebufferObject::Depth);
 
+
         // create some FBOs for post processing
-        fbo1_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale, parent_->height()*pixel_scale, fbo_format);
-        fbo2_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale, parent_->height()*pixel_scale, fbo_format);
-        // qDebug() << "FBO size =" << fbo_->size();
+        fbo1_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                          parent_->height()*pixel_scale,
+                                                          fbo_format);
+        fbo2_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                           parent_->height()*pixel_scale,
+                                                           fbo_format);
+        fbo3_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                           parent_->height()*pixel_scale,
+                                                           fbo_format);
+        fbo4_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                           parent_->height()*pixel_scale,
+                                                           fbo_format);
+        fbo5_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
+                                                           parent_->height()*pixel_scale,
+                                                           fbo_format);
+//         qDebug() << "FBO size =" << fbo_->size();
     }
 
+
     // draw the actual scene into fbo1
+
+    /// draw hilit
     fbo1_->bind();
     draw_scene_();
     fbo1_->release();
 
-
-
     auto fbo_to_be_rendered = fbo1_;
+    auto node_to_be_rendered = nodes_["hilit"];
 
-    //TODO: Use commented out version -> this is for DEBUG.
-    auto node_to_be_rendered = nodes_["post_pass_1"];
-    //auto node_to_be_rendered = nodes_["original"];
+    /// draw blur of hilit
+    fbo2_->bind();
+    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+    fbo2_->release();
 
+    fbo_to_be_rendered = fbo2_;
+    node_to_be_rendered = nodes_["blur"];
+
+    /// draw original
+    fbo3_->bind();
+    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+    fbo3_->release();
+
+
+    bloomMaterial->scene_tex_id = fbo1_->texture();
+    bloomMaterial->hilit_tex_id = fbo3_->texture();
+    bloomMaterial->apply();
+
+    node_to_be_rendered = nodes_["bloom"];
+    post_draw_full_(*node_to_be_rendered);
+
+//    if (m_useGray) {
+//        fbo4_->bind();
+//        post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+//        fbo4_->release();
+//        fbo_to_be_rendered = fbo4_;
+//        node_to_be_rendered = nodes_["grayscale"];
+//        //final draw
+//        post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+//    }
+
+
+
+
+    //////////////////
+    // Possibly causes crash
+//    fbo1_->bind();
+//    draw_scene_();
+//    fbo1_->release();
+//    fbo_to_be_rendered = fbo1_;
+//    node_to_be_rendered = nodes_["Sphere"];
+//    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
 
     // second pass?
     if(nodes_["post_pass_2"]) {
@@ -333,36 +417,45 @@ void Scene::draw() {
         node_to_be_rendered = nodes_["post_pass_2"];
     }
 
-
+    ///////////////////////////
     // final rendering pass, into visible framebuffer (object)
-    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+    if(split_display_) {
+        post_draw_split_(*fbo1_, *nodes_["original"],
+                         *fbo_to_be_rendered, *node_to_be_rendered);
+    } else {
+        //post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+    }
 
-
+    /////////////////////////
     // extract FBI image and display in the UI, every 20 frames
-
     static size_t framecount=20-2; // initially will render twice
     if(show_FBOs_) {
         if(++framecount % 20 == 0) {
             emit displayBufferContents(0, "rendered scene", fbo1_->toImage());
+            emit displayBufferContents(1, "rendered scene", fbo2_->toImage());
+            emit displayBufferContents(2, "rendered scene", fbo3_->toImage());
+            emit displayBufferContents(3, "rendered scene", fbo4_->toImage());
+            emit displayBufferContents(4, "rendered scene", fbo5_->toImage());
+
             if(nodes_["post_pass_2"])
                 emit displayBufferContents(1, "post pass 1", fbo2_->toImage());
         }
     }
-
 }
 
-void Scene::draw_scene_() {
+void Scene::draw_scene_()
+{
 
     // set camera based on node in scene graph
     QMatrix4x4 camToWorld = nodes_["World"]->toWorldTransform(nodes_["Camera"]);
     float aspect = float(parent_->width())/float(parent_->height());
-    LookAtCamera camera(camToWorld*QVector3D(0,0,0), // look from
+    LookAtCamera camera(camToWorld*QVector3D(0,0,2), // look from
                         camToWorld*QVector3D(0,0,-1), // look along -Z
                         camToWorld*QVector3D(0,1,0), // this way is up
                         30.0f,   // field of view in up direction
                         aspect, // aspect ratio
                         0.01f,   // near plane
-                        10.0f    // far plane
+                        30.0f    // far plane
                         );
 
     // clear buffer
@@ -391,6 +484,19 @@ void Scene::draw_scene_() {
         glBlendFunc(GL_ONE,GL_ONE);
         glDepthFunc(GL_EQUAL);
     }
+}
+
+void Scene::post_draw_full_(Node &node) {
+    // set up transformation matrices
+    PostProcessingCamera camera;
+
+    // initial state for drawing full-viewport rectangles
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
+
+    // draw single full screen rectangle with post processing material
+    node.draw(camera);
 }
 
 void Scene::post_draw_full_(QOpenGLFramebufferObject &fbo, Node& node) {

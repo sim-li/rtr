@@ -1,5 +1,6 @@
+build-*
 build-rtr*
-uild-texture_demos*
+build-texture_demos*
 *.pro.user
 
 build-rtr*

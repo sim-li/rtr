@@ -6,5 +6,7 @@
         <file>assets/models/teapot/teapot.obj</file>
         <file>assets/models/moon/moon.obj</file>
         <file>assets/models/moon/moon.mtl</file>
+        <file>assets/models/spaceship/spaceship.obj</file>
+        <file>assets/models/spaceship/spaceship2.obj</file>
     </qresource>
 </RCC>

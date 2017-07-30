@@ -89,9 +89,22 @@ void TexturedPhongMaterial::apply(unsigned int light_pass)
         prog_->setUniformValue("displacement.scale", displacement.scale);
         prog_->setUniformValue("displacementTexture", unit); displacement.tex->bind(unit++);
     }
-
-
 }
 
+void BloomMaterial::apply(unsigned int)
+{
+    prog_->bind();
+
+    // bind texture manually using its OpenGL ID
+    QOpenGLFunctions gl(QOpenGLContext::currentContext());
+    gl.glActiveTexture(GL_TEXTURE0 + tex_unit);
+    gl.glBindTexture(GL_TEXTURE_2D, scene_tex_id);
+    gl.glActiveTexture(GL_TEXTURE0 + tex_unit_2);
+    gl.glBindTexture(GL_TEXTURE_2D, hilit_tex_id);
+    prog_->setUniformValue("scene_tex", tex_unit);
+    prog_->setUniformValue("highlight_tex", tex_unit_2);
+    prog_->setUniformValue("image_width", (GLint)image_size.width());
+    prog_->setUniformValue("image_height", (GLint)image_size.height());
+}
 
 

@@ -87,11 +87,14 @@ protected:
 
     // draw from FBO for post processing, use full viewport
     void post_draw_full_(QOpenGLFramebufferObject& fbo, Node& node);
+
+    void post_draw_full_(Node& node);
+
     // draw from FBO, render left half of node1 + right half of node2
     void post_draw_split_(QOpenGLFramebufferObject &fbo1, Node &node1, QOpenGLFramebufferObject &fbo2, Node &node2);
 
     // multi-pass rendering
-    std::shared_ptr<QOpenGLFramebufferObject> fbo1_, fbo2_;
+    std::shared_ptr<QOpenGLFramebufferObject> fbo1_, fbo2_, fbo3_, fbo4_, fbo5_;
     std::map<QString, std::shared_ptr<PostMaterial>> post_materials_;
     bool split_display_ = true;
     bool show_FBOs_ = false;
@@ -130,6 +133,7 @@ protected:
     std::unique_ptr<ModelTrackball> navigator_;
     std::unique_ptr<PositionNavigator> lightNavigator_;
     std::unique_ptr<RotateCameraY> cameraNavigator_;
+    std::unique_ptr<SpaceshipNavigator> spaceshipNavigator_;
 
     // helper for creating programs from shader files
     std::shared_ptr<QOpenGLShaderProgram> createProgram(const std::string& vertex,
@@ -145,6 +149,7 @@ protected:
 
     std::shared_ptr<TexturedPhongMaterial> makePhongMaterialWithColor(QVector3D color);
 
+    std::shared_ptr<BloomMaterial> bloomMaterial;
 
 };
 

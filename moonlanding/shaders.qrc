@@ -2,10 +2,12 @@
     <qresource prefix="/">
         <file>assets/shaders/textured_phong.frag</file>
         <file>assets/shaders/textured_phong.vert</file>
-        <file>assets/shaders/blur.frag</file>
         <file>assets/shaders/original.frag</file>
         <file>assets/shaders/post.vert</file>
         <file>assets/shaders/gauss_9x9_passA.frag</file>
         <file>assets/shaders/gauss_9x9_passB.frag</file>
+        <file>assets/shaders/blur.frag</file>
+        <file>assets/shaders/bloom.frag</file>
+        <file>assets/shaders/highlight.frag</file>
     </qresource>
 </RCC>
