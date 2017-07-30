@@ -58,8 +58,8 @@ void Scene::makeNodes() {
     auto std = materials_["white"];
     materials_["red"] = makePhongMaterialWithColor(QVector3D(1.0f, 0.0f, 0.0f));
 
-    meshes_["Spaceship"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
-    //meshes_["Spaceship"] = std::make_shared<Mesh>(":/assets/models/spaceship/spaceship2.obj", std);
+    //meshes_["Spaceship"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
+    meshes_["Spaceship"] = std::make_shared<Mesh>(":/assets/models/spaceship/spaceship.obj", std);
     meshes_["Sun"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80, 80), materials_["red"]);
     //meshes_["Moon"] = std::make_shared<Mesh>(":/assets/models/moon/moon.obj", std);
     meshes_["Moon"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80,80), std);
@@ -145,7 +145,9 @@ void Scene::makeScene() {
     nodes_["Light0"]->transformation.translate(QVector3D(0.35f, 0.553f, 2.0169f));
 
 
-    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, -1.3, 0.0));
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0f, 8.3f, 0.0f));
+
+
 }
 
 

@@ -13,6 +13,9 @@ void SpaceshipNavigator::keyPressEvent(QKeyEvent *event)
     // depending on key press, change position
 
     switch(event->key()) {
+        case Qt::Key_I:
+            translation_ec[1] = speed;
+            break;
         case Qt::Key_K:
             translation_ec[1] = -speed;
             break;
