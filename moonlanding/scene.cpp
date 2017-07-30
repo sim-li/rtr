@@ -49,31 +49,15 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     connect(&timer_, SIGNAL(timeout()), this, SLOT(update()) );
 }
 
+
 void Scene::makeNodes()
 {
-    // load 2D textures
-    auto day       = std::make_shared<QOpenGLTexture>(QImage("qrc:/assets/textures/earth_day.jpg").mirrored());
-    auto night     = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_at_night_2048.jpg").mirrored());
-    auto gloss     = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_bathymetry_2048.jpg").mirrored());
-    auto disp      = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048.jpg").mirrored());
-    auto bumps     = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/earth_topography_2048_NRM.png").mirrored());
-    auto rtrsuper  = std::make_shared<QOpenGLTexture>(QImage(":/assets/textures/RTR-ist-super-4-3.png").mirrored());
-
-
-    std::shared_ptr<QOpenGLTexture> cubetex = makeCubeMap(":/assets/textures/bridge2048");
-    auto phong_prog = createProgram(":/assets/shaders/textured_phong.vert", ":/assets/shaders/textured_phong.frag");
-
-    materials_["white"] = std::make_shared<TexturedPhongMaterial>(phong_prog,1);
-    materials_["white"]->phong.k_diffuse = QVector3D(1.0f, 1.0f, 1.0f);
-    materials_["white"]->phong.k_ambient = materials_["white"]->phong.k_diffuse * 0.3f;
-    materials_["white"]->phong.shininess = 80;
-    materials_["white"]->envmap.useEnvironmentTexture = true;
-    materials_["white"]->environmentTexture = cubetex;
-    // Just used to set specular scale from UI, not relevant for post processing
-    materials_["white_original"] = std::make_shared<TexturedPhongMaterial>(*materials_["white"]);
+    materials_["white"] = makePhongMaterialWithColor(QVector3D(1.0f, 1.0f, 1.0f));
+    materials_["white_original"] = materials_["white"];
     auto std = materials_["white"];
-    materials_["red"] = std::make_shared<TexturedPhongMaterial>(*materials_["white"]);
-    materials_["red"]->phong.k_diffuse = QVector3D(1.0f, 0.0f, 0.0f);
+
+    materials_["red"] = makePhongMaterialWithColor(QVector3D(1.0f, 0.0f, 0.0f));
+
 
     meshes_["Spaceship"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
     meshes_["Sun"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80, 80), materials_["red"]);
@@ -105,6 +89,19 @@ void Scene::makeNodes()
     nodes_["gauss_2"] = createNode(meshes_["gauss_2"], false);
     nodes_["post_pass_1"] = nodes_["blur"];
     nodes_["post_pass_2"] = nullptr;
+}
+
+
+std::shared_ptr<TexturedPhongMaterial> Scene::makePhongMaterialWithColor(QVector3D color) {
+    auto phong_prog = createProgram(":/assets/shaders/textured_phong.vert", ":/assets/shaders/textured_phong.frag");
+    std::shared_ptr<TexturedPhongMaterial> m = std::make_shared<TexturedPhongMaterial>(phong_prog,1);
+    std::shared_ptr<QOpenGLTexture> cubetex = makeCubeMap(":/assets/textures/bridge2048");
+    m->phong.k_diffuse = color;
+    m->phong.k_ambient = m->phong.k_diffuse * 0.3f;
+    m->phong.shininess = 80;
+    m->envmap.useEnvironmentTexture = true;
+    m->environmentTexture = cubetex;
+    return m;
 }
 
 

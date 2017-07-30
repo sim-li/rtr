@@ -143,5 +143,8 @@ protected:
     void makeNodes();
     void makeScene();
 
+    std::shared_ptr<TexturedPhongMaterial> makePhongMaterialWithColor(QVector3D color);
+
+
 };
 
