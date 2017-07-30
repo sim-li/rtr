@@ -67,24 +67,16 @@ void Scene::makeNodes() {
 
     auto orig = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/original.frag");
     post_materials_["original"] = make_shared<PostMaterial>(orig, 10);
+
     auto blur = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/blur.frag");
     post_materials_["blur"] = make_shared<PostMaterial>(blur, 11);
 
-    auto gaussA = createProgram(":/assets/shaders/post.vert",":/assets/shaders/gauss_9x9_passA.frag");
-    auto gaussB = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/gauss_9x9_passB.frag");
-    post_materials_["gauss_1"] = make_shared<PostMaterial>(gaussA,11);
-    post_materials_["gauss_2"] = make_shared<PostMaterial>(gaussB,12);
-
     meshes_["original"]  = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["original"]);
     meshes_["blur"]      = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["blur"]);
-    meshes_["gauss_1"]   = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["gauss_1"]);
-    meshes_["gauss_2"]   = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["gauss_2"]);
-
 
     nodes_["original"] = createNode(meshes_["original"], false);
     nodes_["blur"] = createNode(meshes_["blur"], false);
-    nodes_["gauss_1"] = createNode(meshes_["gauss_1"], false);
-    nodes_["gauss_2"] = createNode(meshes_["gauss_2"], false);
+
     nodes_["post_pass_1"] = nodes_["blur"];
     nodes_["post_pass_2"] = nullptr;
 }
@@ -328,10 +320,10 @@ void Scene::draw() {
     auto fbo_to_be_rendered = fbo1_;
 
     //TODO: Use commented out version -> this is for DEBUG.
-    //auto node_to_be_rendered = nodes_["post_pass_1"];
-    auto node_to_be_rendered = nodes_["original"];
+    auto node_to_be_rendered = nodes_["post_pass_1"];
+    //auto node_to_be_rendered = nodes_["original"];
 
-    /*
+
     // second pass?
     if(nodes_["post_pass_2"]) {
         fbo2_->bind();
@@ -340,14 +332,14 @@ void Scene::draw() {
         fbo_to_be_rendered = fbo2_;
         node_to_be_rendered = nodes_["post_pass_2"];
     }
-    */
+
 
     // final rendering pass, into visible framebuffer (object)
     post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
 
 
     // extract FBI image and display in the UI, every 20 frames
-    /*
+
     static size_t framecount=20-2; // initially will render twice
     if(show_FBOs_) {
         if(++framecount % 20 == 0) {
@@ -356,7 +348,7 @@ void Scene::draw() {
                 emit displayBufferContents(1, "post pass 1", fbo2_->toImage());
         }
     }
-    */
+
 }
 
 void Scene::draw_scene_() {
