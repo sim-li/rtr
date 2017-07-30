@@ -5,6 +5,40 @@
 
 using namespace std;
 
+void SpaceshipNavigator::keyPressEvent(QKeyEvent *event)
+{
+    // translation vector in eye coords
+    QVector4D translation_ec(0, 0, 0, 0);
+
+    // depending on key press, change position
+
+    switch(event->key()) {
+        case Qt::Key_K:
+            translation_ec[1] = -speed;
+            break;
+        case Qt::Key_J:
+            translation_ec[0] = -speed;
+            break;
+        case Qt::Key_L:
+            translation_ec[0] = speed;
+            break;
+        default:
+            return;
+    }
+
+    // translate from camera coords into model coords
+    QMatrix4x4 camToWorld = world_->toWorldTransform(camera_);
+    QMatrix4x4 worldToModel = world_->toWorldTransform(node_).inverted();
+    QVector4D translation_mc = worldToModel * camToWorld * translation_ec;
+    node_->transformation.translate(translation_mc.toVector3D());
+
+    // debugging for positioning
+    QMatrix4x4 nodeToWorld = world_->toWorldTransform(node_);
+    QVector4D pos = nodeToWorld * QVector4D(0, 0, 0, 1);
+
+
+}
+
 void PositionNavigator::keyPressEvent(QKeyEvent *event)
 {
     // translation vector in eye coords

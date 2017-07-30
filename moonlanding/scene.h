@@ -130,6 +130,7 @@ protected:
     std::unique_ptr<ModelTrackball> navigator_;
     std::unique_ptr<PositionNavigator> lightNavigator_;
     std::unique_ptr<RotateCameraY> cameraNavigator_;
+    std::unique_ptr<SpaceshipNavigator> spaceshipNavigator_;
 
     // helper for creating programs from shader files
     std::shared_ptr<QOpenGLShaderProgram> createProgram(const std::string& vertex,

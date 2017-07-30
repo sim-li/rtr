@@ -40,6 +40,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     makeScene();
 
     navigator_ = std::make_unique<ModelTrackball>(nodes_["Scene"], nodes_["World"], nodes_["Camera"]);
+    spaceshipNavigator_ = std::make_unique<SpaceshipNavigator>(nodes_["Spaceship"], nodes_["World"], nodes_["Camera"]);
     lightNavigator_ = std::make_unique<PositionNavigator>(nodes_["Light0"], nodes_["World"], nodes_["Camera"]);
     cameraNavigator_ = std::make_unique<RotateCameraY>(nullptr, nullptr, nodes_["Camera"]);
 
@@ -56,8 +57,8 @@ void Scene::makeNodes() {
     auto std = materials_["white"];
     materials_["red"] = makePhongMaterialWithColor(QVector3D(1.0f, 0.0f, 0.0f));
 
-    //meshes_["Spaceship"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
-    meshes_["Spaceship"] = std::make_shared<Mesh>(":/assets/models/spaceship/spaceship.obj", std);
+    meshes_["Spaceship"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
+    //meshes_["Spaceship"] = std::make_shared<Mesh>(":/assets/models/spaceship/spaceship2.obj", std);
     meshes_["Sun"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80, 80), materials_["red"]);
     //meshes_["Moon"] = std::make_shared<Mesh>(":/assets/models/moon/moon.obj", std);
     meshes_["Moon"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80,80), std);
@@ -111,7 +112,7 @@ void Scene::makeScene() {
     nodes_["Moon"]->children.push_back(nodes_["Sun"]);
 
     //0.8->1.4
-    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 0.8, 0.0));
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 1.4, 0.0));
     nodes_["Spaceship"]->transformation.scale(0.2);
 
     nodes_["Camera"] = createNode(nullptr, false);
@@ -254,6 +255,7 @@ void Scene::keyPressEvent(QKeyEvent *event) {
     } else {
         cameraNavigator_->keyPressEvent(event);
     }
+    spaceshipNavigator_->keyPressEvent(event);
     update();
 
 }
