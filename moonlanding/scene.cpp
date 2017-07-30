@@ -136,6 +136,8 @@ void Scene::makeScene() {
     nodes_["Sun"]->transformation.translate(QVector3D(2.0, 2.0, -10.0));
     nodes_["Sun"]->transformation.scale(1.5);
 
+    nodes_["Moon"]->transformation.scale(2.0);
+
     // add a light relative to the world
     nodes_["Light0"] = createNode(nullptr, false);
     lightNodes_.push_back(nodes_["Light0"]);
@@ -145,7 +147,7 @@ void Scene::makeScene() {
     nodes_["Light0"]->transformation.translate(QVector3D(0.35f, 0.553f, 2.0169f));
 
 
-    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0f, 8.3f, 0.0f));
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0f, 50.3f, 0.0f));
 
 
 }
