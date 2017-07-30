@@ -121,10 +121,7 @@ void Scene::makeScene()
     nodes_["Scene"]->children.push_back(nodes_["Moon"]);
     nodes_["Scene"]->children.push_back(nodes_["Spaceship"]);
 
-    nodes_["Sun"]->transformation.translate(QVector3D(2.0, 1.0, -10.0));
-    nodes_["Sun"]->transformation.scale(3.0);
-
-    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 1.0, 0.0));
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.4, 0.7, 0.0));
     nodes_["Spaceship"]->transformation.scale(0.2);
 
     nodes_["Camera"] = createNode(nullptr, false);
@@ -134,10 +131,15 @@ void Scene::makeScene()
 
     // add a light relative to the world
     nodes_["Light0"] = createNode(nullptr, false);
-    nodes_["World"]->children.push_back(nodes_["Light0"]);
-    lightNodes_.push_back(nodes_["Light0"]);
-    nodes_["Light0"]->transformation.translate(QVector3D(-0.55f, 0.68f, 4.34f)); // above camera
 
+    lightNodes_.push_back(nodes_["Light0"]);
+    nodes_["Sun"]->children.push_back(nodes_["Light0"]);
+
+    nodes_["Sun"]->transformation.translate(QVector3D(2.0, 1.0, -10.0));
+    nodes_["Sun"]->transformation.scale(3.0);
+
+    nodes_["Light0"]->transformation.translate(QVector3D(-0.55f, 0.68f, 4.34f)); // above camera
+    //nodes_["Light0"]->transformation.translate(QVector3D(2.45f, 1.98274f, -5.0107f)); // above camera
 }
 
 
