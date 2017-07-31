@@ -56,7 +56,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
 
 void Scene::makeNodes() {
-    activateSkybox = false;
+    activateSkybox = true;
 
     if(activateSkybox) {
         std::shared_ptr<QOpenGLTexture> cubetex = makeCubeMap(":/assets/models/Universe");
@@ -82,9 +82,6 @@ void Scene::makeNodes() {
     nodes_["Moon"]  = createNode(meshes_["Moon"], true);
     nodes_["Sun"]  = createNode(meshes_["Sun"], true);
     nodes_["Spaceship"]  = createNode(meshes_["Spaceship"], true);
-    if(activateSkybox){
-        nodes_["Skybox"].get()->transformation.scale(2.0f);
-    }
 
     auto orig = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/original.frag");
     post_materials_["original"] = make_shared<PostMaterial>(orig, 10);
@@ -108,6 +105,7 @@ void Scene::makeNodes() {
     nodes_["hilit"]    = createNode(meshes_["hilit"], false);
     nodes_["blur"] = createNode(meshes_["blur"], false);
     nodes_["bloom"]    = createNode(meshes_["bloom"], false);
+
 
     nodes_["post_pass_1"] = nodes_["blur"];
     nodes_["post_pass_2"] = nullptr;
@@ -142,15 +140,19 @@ void Scene::makeScene() {
     nodes_["Scene"]->children.push_back(nodes_["Moon"]);
     nodes_["Scene"]->children.push_back(nodes_["Spaceship"]);
     nodes_["Scene"]->children.push_back(nodes_["Sun"]);
-    nodes_["Scene"]->children.push_back(nodes_["Skybox"]);
+
+    if (activateSkybox) {
+        nodes_["Scene"]->children.push_back(nodes_["Skybox"]);
+        nodes_["Skybox"]->transformation.scale(20.0);
+    }
 
     //0.8->1.4
-    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 1.4, 0.0));
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 60.4, 0.0));
     nodes_["Spaceship"]->transformation.scale(0.2);
 
     nodes_["Camera"] = createNode(nullptr, false);
-    nodes_["Camera"]->transformation.translate(QVector3D(0, 4, 15)); // move camera back and up a bit
-    nodes_["Camera"]->transformation.rotate(-7.5, QVector3D(1, 0,0)); // look down on scene
+    nodes_["Camera"]->transformation.translate(QVector3D(0, 54, 135)); // move camera back and up a bit
+    nodes_["Camera"]->transformation.rotate(-17.5, QVector3D(1, 0, 0)); // look down on scene
 
     nodes_["Spaceship"]->children.push_back(nodes_["Camera"]);
 
@@ -158,6 +160,8 @@ void Scene::makeScene() {
     nodes_["Sun"]->transformation.scale(1.5);
 
     nodes_["Moon"]->transformation.scale(2.0);
+
+
 
     // add a light relative to the world
     nodes_["Light0"] = createNode(nullptr, false);
