@@ -100,7 +100,7 @@ void BloomMaterial::apply(unsigned int)
     gl.glActiveTexture(GL_TEXTURE0 + tex_unit);
     gl.glBindTexture(GL_TEXTURE_2D, scene_tex_id);
     gl.glActiveTexture(GL_TEXTURE0 + tex_unit_2);
-    gl.glBindTexture(GL_TEXTURE_2D, hilit_tex_id);
+    gl.glBindTexture(GL_TEXTURE_2D, highlight_tex_id);
     prog_->setUniformValue("scene_tex", tex_unit);
     prog_->setUniformValue("highlight_tex", tex_unit_2);
     prog_->setUniformValue("image_width", (GLint)image_size.width());

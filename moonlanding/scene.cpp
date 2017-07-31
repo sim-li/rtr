@@ -48,6 +48,14 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     // make sure we redraw when the timer hits
     connect(&timer_, SIGNAL(timeout()), this, SLOT(update()) );
     qDebug() << "Made it through constructor";
+
+    setAmbientScale(20/20.0);
+    setDiffuseScale(20/20.0);
+    setSpecularScale(0/20.0);
+    setShininess(20);
+    setLightIntensity(0, 85.0 / 100.0);
+    setPostFilterKernelSize(9);
+    toggleJittering(true);
 }
 
 
@@ -66,7 +74,7 @@ void Scene::makeNodes() {
     materials_["white"] = makePhongMaterialWithColor(QVector3D(1.0f, 1.0f, 1.0f));
     materials_["white_original"] = materials_["white"];
     auto std = materials_["white"];
-    materials_["red"] = makePhongMaterialWithColor(QVector3D(1.0f, 1.0f, 2.0f));
+    materials_["red"] = makePhongMaterialWithColor(QVector3D(1.0f, 1.0f, 1.0f));
 
     meshes_["Spaceship"] = std::make_shared<Mesh>(":/assets/models/spaceship/spaceship.obj", std);
     meshes_["Sun"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80, 80), materials_["red"]);
@@ -364,8 +372,6 @@ void Scene::draw() {
         node_to_be_rendered = nodes_["post_pass_2"];
     }
 
-
-    //TODO: If this causes crash, comment out.
     post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
 
     static size_t framecount=20-2; // initially will render twice

@@ -55,22 +55,7 @@ AppWindow::AppWindow(QWidget *parent) :
     connect(qApp, &QGuiApplication::lastWindowClosed, []{ qApp->quit(); });
 
     // pass 1
-    connect(ui->blackBgRadioButton, &QRadioButton::clicked,
-            [this](bool) { scene().setBackgroundColor(QVector3D(0,0,0)); } );
-    connect(ui->greyBgRadioButton, &QRadioButton::clicked,
-            [this](bool) { scene().setBackgroundColor(QVector3D(0.4f,0.4f,0.4f)); } );
-    connect(ui->whiteBgRadioButton, &QRadioButton::clicked,
-            [this](bool) { scene().setBackgroundColor(QVector3D(1,1,1)); } );
-    connect(ui->light0Slider, &QSlider::valueChanged,
-            [this](int value) { scene().setLightIntensity(0, float(value)/100.0); } );
-    connect(ui->ambientSlider, &QSlider::valueChanged,
-            [this](int value) { scene().setAmbientScale(float(value)/20.0); } );
-    connect(ui->diffuseSlider, &QSlider::valueChanged,
-            [this](int value) { scene().setDiffuseScale(float(value)/20.0); } );
-    connect(ui->specularSlider, &QSlider::valueChanged,
-            [this](int value) { scene().setSpecularScale(float(value)/20.0); } );
-    connect(ui->shininessSlider, &QSlider::valueChanged,
-            [this](int value) { scene().setShininess(float(value)); } );
+
 
     // post processing parameters -------------------------------
     connect(ui->postFilterComboBox, &QComboBox::currentTextChanged,
@@ -144,14 +129,6 @@ void AppWindow::setDefaultUIValues() {
     bool b = connect(&(this->scene()), &Scene::displayBufferContents,
                      this, &AppWindow::displayBufferContents);
     assert(b);
-
-    // scene rendering parameters
-    ui->light0Slider->setValue(85.0);
-    ui->ambientSlider->setValue(20);
-    ui->diffuseSlider->setValue(20);
-    ui->specularSlider->setValue(0);
-    ui->shininessSlider->setValue(20);
-    ui->greyBgRadioButton->setChecked(true);
 
 }
 

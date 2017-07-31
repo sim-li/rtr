@@ -166,7 +166,7 @@ public:
 
     // the texture to be post processed
     GLint scene_tex_id;
-    GLint hilit_tex_id;
+    GLint highlight_tex_id;
 
     // the image size ("resolution") of the texture, needs to be set from outside
     QSize image_size;
