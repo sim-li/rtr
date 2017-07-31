@@ -9,5 +9,7 @@
         <file>assets/shaders/blur.frag</file>
         <file>assets/shaders/bloom.frag</file>
         <file>assets/shaders/highlight.frag</file>
+        <file>assets/shaders/skybox.frag</file>
+        <file>assets/shaders/skybox.vert</file>
     </qresource>
 </RCC>

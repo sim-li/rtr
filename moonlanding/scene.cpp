@@ -36,6 +36,9 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     }
 
 
+
+
+
     makeNodes();
     makeScene();
 
@@ -53,6 +56,22 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
 
 void Scene::makeNodes() {
+    activateSkybox = false;
+
+    if(activateSkybox)
+    {
+    std::shared_ptr<QOpenGLTexture> cubetex = makeCubeMap(":/assets/models/Universe");
+    auto skybox_prog = createProgram(":/assets/shaders/skybox.vert", ":/assets/shaders/skybox.frag");
+    skyboxMaterial_ = std::make_shared<SkyBoxMaterial>(skybox_prog);
+    skyboxMaterial_->texture = cubetex;
+    auto skyboxMesh = std::make_shared<Mesh>(make_shared<geom::Cube>(), skyboxMaterial_);
+    nodes_ ["Skybox"] = createNode(skyboxMesh, true);
+
+
+
+    }
+
+
     materials_["white"] = makePhongMaterialWithColor(QVector3D(1.0f, 1.0f, 1.0f));
     materials_["white_original"] = materials_["white"];
     auto std = materials_["white"];
@@ -61,12 +80,15 @@ void Scene::makeNodes() {
     //meshes_["Spaceship"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
     meshes_["Spaceship"] = std::make_shared<Mesh>(":/assets/models/spaceship/spaceship.obj", std);
     meshes_["Sun"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80, 80), materials_["red"]);
-    //meshes_["Moon"] = std::make_shared<Mesh>(":/assets/models/moon/moon.obj", std);
-    meshes_["Moon"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80,80), std);
+    meshes_["Moon"] = std::make_shared<Mesh>(":/assets/models/moon/moon.obj", std);
+    //meshes_["Moon"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80,80), std);
 
     nodes_["Moon"]  = createNode(meshes_["Moon"], true);
     nodes_["Sun"]  = createNode(meshes_["Sun"], true);
     nodes_["Spaceship"]  = createNode(meshes_["Spaceship"], true);
+    if(activateSkybox){
+        nodes_["Skybox"].get()->transformation.scale(2.0f);
+    }
 
     auto orig = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/original.frag");
     post_materials_["original"] = make_shared<PostMaterial>(orig, 10);
@@ -99,15 +121,17 @@ void Scene::makeNodes() {
 std::shared_ptr<TexturedPhongMaterial> Scene::makePhongMaterialWithColor(QVector3D color) {
     auto phong_prog = createProgram(":/assets/shaders/textured_phong.vert", ":/assets/shaders/textured_phong.frag");
     std::shared_ptr<TexturedPhongMaterial> m = std::make_shared<TexturedPhongMaterial>(phong_prog,1);
-    std::shared_ptr<QOpenGLTexture> cubetex = makeCubeMap(":/assets/textures/bridge2048");
+
+    std::shared_ptr<QOpenGLTexture> cubetex = makeCubeMap(":/assets/models/bridge2018");
+
     m->phong.k_diffuse = color;
     m->phong.k_ambient = m->phong.k_diffuse * 0.3f;
     m->phong.shininess = 80;
     m->envmap.useEnvironmentTexture = true;
     m->environmentTexture = cubetex;
     return m;
-}
 
+}
 
 
 // once the nodes_ map is filled, construct a hierarchical scene from it
@@ -326,6 +350,7 @@ void Scene::draw() {
     for(auto mat : post_materials_)
         mat.second->time = t;
 
+
     ///////////////////////////////
 
     // create an FBO to render the scene into
@@ -461,6 +486,8 @@ void Scene::draw_scene_()
                         0.01f,   // near plane
                         30.0f    // far plane
                         );
+
+
 
     // clear buffer
     glClearColor(bgcolor_[0], bgcolor_[1], bgcolor_[2], 1.0);

@@ -96,6 +96,7 @@ protected:
     // multi-pass rendering
     std::shared_ptr<QOpenGLFramebufferObject> fbo1_, fbo2_, fbo3_, fbo4_, fbo5_;
     std::map<QString, std::shared_ptr<PostMaterial>> post_materials_;
+    std::shared_ptr<SkyBoxMaterial> skyboxMaterial_;
     bool split_display_ = true;
     bool show_FBOs_ = false;
 
@@ -151,5 +152,7 @@ protected:
 
     std::shared_ptr<BloomMaterial> bloomMaterial;
 
+
+    bool activateSkybox;
 };
 

@@ -8,5 +8,11 @@
         <file>assets/models/moon/moon.mtl</file>
         <file>assets/models/spaceship/spaceship.obj</file>
         <file>assets/models/spaceship/spaceship2.obj</file>
+        <file>assets/models/Universe/negx.jpg</file>
+        <file>assets/models/Universe/negy.jpg</file>
+        <file>assets/models/Universe/negz.jpg</file>
+        <file>assets/models/Universe/posx.jpg</file>
+        <file>assets/models/Universe/posy.jpg</file>
+        <file>assets/models/Universe/posz.jpg</file>
     </qresource>
 </RCC>
