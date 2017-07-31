@@ -35,10 +35,6 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
         cout << "max texture size: " << texsize << "x" << texsize << endl;
     }
 
-
-
-
-
     makeNodes();
     makeScene();
 
@@ -67,17 +63,14 @@ void Scene::makeNodes() {
         nodes_["Skybox"] = createNode(skyboxMesh, true);
     }
 
-
     materials_["white"] = makePhongMaterialWithColor(QVector3D(1.0f, 1.0f, 1.0f));
     materials_["white_original"] = materials_["white"];
     auto std = materials_["white"];
     materials_["red"] = makePhongMaterialWithColor(QVector3D(1.0f, 1.0f, 2.0f));
 
-    //meshes_["Spaceship"] = std::make_shared<Mesh>(make_shared<geom::Cube>(), std);
     meshes_["Spaceship"] = std::make_shared<Mesh>(":/assets/models/spaceship/spaceship.obj", std);
     meshes_["Sun"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80, 80), materials_["red"]);
     meshes_["Moon"] = std::make_shared<Mesh>(":/assets/models/moon/moon.obj", std);
-    //meshes_["Moon"] = std::make_shared<Mesh>(make_shared<geom::Sphere>(80,80), std);
 
     nodes_["Moon"]  = createNode(meshes_["Moon"], true);
     nodes_["Sun"]  = createNode(meshes_["Sun"], true);
@@ -89,12 +82,10 @@ void Scene::makeNodes() {
     auto blur = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/blur.frag");
     post_materials_["blur"] = make_shared<PostMaterial>(blur, 11);
 
-
     auto hilit  = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/highlight.frag");
     auto bloom  = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/bloom.frag");
     post_materials_["hilit"] = std::make_shared<PostMaterial>(hilit, 14);
     bloomMaterial = std::make_shared<BloomMaterial>(bloom, 15, 16);
-
 
     meshes_["original"]  = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["original"]);
     meshes_["blur"]      = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["blur"]);
@@ -105,8 +96,6 @@ void Scene::makeNodes() {
     nodes_["hilit"]    = createNode(meshes_["hilit"], false);
     nodes_["blur"] = createNode(meshes_["blur"], false);
     nodes_["bloom"]    = createNode(meshes_["bloom"], false);
-
-
     nodes_["post_pass_1"] = nodes_["blur"];
     nodes_["post_pass_2"] = nullptr;
 }
@@ -330,72 +319,39 @@ void Scene::updateViewport(size_t width, size_t height) {
     fbo2_.reset();
 }
 
-// !!!!! init fbo
-void Scene::draw() {
 
-    /////////////////////////////////////
-    // calculate animation time
+void Scene::draw() {
     chrono::milliseconds millisec_since_first_draw;
     chrono::milliseconds millisec_since_last_draw;
-
-    // calculate total elapsed time and time since last draw call
     auto current = clock_.now();
     millisec_since_first_draw = chrono::duration_cast<chrono::milliseconds>(current - firstDrawTime_);
     millisec_since_last_draw = chrono::duration_cast<chrono::milliseconds>(current - lastDrawTime_);
     lastDrawTime_ = current;
-
-    // set time uniform in animated shader(s)
     float t = millisec_since_first_draw.count() / 1000.0f;
     for(auto mat : materials_)
         mat.second->time = t;
     for(auto mat : post_materials_)
         mat.second->time = t;
 
-
-    ///////////////////////////////
-
-    // create an FBO to render the scene into
     if(!fbo1_) {
-
-        // for high-res Retina displays
         auto pixel_scale = parent_->devicePixelRatio();
-
-        // what kind of FBO do we want?
         auto fbo_format = QOpenGLFramebufferObjectFormat();
         fbo_format.setAttachment(QOpenGLFramebufferObject::Depth);
-
-
-        // create some FBOs for post processing
-        fbo1_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
-                                                          parent_->height()*pixel_scale,
-                                                          fbo_format);
-        fbo2_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
-                                                           parent_->height()*pixel_scale,
-                                                           fbo_format);
-        fbo3_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
-                                                           parent_->height()*pixel_scale,
-                                                           fbo_format);
-        fbo4_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
-                                                           parent_->height()*pixel_scale,
-                                                           fbo_format);
-        fbo5_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale,
-                                                           parent_->height()*pixel_scale,
-                                                           fbo_format);
-//         qDebug() << "FBO size =" << fbo_->size();
+        fbo1_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale, parent_->height()*pixel_scale, fbo_format);
+        fbo2_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale, parent_->height()*pixel_scale, fbo_format);
+        fbo3_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale, parent_->height()*pixel_scale, fbo_format);
+        fbo4_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale, parent_->height()*pixel_scale, fbo_format);
+        fbo5_ = std::make_shared<QOpenGLFramebufferObject>(parent_->width()*pixel_scale, parent_->height()*pixel_scale, fbo_format);
     }
 
-
-    // draw the actual scene into fbo1
-
-    /// draw hilit
+    // Highlight
     fbo1_->bind();
     draw_scene_();
     fbo1_->release();
-
     auto fbo_to_be_rendered = fbo1_;
     auto node_to_be_rendered = nodes_["hilit"];
 
-    /// draw blur of hilit
+    // Blur on highlight
     fbo2_->bind();
     post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
     fbo2_->release();
@@ -403,11 +359,10 @@ void Scene::draw() {
     fbo_to_be_rendered = fbo2_;
     node_to_be_rendered = nodes_["blur"];
 
-    /// draw original
+    // Original
     fbo3_->bind();
     post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
     fbo3_->release();
-
 
     bloomMaterial->scene_tex_id = fbo1_->texture();
     bloomMaterial->hilit_tex_id = fbo3_->texture();
@@ -416,29 +371,6 @@ void Scene::draw() {
     node_to_be_rendered = nodes_["bloom"];
     post_draw_full_(*node_to_be_rendered);
 
-//    if (m_useGray) {
-//        fbo4_->bind();
-//        post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
-//        fbo4_->release();
-//        fbo_to_be_rendered = fbo4_;
-//        node_to_be_rendered = nodes_["grayscale"];
-//        //final draw
-//        post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
-//    }
-
-
-
-
-    //////////////////
-    // Possibly causes crash
-//    fbo1_->bind();
-//    draw_scene_();
-//    fbo1_->release();
-//    fbo_to_be_rendered = fbo1_;
-//    node_to_be_rendered = nodes_["Sphere"];
-//    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
-
-    // second pass?
     if(nodes_["post_pass_2"]) {
         fbo2_->bind();
         post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
@@ -447,17 +379,10 @@ void Scene::draw() {
         node_to_be_rendered = nodes_["post_pass_2"];
     }
 
-    ///////////////////////////
-    // final rendering pass, into visible framebuffer (object)
-    if(split_display_) {
-        post_draw_split_(*fbo1_, *nodes_["original"],
-                         *fbo_to_be_rendered, *node_to_be_rendered);
-    } else {
-        //post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
-    }
 
-    /////////////////////////
-    // extract FBI image and display in the UI, every 20 frames
+    //TODO: If this causes crash, comment out.
+    post_draw_full_(*fbo_to_be_rendered, *node_to_be_rendered);
+
     static size_t framecount=20-2; // initially will render twice
     if(show_FBOs_) {
         if(++framecount % 20 == 0) {
@@ -518,19 +443,6 @@ void Scene::draw_scene_()
     }
 }
 
-void Scene::post_draw_full_(Node &node) {
-    // set up transformation matrices
-    PostProcessingCamera camera;
-
-    // initial state for drawing full-viewport rectangles
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_BLEND);
-
-    // draw single full screen rectangle with post processing material
-    node.draw(camera);
-}
-
 void Scene::post_draw_full_(QOpenGLFramebufferObject &fbo, Node& node) {
     // set up transformation matrices
     PostProcessingCamera camera;
@@ -551,6 +463,16 @@ void Scene::post_draw_full_(QOpenGLFramebufferObject &fbo, Node& node) {
     glDisable(GL_BLEND);
 
     // draw single full screen rectangle with post processing material
+    node.draw(camera);
+}
+
+void Scene::post_draw_full_(Node &node) {
+    PostProcessingCamera camera;
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
+
     node.draw(camera);
 }
 
