@@ -58,17 +58,13 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 void Scene::makeNodes() {
     activateSkybox = false;
 
-    if(activateSkybox)
-    {
-    std::shared_ptr<QOpenGLTexture> cubetex = makeCubeMap(":/assets/models/Universe");
-    auto skybox_prog = createProgram(":/assets/shaders/skybox.vert", ":/assets/shaders/skybox.frag");
-    skyboxMaterial_ = std::make_shared<SkyBoxMaterial>(skybox_prog);
-    skyboxMaterial_->texture = cubetex;
-    auto skyboxMesh = std::make_shared<Mesh>(make_shared<geom::Cube>(), skyboxMaterial_);
-    nodes_ ["Skybox"] = createNode(skyboxMesh, true);
-
-
-
+    if(activateSkybox) {
+        std::shared_ptr<QOpenGLTexture> cubetex = makeCubeMap(":/assets/models/Universe");
+        auto skybox_prog = createProgram(":/assets/shaders/skybox.vert", ":/assets/shaders/skybox.frag");
+        skyboxMaterial_ = std::make_shared<SkyBoxMaterial>(skybox_prog);
+        skyboxMaterial_-> texture = cubetex;
+        auto skyboxMesh = std::make_shared<Mesh>(make_shared<geom::Cube>(), skyboxMaterial_);
+        nodes_["Skybox"] = createNode(skyboxMesh, true);
     }
 
 
@@ -146,6 +142,7 @@ void Scene::makeScene() {
     nodes_["Scene"]->children.push_back(nodes_["Moon"]);
     nodes_["Scene"]->children.push_back(nodes_["Spaceship"]);
     nodes_["Scene"]->children.push_back(nodes_["Sun"]);
+    nodes_["Scene"]->children.push_back(nodes_["Skybox"]);
 
     //0.8->1.4
     nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 1.4, 0.0));
