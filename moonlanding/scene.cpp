@@ -113,7 +113,6 @@ std::shared_ptr<TexturedPhongMaterial> Scene::makePhongMaterialWithColor(QVector
     m->envmap.useEnvironmentTexture = true;
     m->environmentTexture = cubetex;
     return m;
-
 }
 
 void Scene::makeScene() {
