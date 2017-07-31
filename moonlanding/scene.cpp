@@ -82,18 +82,18 @@ void Scene::makeNodes() {
     auto blur = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/blur.frag");
     post_materials_["blur"] = make_shared<PostMaterial>(blur, 11);
 
-    auto hilit  = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/highlight.frag");
+    auto highlight  = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/highlight.frag");
     auto bloom  = createProgram(":/assets/shaders/post.vert", ":/assets/shaders/bloom.frag");
-    post_materials_["hilit"] = std::make_shared<PostMaterial>(hilit, 14);
+    post_materials_["highlight"] = std::make_shared<PostMaterial>(highlight, 14);
     bloomMaterial = std::make_shared<BloomMaterial>(bloom, 15, 16);
 
     meshes_["original"]  = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["original"]);
     meshes_["blur"]      = std::make_shared<Mesh>(make_shared<geom::RectXY>(1, 1), post_materials_["blur"]);
-    meshes_["hilit"]    = std::make_shared<Mesh>(make_shared<geom::RectXY>(1,1), post_materials_["hilit"]);
+    meshes_["highlight"]    = std::make_shared<Mesh>(make_shared<geom::RectXY>(1,1), post_materials_["highlight"]);
     meshes_["bloom"]    = std::make_shared<Mesh>(make_shared<geom::RectXY>(1,1), bloomMaterial);
 
     nodes_["original"] = createNode(meshes_["original"], false);
-    nodes_["hilit"]    = createNode(meshes_["hilit"], false);
+    nodes_["highlight"]    = createNode(meshes_["highlight"], false);
     nodes_["blur"] = createNode(meshes_["blur"], false);
     nodes_["bloom"]    = createNode(meshes_["bloom"], false);
     nodes_["post_pass_1"] = nodes_["blur"];
@@ -349,7 +349,7 @@ void Scene::draw() {
     draw_scene_();
     fbo1_->release();
     auto fbo_to_be_rendered = fbo1_;
-    auto node_to_be_rendered = nodes_["hilit"];
+    auto node_to_be_rendered = nodes_["highlight"];
 
     // Blur on highlight
     fbo2_->bind();
@@ -365,7 +365,7 @@ void Scene::draw() {
     fbo3_->release();
 
     bloomMaterial->scene_tex_id = fbo1_->texture();
-    bloomMaterial->hilit_tex_id = fbo3_->texture();
+    bloomMaterial->highlight_tex_id = fbo3_->texture();
     bloomMaterial->apply();
 
     node_to_be_rendered = nodes_["bloom"];
