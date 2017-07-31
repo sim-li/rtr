@@ -116,15 +116,10 @@ std::shared_ptr<TexturedPhongMaterial> Scene::makePhongMaterialWithColor(QVector
 
 }
 
-
-// once the nodes_ map is filled, construct a hierarchical scene from it
 void Scene::makeScene() {
-    // world contains the scene plus the camera
     nodes_["World"] = createNode(nullptr, false);
     nodes_["Scene"] = createNode(nullptr, false);
     nodes_["World"]->children.push_back(nodes_["Scene"]);
-
-    // initial model to be shown in the scene
 
     nodes_["Scene"]->children.push_back(nodes_["Moon"]);
     nodes_["Scene"]->children.push_back(nodes_["Spaceship"]);
@@ -135,7 +130,6 @@ void Scene::makeScene() {
         nodes_["Skybox"]->transformation.scale(20.0);
     }
 
-    //0.8->1.4
     nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, 60.4, 0.0));
     nodes_["Spaceship"]->transformation.scale(0.2);
 
@@ -150,20 +144,12 @@ void Scene::makeScene() {
 
     nodes_["Moon"]->transformation.scale(2.0);
 
-
-
-    // add a light relative to the world
     nodes_["Light0"] = createNode(nullptr, false);
     lightNodes_.push_back(nodes_["Light0"]);
+
     nodes_["Sun"]->children.push_back(nodes_["Light0"]);
-
-    //nodes_["Light0"]->transformation.translate(QVector3D(-0.55f, 0.68f, 1.34f));
     nodes_["Light0"]->transformation.translate(QVector3D(0.35f, 0.553f, 2.0169f));
-
-
     nodes_["Spaceship"]->transformation.translate(QVector3D(0.0f, 50.3f, 0.0f));
-
-
 }
 
 
@@ -490,8 +476,6 @@ void Scene::post_draw_split_(QOpenGLFramebufferObject &fbo1, Node& node1, QOpenG
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
 
-    // left half of node1
-
     // use texture from fbo1 during rendering
     for(auto mat : post_materials_) {
         mat.second->post_texture_id = fbo1.texture();
@@ -500,8 +484,6 @@ void Scene::post_draw_split_(QOpenGLFramebufferObject &fbo1, Node& node1, QOpenG
     glEnable(GL_SCISSOR_TEST);
     glScissor(0,0,halfw,h);
     node1.draw(camera);
-
-    // right half of node2
 
     // use texture from fbo2 during rendering
     for(auto mat : post_materials_) {
@@ -513,6 +495,3 @@ void Scene::post_draw_split_(QOpenGLFramebufferObject &fbo1, Node& node1, QOpenG
     node2.draw(camera);
     glDisable(GL_SCISSOR_TEST);
 }
-
-
-
