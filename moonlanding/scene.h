@@ -76,6 +76,7 @@ public slots:
 
     // trigger a redraw of the widget through this method
     void update();
+    void moveSpaceship();
 
     // adjust camera / viewport / ... if drawing surface changes
     void updateViewport(size_t width, size_t height);
@@ -105,6 +106,7 @@ protected:
 
     // periodically update the scene for animations
     QTimer timer_;
+    QTimer movementTimer;
 
     // track time for animations
     std::chrono::high_resolution_clock clock_;
@@ -148,11 +150,15 @@ protected:
     void makeNodes();
     void makeScene();
 
+
+
     std::shared_ptr<TexturedPhongMaterial> makePhongMaterialWithColor(QVector3D color);
 
     std::shared_ptr<BloomMaterial> bloomMaterial;
 
-
     bool activateSkybox;
+
+    int numberOfMoves = 0;
+
 };
 

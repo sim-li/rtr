@@ -7,6 +7,7 @@
 #include "cubemap.h"
 #include <QtMath>
 #include <QMessageBox>
+#include <math.h>
 
 using namespace std;
 
@@ -47,7 +48,7 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
 
     // make sure we redraw when the timer hits
     connect(&timer_, SIGNAL(timeout()), this, SLOT(update()) );
-    qDebug() << "Made it through constructor";
+    connect(&movementTimer, SIGNAL(timeout()), this, SLOT(moveSpaceship()) );
 
     setAmbientScale(20/20.0);
     setDiffuseScale(20/20.0);
@@ -56,8 +57,18 @@ Scene::Scene(QWidget* parent, QOpenGLContext *context) :
     setLightIntensity(0, 85.0 / 100.0);
     setPostFilterKernelSize(9);
     toggleJittering(true);
+
+    timer_.start(1000.0 / 60.0);
+    movementTimer.start(1000.0 / 50.0);
 }
 
+void Scene::moveSpaceship() {
+    numberOfMoves += 1;
+    if (numberOfMoves >= 305) {
+        movementTimer.stop();
+    }
+    nodes_["Spaceship"]->transformation.translate(QVector3D(0.0, -1.0, 0.0));
+}
 
 void Scene::makeNodes() {
     activateSkybox = true;
@@ -319,8 +330,10 @@ void Scene::draw() {
     auto current = clock_.now();
     millisec_since_first_draw = chrono::duration_cast<chrono::milliseconds>(current - firstDrawTime_);
     millisec_since_last_draw = chrono::duration_cast<chrono::milliseconds>(current - lastDrawTime_);
+
     lastDrawTime_ = current;
     float t = millisec_since_first_draw.count() / 1000.0f;
+
     for(auto mat : materials_)
         mat.second->time = t;
     for(auto mat : post_materials_)
